@@ -59,7 +59,7 @@ export function LoggingFields({ leftRight, timed, onLeftRight, onTimed, showNote
         <Row>
           <span className="flex-1">
             <span className="block">{t('ex.leftRight')}</span>
-            <span className="block text-[13px] text-muted">{t('ex.leftRightNote')}</span>
+            <span className="block text-[13px] text-muted">{showNote ? t('ex.leftRightNoteNext') : t('ex.leftRightNote')}</span>
           </span>
           <Switch checked={leftRight} onChange={onLeftRight} label={t('ex.leftRight')} />
         </Row>

@@ -4,7 +4,8 @@ import { db } from '../../db/db'
 import { readSetValues, saveDraft, setToText } from '../../db/sessions'
 import type { SessionExercise, SetDraft, SetLog, WeightUnit } from '../../db/types'
 import { useT } from '../../i18n/useT'
-import { formatDuration, parseDecimal } from '../../lib/numbers'
+import { parseDecimal } from '../../lib/numbers'
+import { setSummary } from '../../lib/setFormat'
 import { unlockAudio } from '../../lib/sound'
 import { fromDisplayWeight, toDisplayWeight } from '../../lib/units'
 
@@ -22,17 +23,6 @@ type Text = { weight: string; value: string; left: string; right: string }
 export const rowGrid = (lr: boolean) =>
   lr ? 'grid-cols-[28px_48px_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_32px_44px]'
     : 'grid-cols-[32px_56px_minmax(0,1fr)_minmax(0,1fr)_36px_44px]'
-
-/** Short text for a set, e.g. "60×8", "60×8/7" or "+10×0:45". */
-export function setSummary(s: SetLog, se: SessionExercise, unit: WeightUnit) {
-  const v = (x?: number) => (x === undefined ? '–' : se.timed ? formatDuration(x) : String(x))
-  const val = se.leftRight
-    ? `${v(se.timed ? s.durationLeftSec : s.repsLeft)}/${v(se.timed ? s.durationRightSec : s.repsRight)}`
-    : v(se.timed ? s.durationSec : s.reps)
-  if (s.weightKg === undefined) return se.timed ? val : `×${val}`
-  const w = toDisplayWeight(s.weightKg, unit)
-  return `${se.bodyweight || se.timed ? '+' : ''}${w}×${val}`
-}
 
 export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, onSaved, onSaveNew, onNewChange }: {
   se: SessionExercise; row: Row; label: string; prev?: SetLog; above?: Text; unit: WeightUnit; date: string

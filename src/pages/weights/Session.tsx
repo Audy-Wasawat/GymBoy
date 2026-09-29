@@ -5,10 +5,11 @@ import { MoreHorizontal, Plus } from 'lucide-react'
 import { ExercisePicker } from '../../components/ExercisePicker'
 import { Page } from '../../components/Page'
 import { Sheet, SheetButton } from '../../components/Sheet'
+import { Switch } from '../../components/Switch'
 import { db } from '../../db/db'
 import { moveRow } from '../../db/programs'
 import {
-  addExerciseToSession, cancelSession, deleteSet, emptyDraft, getOpenSession, previousEntry,
+  addExerciseToSession, cancelSession, deleteSet, emptyDraft, getOpenSession, previousEntry, setSessionLeftRight,
   refreshBodyParts, removeSessionExercise, replaceSessionExercise, setToText, startRest
 } from '../../db/sessions'
 import type { SessionExercise, SetDraft, SetLog, WeightUnit, WorkoutSession } from '../../db/types'
@@ -162,7 +163,7 @@ function ExerciseBlock({ block, session, ses, index }: {
       <SetHeader se={se} unit={weightUnit} />
       {labelled.map(({ r, label, prev: p, above }) => (
         <SetRow
-          key={r.kind === 'set' ? `s${r.set.id}` : `d${r.draft.id}`}
+          key={`${r.kind === 'set' ? `s${r.set.id}` : `d${r.draft.id}`}${se.leftRight ? 'lr' : ''}`}
           se={se} row={r} label={label} prev={p} above={above}
           pr={r.kind === 'set' && prIds.has(r.set.id!)}
           unit={weightUnit} date={session.date}
@@ -185,6 +186,13 @@ function ExerciseBlock({ block, session, ses, index }: {
       />
 
       <Sheet open={menu === 'menu'} onClose={() => setMenu(undefined)} title={se.name}>
+        <div className="mb-3 flex items-center gap-3 rounded-xl border border-line px-4 py-2">
+          <span className="flex-1">
+            <span className="block text-[16px]">{t('ex.leftRight')}</span>
+            <span className="block text-[13px] text-muted">{savedCount > 0 ? t('session.leftRightLocked') : t('session.leftRightNote')}</span>
+          </span>
+          <Switch checked={se.leftRight} disabled={savedCount > 0} onChange={(v) => void setSessionLeftRight(se.id!, v)} label={t('ex.leftRight')} />
+        </div>
         {index > 0 && <SheetButton onClick={() => { void moveRow(db.sessionExercises, ses, se.id!, -1); setMenu(undefined) }}>{t('common.moveUp')}</SheetButton>}
         {index < ses.length - 1 && <SheetButton onClick={() => { void moveRow(db.sessionExercises, ses, se.id!, 1); setMenu(undefined) }}>{t('common.moveDown')}</SheetButton>}
         <SheetButton onClick={() => navigate(`/weights/exercises/${se.exerciseId}/history`, { state: { from: '/weights/session' } })}>{t('history.exercise')}</SheetButton>

@@ -4,6 +4,7 @@ import type { BodyPart, Exercise, SessionExercise, SetDraft, SetLog, SetType, We
 import { localDate } from '../lib/dates'
 import { BODY_PARTS, bodyPartOf } from '../lib/exercises'
 import { formatDuration, parseCount, parseDecimal, parseDuration } from '../lib/numbers'
+import { bothSides, sidesOf } from '../lib/setFormat'
 import { fromDisplayWeight, toDisplayWeight } from '../lib/units'
 
 // At most one session is open; finishedAt is a number, so the open one is found with a filter.
@@ -148,12 +149,43 @@ export function readSetValues(
 /** Set values back to the text shown in the inputs, in the chosen weight unit. */
 export function setToText(s: SetValues, se: SessionExercise, unit: WeightUnit) {
   const n = (x?: number) => (x === undefined ? '' : se.timed ? formatDuration(x) : String(x))
+  const sd = sidesOf(s as SetLog, se.timed)
+  // The set may have been logged in the other mode: a single value fills both sides, and two sides
+  // become the lower one, so copying "previous" never leaves an empty field.
   return {
     weight: s.weightKg === undefined ? '' : String(toDisplayWeight(s.weightKg, unit)),
-    value: n(se.timed ? s.durationSec : s.reps),
-    left: n(se.timed ? s.durationLeftSec : s.repsLeft),
-    right: n(se.timed ? s.durationRightSec : s.repsRight)
+    value: se.leftRight ? '' : n(bothSides(sd)),
+    left: se.leftRight ? n(sd.left ?? sd.single) : '',
+    right: se.leftRight ? n(sd.right ?? sd.single) : ''
   }
+}
+
+/**
+ * Switches an exercise of the open session between one shared value and left/right. Allowed only
+ * while it has no saved set. The choice is also kept as the exercise's default, so the next session
+ * starts in the mode last used. Typed rows are converted so nothing typed is lost.
+ * Returns false when it was refused.
+ */
+export async function setSessionLeftRight(seId: number, on: boolean): Promise<boolean> {
+  return db.transaction('rw', [db.sessionExercises, db.sets, db.setDrafts, db.exercises], async () => {
+    const se = await db.sessionExercises.get(seId)
+    if (!se) return false
+    if (await db.sets.where('sessionExerciseId').equals(seId).count()) return false
+    if (se.leftRight === on) return true
+    await db.sessionExercises.update(seId, { leftRight: on })
+    await db.exercises.update(se.exerciseId, { leftRight: on })
+    const read = se.timed ? parseDuration : parseCount
+    const lower = (a: string, b: string) => {
+      const x = read(a); const y = read(b)
+      return x !== undefined && y !== undefined ? (x <= y ? a : b) : a || b
+    }
+    for (const d of await db.setDrafts.where('sessionExerciseId').equals(seId).toArray()) {
+      await db.setDrafts.update(d.id!, on
+        ? { left: d.left || d.value, right: d.right || d.value, value: '' }
+        : { value: d.value || lower(d.left, d.right), left: '', right: '' })
+    }
+    return true
+  })
 }
 
 /** Turns a draft into a saved set. Returns false when the draft is incomplete. */

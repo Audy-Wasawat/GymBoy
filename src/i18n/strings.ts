@@ -512,6 +512,9 @@ const th = {
   'ex.dupUse': 'ใช้ท่าที่มีอยู่',
   'ex.dupCreate': 'สร้างใหม่ต่อไป',
   'ex.dupBack': 'กลับไปแก้ชื่อ',
+  'session.leftRightNote': 'ใช้กับเซสชันนี้ และจำโหมดนี้ไว้เป็นค่าเริ่มต้นของครั้งต่อไป',
+  'session.leftRightLocked': 'เปลี่ยนไม่ได้ เพราะท่านี้มีเซ็ตที่บันทึกแล้วในเซสชันนี้',
+  'ex.leftRightNoteNext': 'บันทึกซ้ายและขวาแยกกัน ใช้กับเซสชันถัดไป ส่วนเซสชันที่เปิดอยู่ให้เปลี่ยนจากเมนูของท่านั้น',
 } as const
 
 export type StringKey = keyof typeof th
@@ -1030,6 +1033,9 @@ const en: Record<StringKey, string> = {
   'ex.dupUse': 'Use the existing one',
   'ex.dupCreate': 'Create anyway',
   'ex.dupBack': 'Go back and rename',
+  'session.leftRightNote': 'Applies to this session, and is remembered as the default next time.',
+  'session.leftRightLocked': 'Cannot change: this exercise already has saved sets in this session.',
+  'ex.leftRightNoteNext': 'Log left and right separately. Applies to the next sessions; in an open session use the exercise menu.',
 }
 
 export const strings = { th, en }

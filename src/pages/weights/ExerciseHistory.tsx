@@ -11,9 +11,9 @@ import { formatDate } from '../../lib/dates'
 import { formatDuration } from '../../lib/numbers'
 import { loadProgress, weightHint, type MetricKind } from '../../lib/progress'
 import { sessionTitle } from '../../lib/sessionTitle'
+import { setSummary } from '../../lib/setFormat'
 import { toDisplayWeight } from '../../lib/units'
 import { HintNote } from './HintNote'
-import { setSummary } from './SetRow'
 
 const ProgressChart = lazy(() => import('../../components/ProgressChart'))
 
