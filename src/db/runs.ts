@@ -11,11 +11,14 @@ export const updateRun = (id: number, patch: Partial<Omit<RunLog, 'id'>>) => db.
 
 export const deleteRun = (id: number) => db.runs.delete(id)
 
-// Shoes — cumulative distance is always summed from runs, never stored.
+// Shoes — the distance in the app is always summed from runs, never stored; only the distance before the app is.
 
 export const listShoes = () => db.shoes.orderBy('id').toArray()
 
-export const addShoe = (name: string) => db.shoes.add({ name, retired: false })
+export const addShoe = (name: string, startKm = 0) => db.shoes.add({ name, retired: false, ...(startKm > 0 ? { startKm } : {}) })
+
+/** Sets the distance run before the app (0 clears it). */
+export const setShoeStartKm = (id: number, startKm: number) => db.shoes.update(id, { startKm: startKm > 0 ? startKm : undefined })
 
 export const renameShoe = (id: number, name: string) => db.shoes.update(id, { name })
 

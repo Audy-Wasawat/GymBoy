@@ -515,6 +515,11 @@ const th = {
   'session.leftRightNote': 'ใช้กับเซสชันนี้ และจำโหมดนี้ไว้เป็นค่าเริ่มต้นของครั้งต่อไป',
   'session.leftRightLocked': 'เปลี่ยนไม่ได้ เพราะท่านี้มีเซ็ตที่บันทึกแล้วในเซสชันนี้',
   'ex.leftRightNoteNext': 'บันทึกซ้ายและขวาแยกกัน ใช้กับเซสชันถัดไป ส่วนเซสชันที่เปิดอยู่ให้เปลี่ยนจากเมนูของท่านั้น',
+  'shoe.total': 'รวม {km} กม.',
+  'shoe.split': 'ก่อนใช้แอป {before} กม. · ในแอป {inApp} กม.',
+  'shoe.startKm': 'ระยะที่วิ่งมาแล้ว (กม.)',
+  'shoe.editStart': 'แก้ระยะสะสมเดิม',
+  'shoe.startInvalid': 'กรอกระยะเป็นตัวเลขตั้งแต่ 0 ขึ้นไป ทศนิยมไม่เกิน 2 ตำแหน่ง',
 } as const
 
 export type StringKey = keyof typeof th
@@ -1036,6 +1041,11 @@ const en: Record<StringKey, string> = {
   'session.leftRightNote': 'Applies to this session, and is remembered as the default next time.',
   'session.leftRightLocked': 'Cannot change: this exercise already has saved sets in this session.',
   'ex.leftRightNoteNext': 'Log left and right separately. Applies to the next sessions; in an open session use the exercise menu.',
+  'shoe.total': 'Total {km} km',
+  'shoe.split': 'Before the app {before} km · in the app {inApp} km',
+  'shoe.startKm': 'Distance already run (km)',
+  'shoe.editStart': 'Edit starting distance',
+  'shoe.startInvalid': 'Enter a distance of 0 or more, with at most 2 decimals.',
 }
 
 export const strings = { th, en }

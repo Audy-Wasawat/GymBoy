@@ -1,5 +1,6 @@
-import type { IntervalPlan, IntervalRepResult, RunLog, RunType } from '../db/types'
+import type { IntervalPlan, IntervalRepResult, RunLog, RunType, Shoe } from '../db/types'
 import { localDate, startOfWeek } from './dates'
+import { parseDecimal } from './numbers'
 
 /** Average pace in seconds per km, or undefined when distance or time is missing. */
 export function paceSecPerKm(distanceKm: number, durationSec: number): number | undefined {
@@ -43,9 +44,36 @@ export function chartPace(run: RunLog): number | undefined {
  */
 export const listPace = (run: RunLog) => paceSecPerKm(run.distanceKm, run.durationSec)
 
-/** Total km run in a pair of shoes. */
+/** Km run in a pair of shoes and logged in the app. */
 export const shoeDistanceKm = (runs: RunLog[], shoeId: number) =>
   runs.filter((r) => r.shoeId === shoeId).reduce((s, r) => s + r.distanceKm, 0)
+
+const round2 = (n: number) => Math.round(n * 100) / 100
+export const MAX_START_KM = 100000
+
+/**
+ * Reads the "already run" distance of a pair. Empty means 0; otherwise it must be a number from 0
+ * up with at most 2 decimals (a comma works as the decimal mark). Returns undefined when invalid.
+ */
+export function parseStartKm(text: string): number | undefined {
+  const t = text.trim().replace(',', '.')
+  if (!t) return 0
+  if (!/^\d+(\.\d{0,2})?$/.test(t)) return undefined
+  const n = parseDecimal(t)
+  if (n === undefined || n > MAX_START_KM) return undefined
+  return n
+}
+
+/** Distance a pair had before the app. Older data and backups have no value, which counts as 0. */
+export const shoeStartKm = (shoe: Pick<Shoe, 'startKm'>) =>
+  typeof shoe.startKm === 'number' && Number.isFinite(shoe.startKm) && shoe.startKm > 0 ? shoe.startKm : 0
+
+/** Total = distance before the app + every logged run in the pair. */
+export function shoeTotals(shoe: Pick<Shoe, 'id' | 'startKm'>, runs: RunLog[]) {
+  const startKm = round2(shoeStartKm(shoe))
+  const inAppKm = round2(shoeDistanceKm(runs, shoe.id!))
+  return { startKm, inAppKm, totalKm: round2(startKm + inAppKm) }
+}
 
 export interface DistanceBucket { start: string; label: string; km: number }
 

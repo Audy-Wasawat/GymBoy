@@ -102,7 +102,11 @@ export interface RunLog {
   surface?: Surface
 }
 export interface RunTemplate { id?: number; name: string; type: RunType; plan: IntervalPlan }
-export interface Shoe { id?: number; name: string; retired: boolean }
+export interface Shoe {
+  id?: number; name: string; retired: boolean
+  /** Distance run in this pair before using the app, in km (0 or more, 2 decimals). Missing means 0. */
+  startKm?: number
+}
 
 export interface Activity { id?: number; date: string; sport: string; minutes: number; effort?: number; note?: string }
 
