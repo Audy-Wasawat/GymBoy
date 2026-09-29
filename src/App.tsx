@@ -22,6 +22,13 @@ import { RunEditor } from './pages/running/RunEditor'
 import { RunCharts } from './pages/running/RunCharts'
 import { Templates } from './pages/running/Templates'
 import { Shoes } from './pages/Shoes'
+import { Food } from './pages/food/Food'
+import { FoodEntryEditor } from './pages/food/FoodEntryEditor'
+import { FoodLibrary } from './pages/food/FoodLibrary'
+import { FoodLibraryEditor } from './pages/food/FoodLibraryEditor'
+import { Activities, ActivityEditor } from './pages/Activities'
+import { Body } from './pages/body/Body'
+import { BodyEntryEditor } from './pages/body/BodyEntryEditor'
 
 function Shell() {
   return (
@@ -55,11 +62,20 @@ function AppRoutes() {
         <Route path="running/charts" element={<RunCharts />} />
         <Route path="running/templates" element={<Templates />} />
         <Route path="running/:id" element={<RunEditor />} />
-        <Route path="food" element={<Soon title={t('food.title')} />} />
+        <Route path="food" element={<Food />} />
+        <Route path="food/add" element={<FoodEntryEditor />} />
+        <Route path="food/entry/:id" element={<FoodEntryEditor />} />
+        <Route path="food/library" element={<FoodLibrary />} />
+        <Route path="food/library/new" element={<FoodLibraryEditor />} />
+        <Route path="food/library/:id" element={<FoodLibraryEditor />} />
         <Route path="more" element={<More />} />
         <Route path="more/summary" element={<Soon title={t('more.summary')} back="/more" />} />
-        <Route path="more/body" element={<Soon title={t('more.body')} back="/more" />} />
-        <Route path="more/activities" element={<Soon title={t('more.activities')} back="/more" />} />
+        <Route path="more/body" element={<Body />} />
+        <Route path="more/body/new" element={<BodyEntryEditor />} />
+        <Route path="more/body/:id" element={<BodyEntryEditor />} />
+        <Route path="more/activities" element={<Activities />} />
+        <Route path="more/activities/new" element={<ActivityEditor />} />
+        <Route path="more/activities/:id" element={<ActivityEditor />} />
         <Route path="more/shoes" element={<Shoes />} />
         <Route path="more/backup" element={<Soon title={t('more.backup')} back="/more" />} />
         <Route path="more/settings" element={<SettingsPage />} />

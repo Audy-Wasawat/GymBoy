@@ -62,6 +62,49 @@ export function SettingsPage() {
       </Section>
       <p className="-mt-3 mb-5 px-1 text-[13px] text-muted">{t('settings.weightUnitNote')}</p>
 
+      <Section title={t('settings.goals')}>
+        <Row className="justify-between">
+          <label htmlFor="goalKcal" className="text-[15px]">{t('settings.goalKcal')}</label>
+          <input
+            id="goalKcal"
+            inputMode="numeric"
+            defaultValue={settings.goals.kcal ?? ''}
+            onBlur={(e) => {
+              const v = e.target.value ? Number(e.target.value) : undefined
+              updateSettings({ goals: { ...settings.goals, kcal: v } })
+            }}
+            className="w-24 rounded-lg border border-line bg-bg px-3 py-1 text-[16px] text-right"
+          />
+        </Row>
+        <Row className="justify-between">
+          <label htmlFor="goalProtein" className="text-[15px]">{t('settings.goalProtein')}</label>
+          <input
+            id="goalProtein"
+            inputMode="decimal"
+            defaultValue={settings.goals.proteinG ?? ''}
+            onBlur={(e) => {
+              const v = e.target.value ? Number(e.target.value) : undefined
+              updateSettings({ goals: { ...settings.goals, proteinG: v } })
+            }}
+            className="w-24 rounded-lg border border-line bg-bg px-3 py-1 text-[16px] text-right"
+          />
+        </Row>
+        <Row className="justify-between">
+          <label htmlFor="goalDays" className="text-[15px]">{t('settings.goalWeeklyDays')}</label>
+          <input
+            id="goalDays"
+            inputMode="numeric"
+            defaultValue={settings.goals.weeklyDays ?? ''}
+            onBlur={(e) => {
+              const v = e.target.value ? Number(e.target.value) : undefined
+              updateSettings({ goals: { ...settings.goals, weeklyDays: v } })
+            }}
+            className="w-24 rounded-lg border border-line bg-bg px-3 py-1 text-[16px] text-right"
+          />
+        </Row>
+        <Row className="text-[13px] text-muted">{t('settings.goalOptional')}</Row>
+      </Section>
+
       <Section title={t('settings.storage')}>
         <Row>
           <span className="flex-1 text-[15px]">{persistText}</span>
@@ -84,6 +127,14 @@ export function SettingsPage() {
 
       <Section title={t('settings.install')}>
         <Row className="text-[15px]">{isStandalone() ? t('settings.installed') : t('settings.notInstalled')}</Row>
+        <Row className="justify-between text-[15px]">
+          <span>{t('settings.backupDate')}</span>
+          <span className="text-muted">
+            {settings.lastBackupAt
+              ? new Date(settings.lastBackupAt).toLocaleDateString()
+              : t('settings.neverBackedUp')}
+          </span>
+        </Row>
       </Section>
 
       <p className="px-1 text-[13px] text-muted">{t('settings.version')} 0.1.0</p>

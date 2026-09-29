@@ -18,6 +18,11 @@ One line per choice made where SPEC.md and AUTOPILOT.md were silent, with the re
 - The future-date guard shows a dedicated `run.futureDate` message; mm:ss fields (target pace, per-rep time) use `inputMode="text"` because the iOS numeric keypad has no ":".
 
 ## Phase 5: Food, other activities, body
+- `listFoodsMRU` sorts by `time` in memory (no index) rather than bumping `db.version` — foodEntries are few, so a full scan is fine and avoids a migration.
+- Body chart shows as a toggle button to save vertical space; only visible when there are ≥2 entries.
+- Body compare: user picks ≤2 entries with photos via a toggle-select UI; no separate screen needed.
+- Goals (kcal, protein, weeklyDays) edited via blur/onBlur inputs in Settings — updates fire per-field on blur.
+- `capture="user"` on body photo input to open the front camera by default.
 
 ## Phase 6: Today details, summary, daily grid
 

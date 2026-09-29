@@ -3,10 +3,10 @@
 Kept current so a compacted or restarted session can resume. See AUTOPILOT.md for the plan.
 
 ## Status
-- **Current phase:** 4 (Running)
-- **Current step:** implementation done; `npm run build`, `npm test` and `npm run test:tz` all pass. Five review subagents running (spec, data-integrity, qa-flow, offline, mobile-ux). Awaiting findings to fix, then commit.
-- **Last passing build:** Phase 4 working tree — build + tests green (27 tests, 4 zones).
-- **Next:** triage subagent findings, fix HIGH/MEDIUM, re-run, commit "Phase 4: Running".
+- **Current phase:** 5 (Food, activities, body)
+- **Current step:** Phase 5 implemented, build and 42 tests pass. Committing.
+- **Last passing build:** Phase 5 — 42 tests green.
+- **Next:** Phase 6 — Today details, summary, daily grid.
 
 ## Dev/preview servers
 - A Vite dev server was started on http://localhost:5173 for the qa/mobile agents (HashRouter). Remember to stop it (`npm run dev` background task) before finishing the run.
@@ -19,8 +19,8 @@ Kept current so a compacted or restarted session can resume. See AUTOPILOT.md fo
   drive the app with the browser tool instead.
 
 ## Phase checklist
-- [ ] Phase 4 — Running
-- [ ] Phase 5 — Food, other activities, body
+- [x] Phase 4 — Running
+- [x] Phase 5 — Food, other activities, body
 - [ ] Phase 6 — Today details, summary, daily grid
 - [ ] Phase 7 — Backup, restore, AI export, banner, data deletion
 - [ ] Phase 8 — Muscle picker on the body model
