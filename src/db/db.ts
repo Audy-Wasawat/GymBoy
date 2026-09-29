@@ -41,6 +41,23 @@ export class GymboyDB extends Dexie {
       bodyEntries: '++id, date',
       settings: 'id'
     })
+    // v2 (phase 2): single exercise name, seed key, body part; sets carry exerciseId and date.
+    // IndexedDB cannot index booleans, so isCustom, isActive and retired are dropped and read with .filter().
+    this.version(2).stores({
+      exercises: '++id, name, equipment, bodyPart, &seedKey',
+      programs: '++id',
+      shoes: '++id',
+      sessions: '++id, date, programId, startedAt',
+      sets: '++id, sessionExerciseId, exerciseId, date, type, [exerciseId+date]'
+    }).upgrade(async (tx) => {
+      await tx.table('exercises').toCollection().modify((e) => {
+        e.name ??= e.nameEn ?? e.nameTh ?? ''
+        delete e.nameEn
+        delete e.nameTh
+        e.timed ??= false
+      })
+      await tx.table('sessions').toCollection().modify((s) => { s.startedAt ??= 0 })
+    })
   }
 }
 

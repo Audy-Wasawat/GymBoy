@@ -41,7 +41,7 @@ Today is the first screen and shows:
 - What was done today (weights, runs, other activities).
 - Today's food: kcal and protein, compared with goals if set.
 - This week's progress: workout days against the weekly goal, and running distance so far.
-- A body model highlighting the muscles of the program day chosen for today's session.
+- A body model highlighting the muscles of every exercise that has at least one working set logged today, including exercises added to that session on the spot (primary dark, secondary light). Exercises with no sets yet, or with warm-up sets only, do not count.
 - Quick buttons: start a weight session, start a run entry, add food.
 
 ## Weight training
@@ -52,13 +52,13 @@ Programs are reusable, editable templates; a session records what was actually d
 
 - Several programs can be stored (for example "Upper/Lower Sep"). One is active at a time and stays active until the user switches it; there is no end date.
 - A program has named days (Upper A, Lower A, ...). Each day lists the body parts trained and an ordered list of exercises.
-- Each exercise in a day has a target number of sets, a target rep range (for example 6-8) and a rest time in seconds (default 90 s app-wide).
+- Each exercise in a day has a target number of sets, a target rep range (for example 6-8) and a rest time in seconds (default 90 s app-wide). For timed exercises the target range is in seconds (for example 30-45 s).
 
 **Session flow**
 
 1. Start a session and choose a day from the active program (no automatic suggestion), or start an empty session and add exercises as you go.
 2. The day's exercises appear with last session's sets (weight x reps) beside the inputs and a "copy previous set" button.
-3. Log each set: weight, reps, and a "to failure" tick. Each exercise also has a free-text note.
+3. Log each set: weight, reps, and a "to failure" tick. Each exercise also has a free-text note. Timed exercises log a duration in seconds instead of reps (typing mm:ss is also accepted), with an optional weight field for added load; there is no hold timer.
 4. Changing, adding or removing exercises during a session affects that session only; the program stays as it was.
 
 **Set types and left/right**
@@ -66,6 +66,8 @@ Programs are reusable, editable templates; a session records what was actually d
 - Warm-up sets are a separate set type: optional, any number per exercise, and excluded from PR, progress charts and the weight-increase hint.
 - An exercise can be marked left/right (for example bicep curl). Each set then has reps for left and reps for right, with one shared weight.
 - Bodyweight exercises (for example pull-up) have an optional weight field for added load; empty means bodyweight only.
+- Timed exercises (for example plank) record a duration per set instead of reps; a timed left/right exercise records a duration for each side.
+- A session copies each exercise's left/right, bodyweight and timed settings when it is logged, so changing them later affects only the next sessions.
 
 **Rest timer**
 
@@ -75,32 +77,38 @@ Programs are reusable, editable templates; a session records what was actually d
 **Progress signals**
 
 - Weight-increase hint: shown when every working set reaches the top of the target rep range (both sides for left/right exercises). It only notifies and changes nothing.
-- PR: the heaviest weight ever lifted in a working set for that exercise, reps ignored. A badge appears when it is beaten. For bodyweight exercises the PR is the heaviest added weight, or the most reps in one set if extra weight has never been used.
+- PR: the heaviest weight ever lifted in a working set for that exercise, reps ignored. A badge appears when it is beaten. For bodyweight exercises the PR is the heaviest added weight, or the most reps in one set if extra weight has never been used. For timed exercises the PR is the heaviest added weight, or the longest duration in one set if extra weight has never been used.
+- For timed exercises the weight-increase hint uses the target range in seconds: it shows when every working set reaches the top of the range.
 - Session duration is not recorded.
 
 ## Exercise library and body model
 
 **Seeded exercises**
 
-- About 250 popular exercises across barbell, dumbbell, machine/cable and bodyweight, grouped by body part and named in English only. Bodyweight core moves such as hanging knee raise are included.
-- Each exercise carries one image, primary muscles, secondary muscles and a left/right flag. Images come from free-exercise-db (https://github.com/yuhonas/free-exercise-db, Unlicense / public domain), one image per exercise, compressed to small WebP files and bundled for offline use. Its coarse muscle names are remapped to the detailed regions below. The list and detail screens show the image beside a small body model with the muscles highlighted.
+- 249 popular exercises across barbell, dumbbell, machine/cable and bodyweight, grouped by body part and named in English only. Bodyweight core moves such as hanging knee raise are included.
+- Each exercise carries primary muscles, secondary muscles, a left/right flag and a timed flag. Seeded timed exercises: plank, side plank (left/right), farmer's walk and plate pinch.
+- v1 has no exercise photos or drawings. Exercise names and muscle data come from free-exercise-db (https://github.com/yuhonas/free-exercise-db, Unlicense / public domain); its images are not used. Its coarse muscle names are remapped to the detailed regions below. An empty `image` field is kept in the data for later.
+- The list shows a small front-and-back body model beside each exercise, and the detail screen a larger one, with the muscle names also shown as text chips.
 - Machine and cable variants are separate entries where the muscle emphasis differs; any entry can be duplicated and adjusted. The muscles of any seeded exercise can be re-marked on the body model if they feel wrong.
 
 **Custom exercises**
 
 - The user enters the name and equipment, then taps muscles on the body model to mark each one primary or secondary. Custom exercises have no photo. An exercise with no muscles marked is simply not highlighted.
+- Every exercise, seeded or custom, has "Left/right" and "Timed" switches on its detail screen. Changing them affects the next sessions only.
 
 **Body model**
 
-- Front and back views, switchable.
+- Drawn in code as a flat SVG figure (not realistic, but each region is recognisable), with front, back or both views side by side, at any size.
 - Regions: upper and lower chest, front/side/rear delts, biceps, triceps, forearms, abs, obliques, traps, lats, mid-back, lower back, glutes, quads, hamstrings, adductors, calves.
-- Primary muscles drawn dark, secondary muscles lighter.
+- Primary muscles in the weights plate red, secondary muscles in the same red at about 35 %, other regions in a neutral theme tone; it follows light and dark mode.
+- It carries an accessible label listing the primary and secondary muscles.
+- Tapping regions on the model to mark muscles comes in phase 8; until then muscles are picked with chips.
 
 ## Running
 
 Runs are typed in after the fact; Apple Watch does the tracking, so the app needs no GPS or timer.
 
-- Fields: date, type (easy, LSD, tempo, interval), distance (km), total time, average pace (calculated, min/km), shoe, note.
+- Fields: date, type (easy, LSD, tempo, interval), distance (km), total time, average pace (calculated, min/km), shoe, note, average and maximum heart rate (optional), and a treadmill/outdoor tag (optional).
 - Interval runs have a plan and a result. The plan is the number of reps, distance or time per rep, target pace and rest; the result is the time or pace of each rep. History shows plan against actual.
 - Templates: a run plan can be saved (for example "6x800 m @ 3:40") and reused, which pre-fills the plan for a new run.
 - Shoes: a list of pairs, chosen per run, with cumulative distance per pair and an option to retire a pair.
@@ -128,7 +136,8 @@ Each entry records date and body weight, with an optional progress photo. A weig
 
 ## Weekly and monthly summary
 
-- Workout days in the month, with a calendar of active days. Weights, runs and other activities all count, and a day counts once.
+- Workout days in the month. Weights, runs and other activities all count, and a day counts once.
+- Activity grid in the style of GitHub's contribution graph: one column per week starting on Monday, one row per weekday. Red = weights, blue = running, half red and half blue = both on the same day, yellow = other sports, grey = nothing logged. Filters: all / weights / running. Tapping a cell shows that day's summary. Days before the first entry are left blank. There is no rest-day button.
 - Optional weekly goal for workout days. Weeks start on Monday.
 - Running distance per week and per month.
 - Average kcal and protein per day for the month, over days that have at least one food entry.
@@ -152,15 +161,15 @@ Each entry records date and body weight, with an optional progress photo. A weig
 ## Build phases
 
 1. [done] Project setup: PWA, Dexie schema, Thai/English, theme, tabs, Today, Settings.
-2. Weights core: seeded exercise library (about 250, with images), custom exercises and muscle editing, programs, session logging (sets, warm-ups, failure, left/right, notes) and the rest timer.
+2. Weights core: seeded exercise library (249, no images), the body model drawing (front/back SVG with highlighting), custom exercises and muscle editing, programs, session logging (sets, warm-ups, failure, left/right, timed, notes) and the rest timer. At the end of phase 2 the Today screen shows the body model for today's logged exercises.
 3. History and progress: per-exercise history, charts, PR badge and weight-increase hint.
-4. Running: run log, interval plan vs actual, templates, shoes, charts.
+4. Running: run log (including optional heart rate and treadmill/outdoor tag), interval plan vs actual, templates, shoes, charts.
 5. Food, other activities and body tracking.
-6. Today screen details, weekly/monthly summary and goals.
+6. Today screen details, weekly/monthly summary with the activity grid, and goals.
 7. Full backup, restore, browser-tab banner and AI export.
-8. Body model: front/back SVG with primary and secondary muscle highlighting.
+8. Body model: tap regions on the model to mark muscles primary or secondary (replaces the chip picker).
 
-Phase 2 needs muscle data for the library and the muscle picker before phase 8 draws the full body model; a simple chip-based muscle picker is acceptable until then.
+Phase 2 draws the body model for display; picking muscles uses chips until phase 8 adds tapping on the model.
 
 ## Out of scope for v1
 

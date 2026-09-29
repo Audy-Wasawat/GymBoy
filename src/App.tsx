@@ -5,6 +5,10 @@ import { More } from './pages/More'
 import { SettingsPage } from './pages/Settings'
 import { Soon } from './pages/Soon'
 import { Today } from './pages/Today'
+import { ExerciseDetail } from './pages/weights/ExerciseDetail'
+import { ExerciseLibrary } from './pages/weights/ExerciseLibrary'
+import { ExerciseNew } from './pages/weights/ExerciseNew'
+import { Weights } from './pages/weights/Weights'
 
 function Shell() {
   return (
@@ -21,7 +25,10 @@ function AppRoutes() {
     <Routes>
       <Route element={<Shell />}>
         <Route index element={<Today />} />
-        <Route path="weights" element={<Soon title={t('weights.title')} />} />
+        <Route path="weights" element={<Weights />} />
+        <Route path="weights/exercises" element={<ExerciseLibrary />} />
+        <Route path="weights/exercises/new" element={<ExerciseNew />} />
+        <Route path="weights/exercises/:id" element={<ExerciseDetail />} />
         <Route path="running" element={<Soon title={t('running.title')} />} />
         <Route path="food" element={<Soon title={t('food.title')} />} />
         <Route path="more" element={<More />} />
