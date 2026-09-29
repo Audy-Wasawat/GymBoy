@@ -3,12 +3,15 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { ChevronRight } from 'lucide-react'
 import { Page, Row, Section } from '../../components/Page'
+import { PhotoField } from '../../components/PhotoField'
+import { PhotoThumb } from '../../components/PhotoThumb'
 import { Sheet, SheetButton } from '../../components/Sheet'
-import { addFood, addFoodEntry, deleteFoodEntry, listFoodsMRU, updateFoodEntry } from '../../db/food'
+import { deleteFoodEntry, listFoodsMRU, saveNewFoodEntry, updateFoodEntry } from '../../db/food'
 import { db } from '../../db/db'
 import type { Food } from '../../db/types'
 import { useT } from '../../i18n/useT'
 import { isPastOrToday, localDate } from '../../lib/dates'
+import { FOOD_PHOTO_MAX } from '../../lib/photos'
 
 type Mode = 'pick' | 'manual'
 
@@ -37,6 +40,8 @@ export function FoodEntryEditor() {
   const [proteinStr, setProteinStr] = useState('')
   const [portionStr, setPortionStr] = useState('1')
   const [saveToLib, setSaveToLib] = useState(false)
+  // The entry's own photo: a copy of the library food's when one is picked, replaceable and removable.
+  const [photo, setPhoto] = useState<Blob | undefined>()
   const [date, setDate] = useState(initDate)
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
@@ -51,6 +56,7 @@ export function FoodEntryEditor() {
       setProteinStr(String(existingEntry.proteinG))
       setPortionStr(String(existingEntry.portion))
       setDate(existingEntry.date)
+      setPhoto(existingEntry.photo)
       setMode('manual')
     }
   }, [isNew, existingEntry])
@@ -65,6 +71,7 @@ export function FoodEntryEditor() {
     setKcalStr(String(f.kcal))
     setProteinStr(String(f.proteinG))
     setPortionStr('1')
+    setPhoto(f.photo)
     setMode('manual')
   }
 
@@ -86,23 +93,20 @@ export function FoodEntryEditor() {
     if (!isPastOrToday(date)) { setError(t('run.futureDate')); return }
     setSaving(true)
     try {
-      let foodId = picked?.id
-      if (saveToLib && !picked) {
-        foodId = await addFood({ name: name.trim(), kcal: baseKcal, proteinG: baseProtein })
-      }
       const entry = {
         date,
         time: Date.now(),
-        foodId,
+        foodId: picked?.id,
         name: name.trim(),
         portion,
         kcal: finalKcal,
         proteinG: finalProtein
       }
       if (isNew) {
-        await addFoodEntry(entry)
+        await saveNewFoodEntry(entry, photo, saveToLib && !picked ? { name: name.trim(), kcal: baseKcal, proteinG: baseProtein } : undefined)
       } else {
-        await updateFoodEntry(Number(id), entry)
+        // photo may be undefined here: that removes it.
+        await updateFoodEntry(Number(id), { ...entry, photo })
       }
       nav(-1)
     } finally {
@@ -160,6 +164,7 @@ export function FoodEntryEditor() {
                     onClick={() => pickFood(f)}
                     className="flex w-full min-h-[52px] items-center gap-3 border-b border-line px-4 py-2 last:border-b-0 text-left"
                   >
+                    <PhotoThumb blob={f.photo} alt={f.name} />
                     <span className="flex-1">
                       <span className="block text-[16px]">{f.name}</span>
                       <span className="block text-[13px] text-muted">{f.kcal} kcal · {f.proteinG} g</span>
@@ -228,6 +233,10 @@ export function FoodEntryEditor() {
                 className="flex-1 bg-transparent text-[16px] outline-none"
               />
             </Row>
+          </Section>
+
+          <Section title={t('food.photo')}>
+            <PhotoField photo={photo} onChange={setPhoto} maxSide={FOOD_PHOTO_MAX} capture="environment" alt={name || t('food.photoOf')} />
           </Section>
 
           {/* save-to-library toggle (new + manual only) */}

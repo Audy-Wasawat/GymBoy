@@ -9,8 +9,8 @@ import { useSettings } from '../../db/useSettings'
 import { useT } from '../../i18n/useT'
 import { isPastOrToday, localDate } from '../../lib/dates'
 import { fromDisplayWeight, toDisplayWeight } from '../../lib/units'
-import { usePhotoUrl } from '../../components/usePhotoUrl'
-import { BODY_PHOTO_MAX, compressImage } from '../../lib/photos'
+import { PhotoField } from '../../components/PhotoField'
+import { BODY_PHOTO_MAX } from '../../lib/photos'
 
 export function BodyEntryEditor() {
   const t = useT()
@@ -40,15 +40,6 @@ export function BodyEntryEditor() {
       setPhoto(existing.photo)
     }
   }, [isNew, existing, weightUnit])
-
-  const photoUrl = usePhotoUrl(photo)
-
-  async function handlePhoto(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const compressed = await compressImage(file, BODY_PHOTO_MAX)
-    setPhoto(compressed)
-  }
 
   async function handleSave() {
     const w = parseFloat(weightStr)
@@ -102,15 +93,14 @@ export function BodyEntryEditor() {
       </Section>
 
       <Section title={t('body.photo')}>
-        <div className="px-4 py-3">
-          {photoUrl && (
-            <img src={photoUrl} alt={date} className="mb-3 w-full rounded-lg object-cover" style={{ maxHeight: 300 }} />
-          )}
-          <label className="flex min-h-[44px] cursor-pointer items-center justify-center rounded-lg border border-line bg-surface px-4 text-[15px]">
-            {photoUrl ? t('body.changePhoto') : t('body.addPhoto')}
-            <input type="file" accept="image/*" capture="user" className="sr-only" onChange={handlePhoto} />
-          </label>
-        </div>
+        <PhotoField
+          photo={photo}
+          onChange={setPhoto}
+          maxSide={BODY_PHOTO_MAX}
+          capture="user"
+          alt={`${t('body.photo')} ${date}`}
+          allowRemove={false}
+        />
       </Section>
 
       {error && <p className="mb-3 text-[14px] text-weights">{error}</p>}

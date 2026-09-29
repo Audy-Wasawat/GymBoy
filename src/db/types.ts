@@ -114,6 +114,8 @@ export interface Food { id?: number; name: string; kcal: number; proteinG: numbe
 export interface FoodEntry {
   id?: number; date: string; time: number; foodId?: number; name: string
   portion: number; kcal: number; proteinG: number
+  /** A snapshot taken with the entry, like its kcal and protein: library edits never change it. */
+  photo?: Blob
 }
 
 export interface BodyEntry { id?: number; date: string; weightKg: number; photo?: Blob }

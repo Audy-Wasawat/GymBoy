@@ -6,8 +6,8 @@ import { Sheet, SheetButton } from '../../components/Sheet'
 import { addFood, deleteFood, updateFood } from '../../db/food'
 import { db } from '../../db/db'
 import { useT } from '../../i18n/useT'
-import { usePhotoUrl } from '../../components/usePhotoUrl'
-import { compressImage, FOOD_PHOTO_MAX } from '../../lib/photos'
+import { PhotoField } from '../../components/PhotoField'
+import { FOOD_PHOTO_MAX } from '../../lib/photos'
 
 export function FoodLibraryEditor() {
   const t = useT()
@@ -39,15 +39,6 @@ export function FoodLibraryEditor() {
     }
   }, [isNew, existing])
 
-  const photoUrl = usePhotoUrl(photo)
-
-  async function handlePhoto(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const compressed = await compressImage(file, FOOD_PHOTO_MAX)
-    setPhoto(compressed)
-  }
-
   async function handleSave() {
     if (!name.trim()) { setError(t('food.nameRequired')); return }
     if (!kcalStr.trim() || isNaN(Number(kcalStr))) { setError(t('food.kcalRequired')); return }
@@ -56,13 +47,13 @@ export function FoodLibraryEditor() {
       const food = {
         name: name.trim(),
         kcal: Math.round(parseFloat(kcalStr)),
-        proteinG: parseFloat(proteinStr) || 0,
-        ...(photo ? { photo } : {})
+        proteinG: parseFloat(proteinStr) || 0
       }
       if (isNew) {
-        await addFood(food)
+        await addFood({ ...food, ...(photo ? { photo } : {}) })
       } else {
-        await updateFood(Number(id), food)
+        // photo may be undefined here: that removes it.
+        await updateFood(Number(id), { ...food, photo })
       }
       nav(-1)
     } finally {
@@ -113,15 +104,7 @@ export function FoodLibraryEditor() {
 
       {/* photo */}
       <Section title={t('food.photo')}>
-        <div className="px-4 py-3">
-          {photoUrl && (
-            <img src={photoUrl} alt={name} className="mb-3 h-40 w-full rounded-lg object-cover" />
-          )}
-          <label className="flex min-h-[44px] cursor-pointer items-center justify-center rounded-lg border border-line bg-surface px-4 text-[15px]">
-            {photoUrl ? t('food.changePhoto') : t('food.addPhoto')}
-            <input type="file" accept="image/*" className="sr-only" onChange={handlePhoto} />
-          </label>
-        </div>
+        <PhotoField photo={photo} onChange={setPhoto} maxSide={FOOD_PHOTO_MAX} capture="environment" alt={name || t('food.photoOf')} />
       </Section>
 
       {error && <p className="mb-3 text-[14px] text-weights">{error}</p>}

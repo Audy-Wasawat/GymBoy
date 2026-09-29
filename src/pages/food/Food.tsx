@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { ChevronLeft, ChevronRight, Library, Plus } from 'lucide-react'
 import { Page, Section } from '../../components/Page'
+import { PhotoThumb } from '../../components/PhotoThumb'
 import { listFoodEntries } from '../../db/food'
 import { useSettings } from '../../db/useSettings'
 import type { FoodEntry } from '../../db/types'
@@ -111,6 +112,7 @@ export function Food() {
               to={`/food/entry/${e.id}`}
               className="flex min-h-[56px] items-center gap-3 border-b border-line px-4 py-2 last:border-b-0"
             >
+              <PhotoThumb blob={e.photo} alt={e.name} />
               <span className="flex-1">
                 <span className="block text-[16px]">{e.name}{e.portion !== 1 ? ` ×${e.portion}` : ''}</span>
                 <span className="block text-[13px] text-muted">{e.kcal} kcal · {Math.round(e.proteinG * 10) / 10} {t('food.gramUnit')} {t('food.protein')}</span>

@@ -520,6 +520,12 @@ const th = {
   'shoe.startKm': 'ระยะที่วิ่งมาแล้ว (กม.)',
   'shoe.editStart': 'แก้ระยะสะสมเดิม',
   'shoe.startInvalid': 'กรอกระยะเป็นตัวเลขตั้งแต่ 0 ขึ้นไป ทศนิยมไม่เกิน 2 ตำแหน่ง',
+  'photo.take': 'ถ่ายรูป',
+  'photo.choose': 'เลือกรูป',
+  'photo.remove': 'ลบรูป',
+  'photo.failed': 'ประมวลผลรูปไม่สำเร็จ ลองรูปอื่น',
+  'photo.working': 'กำลังลดขนาดรูป…',
+  'food.photoOf': 'รูปอาหาร',
 } as const
 
 export type StringKey = keyof typeof th
@@ -1046,6 +1052,12 @@ const en: Record<StringKey, string> = {
   'shoe.startKm': 'Distance already run (km)',
   'shoe.editStart': 'Edit starting distance',
   'shoe.startInvalid': 'Enter a distance of 0 or more, with at most 2 decimals.',
+  'photo.take': 'Take photo',
+  'photo.choose': 'Choose photo',
+  'photo.remove': 'Remove photo',
+  'photo.failed': 'Could not process the photo. Try another one.',
+  'photo.working': 'Shrinking the photo…',
+  'food.photoOf': 'Food photo',
 }
 
 export const strings = { th, en }

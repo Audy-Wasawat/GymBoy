@@ -39,6 +39,20 @@ export async function listFoodEntriesByRange(from: string, to: string): Promise<
 
 export const addFoodEntry = (entry: Omit<FoodEntry, 'id'>) => db.foodEntries.add(entry)
 
+/**
+ * Adds a new entry with its own copy of the photo. With `library`, the food is also saved to the
+ * library (photo included) and the entry is linked to it. Later library edits or deletes never
+ * touch the entry: it keeps its own name, values and photo.
+ */
+export async function saveNewFoodEntry(
+  entry: Omit<FoodEntry, 'id' | 'photo'>, photo: Blob | undefined, library?: Omit<Food, 'id' | 'photo'>
+) {
+  return db.transaction('rw', [db.foods, db.foodEntries], async () => {
+    const foodId = library ? await db.foods.add({ ...library, ...(photo ? { photo } : {}) }) : entry.foodId
+    return db.foodEntries.add({ ...entry, foodId, ...(photo ? { photo } : {}) })
+  })
+}
+
 export const updateFoodEntry = (id: number, patch: Partial<Omit<FoodEntry, 'id'>>) =>
   db.foodEntries.update(id, patch)
 

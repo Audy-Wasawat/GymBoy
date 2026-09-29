@@ -225,7 +225,7 @@ function DayPopup({ data, onClose }: { data: DaySummaryPopup; onClose: () => voi
             {data.hasWeights && <div><span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-weights" />{t('grid.weights')}</div>}
             {data.hasRun && <div><span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-running" />{t('grid.running')}</div>}
             {data.hasOther && <div><span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-other" />{t('more.activities')}</div>}
-            {kcal > 0 && <div className="text-muted">{kcal} kcal · {Math.round(protein * 10) / 10} g protein</div>}
+            {kcal > 0 && <div className="text-muted">{kcal} kcal · {Math.round(protein * 10) / 10} {t('food.gramUnit')} {t('food.protein')}</div>}
           </div>
         )}
       </div>

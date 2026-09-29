@@ -7,22 +7,32 @@ const SCHEMA_VERSION = 2
 const APP_VERSION = '0.1.0'
 const FORMAT = 'gymboy-backup'
 
-async function blobToDataUrl(blob: Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = reject
-    reader.readAsDataURL(blob)
-  })
+export async function blobToDataUrl(blob: Blob): Promise<string> {
+  const bytes = new Uint8Array(await blob.arrayBuffer())
+  let binary = ''
+  // In pieces, so a large photo does not overflow the argument limit of fromCharCode.
+  for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000))
+  return `data:${blob.type || 'image/jpeg'};base64,${btoa(binary)}`
 }
 
-function dataUrlToBlob(dataUrl: string): Blob {
+export function dataUrlToBlob(dataUrl: string): Blob {
   const [header, b64] = dataUrl.split(',')
   const mime = header.match(/:(.*?);/)?.[1] ?? 'image/jpeg'
   const bytes = atob(b64)
   const arr = new Uint8Array(bytes.length)
   for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i)
   return new Blob([arr], { type: mime })
+}
+
+/** A stored photo from a backup: a data URL becomes a Blob again; anything else (missing, or a Blob that JSON turned into {}) is dropped. */
+const photoFromBackup = (photo: unknown): Blob | undefined =>
+  typeof photo === 'string' && photo.startsWith('data:') ? dataUrlToBlob(photo) : undefined
+
+/** A row from a backup with its photo restored, or without the field when there is none. */
+function restorePhoto(row: Record<string, unknown>): Record<string, unknown> {
+  const { photo, ...rest } = row
+  const blob = photoFromBackup(photo)
+  return blob ? { ...rest, photo: blob } : rest
 }
 
 export interface BackupCounts {
@@ -56,6 +66,10 @@ export async function createBackup(): Promise<Blob> {
   const bodyWithPhotos = await Promise.all(bodyEntries.map(async (e) => ({
     ...e, photo: e.photo ? await blobToDataUrl(e.photo) : undefined
   })))
+  // Food entries keep their own photo; a Blob would be written as {} by JSON.stringify.
+  const foodEntriesWithPhotos = await Promise.all(foodEntries.map(async (e) => ({
+    ...e, photo: e.photo ? await blobToDataUrl(e.photo) : undefined
+  })))
 
   const payload = {
     format: FORMAT,
@@ -67,7 +81,7 @@ export async function createBackup(): Promise<Blob> {
     runs, runTemplates, shoes,
     activities,
     foods: foodsWithPhotos,
-    foodEntries,
+    foodEntries: foodEntriesWithPhotos,
     bodyEntries: bodyWithPhotos,
     settings
   }
@@ -110,14 +124,9 @@ export async function restoreBackup(data: Record<string, unknown[]>): Promise<vo
   )
 
   // Convert photo data URLs back to Blobs
-  const foods = (data.foods as Array<Record<string, unknown>>).map((f) => ({
-    ...f,
-    photo: f.photo ? dataUrlToBlob(f.photo as string) : undefined
-  }))
-  const bodyEntries = (data.bodyEntries as Array<Record<string, unknown>>).map((e) => ({
-    ...e,
-    photo: e.photo ? dataUrlToBlob(e.photo as string) : undefined
-  }))
+  const foods = (data.foods as Array<Record<string, unknown>>).map(restorePhoto)
+  const foodEntries = (data.foodEntries as Array<Record<string, unknown>>).map(restorePhoto)
+  const bodyEntries = (data.bodyEntries as Array<Record<string, unknown>>).map(restorePhoto)
 
   await db.transaction('rw', [
     db.exercises, db.programs, db.programDays, db.programExercises,
@@ -145,7 +154,7 @@ export async function restoreBackup(data: Record<string, unknown[]>): Promise<vo
       db.shoes.bulkAdd(data.shoes as never[]),
       db.activities.bulkAdd(data.activities as never[]),
       db.foods.bulkAdd(foods as never[]),
-      db.foodEntries.bulkAdd(data.foodEntries as never[]),
+      db.foodEntries.bulkAdd(foodEntries as never[]),
       db.bodyEntries.bulkAdd(bodyEntries as never[]),
       db.settings.bulkAdd(data.settings as never[])
     ])
