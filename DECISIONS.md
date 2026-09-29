@@ -31,6 +31,12 @@ One line per choice made where SPEC.md and AUTOPILOT.md were silent, with the re
 - Summary and grid are on one page (`/more/summary`) — no separate grid route needed.
 
 ## Phase 7: Data
+- Full backup serialises photos to data URLs (FileReader); restore converts back to Blobs.
+- `shareOrDownload`: tries `navigator.share({files})` first; falls back to a temporary `<a download>` link; AI export falls back to clipboard.
+- BrowserBanner dismissed via sessionStorage (shows again after reload per AUTOPILOT spec — "every launch").
+- Confirmation word: "ลบ" in Thai mode, "DELETE" in English mode.
+- No `db.version` bump needed: no new stores or index changes.
+- `eraseEverything` wipes all stores then re-seeds and re-creates settings in one flow.
 
 ## Phase 8: Muscle picker
 

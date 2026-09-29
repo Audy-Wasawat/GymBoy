@@ -3,9 +3,9 @@
 Kept current so a compacted or restarted session can resume. See AUTOPILOT.md for the plan.
 
 ## Status
-- **Current phase:** 6 (Summary, daily grid) — done.
-- **Last passing build:** Phase 6 — 47 tests green.
-- **Next:** Phase 7 — Backup, restore, AI export, browser-tab banner, data deletion.
+- **Current phase:** 7 (Backup, restore, AI export, banner, data deletion) — done.
+- **Last passing build:** Phase 7 — 52 tests green.
+- **Next:** Phase 8 — Muscle picker on the body model.
 
 ## Dev/preview servers
 - A Vite dev server was started on http://localhost:5173 for the qa/mobile agents (HashRouter). Remember to stop it (`npm run dev` background task) before finishing the run.
@@ -21,6 +21,6 @@ Kept current so a compacted or restarted session can resume. See AUTOPILOT.md fo
 - [x] Phase 4 — Running
 - [x] Phase 5 — Food, other activities, body
 - [x] Phase 6 — Today details, summary, daily grid
-- [ ] Phase 7 — Backup, restore, AI export, banner, data deletion
+- [x] Phase 7 — Backup, restore, AI export, banner, data deletion
 - [ ] Phase 8 — Muscle picker on the body model
 - [ ] Final pass

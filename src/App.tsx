@@ -1,9 +1,7 @@
 import { HashRouter, Outlet, Route, Routes } from 'react-router-dom'
 import { TabBar } from './components/TabBar'
-import { useT } from './i18n/useT'
 import { More } from './pages/More'
 import { SettingsPage } from './pages/Settings'
-import { Soon } from './pages/Soon'
 import { Today } from './pages/Today'
 import { DayEditor } from './pages/weights/DayEditor'
 import { ExerciseDetail } from './pages/weights/ExerciseDetail'
@@ -30,6 +28,8 @@ import { Activities, ActivityEditor } from './pages/Activities'
 import { Body } from './pages/body/Body'
 import { BodyEntryEditor } from './pages/body/BodyEntryEditor'
 import { Summary } from './pages/Summary'
+import { BrowserBanner } from './components/BrowserBanner'
+import { BackupPage } from './pages/Backup'
 
 function Shell() {
   return (
@@ -37,12 +37,12 @@ function Shell() {
       <Outlet />
       <TabBar />
       <StaleSessionPrompt />
+      <BrowserBanner />
     </div>
   )
 }
 
 function AppRoutes() {
-  const t = useT()
   return (
     <Routes>
       <Route element={<Shell />}>
@@ -78,7 +78,7 @@ function AppRoutes() {
         <Route path="more/activities/new" element={<ActivityEditor />} />
         <Route path="more/activities/:id" element={<ActivityEditor />} />
         <Route path="more/shoes" element={<Shoes />} />
-        <Route path="more/backup" element={<Soon title={t('more.backup')} back="/more" />} />
+        <Route path="more/backup" element={<BackupPage />} />
         <Route path="more/settings" element={<SettingsPage />} />
       </Route>
     </Routes>
