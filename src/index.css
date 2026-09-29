@@ -1,0 +1,48 @@
+@import '@fontsource/ibm-plex-sans-thai/400.css';
+@import '@fontsource/ibm-plex-sans-thai/500.css';
+@import '@fontsource/ibm-plex-sans-thai/600.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Concrete floor by day, graphite and chalk by night. Accents are competition plate colours,
+   one per category: weights red, running blue, other sports yellow, food green. */
+:root {
+  --bg: 233 232 228;
+  --surface: 248 247 244;
+  --ink: 28 29 31;
+  --muted: 104 105 110;
+  --line: 211 210 205;
+  --plate-red: 196 48 43;
+  --plate-blue: 38 90 172;
+  --plate-yellow: 196 138 10;
+  --plate-green: 44 128 70;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: 22 23 26;
+    --surface: 33 34 38;
+    --ink: 236 235 230;
+    --muted: 154 154 160;
+    --line: 51 52 58;
+    --plate-red: 232 84 76;
+    --plate-blue: 96 146 230;
+    --plate-yellow: 236 184 58;
+    --plate-green: 84 186 114;
+    color-scheme: dark;
+  }
+}
+
+html, body, #root { height: 100%; }
+body {
+  @apply bg-bg text-ink font-sans antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+  font-feature-settings: 'tnum';
+}
+button, a, input, select { touch-action: manipulation; }
+:focus-visible { outline: 2px solid rgb(var(--plate-blue)); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

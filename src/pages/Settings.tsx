@@ -1,0 +1,92 @@
+import { useEffect, useState } from 'react'
+import { Page, Row, Section } from '../components/Page'
+import { Segmented } from '../components/Segmented'
+import { updateSettings } from '../db/db'
+import { useSettings } from '../db/useSettings'
+import type { Lang, WeightUnit } from '../db/types'
+import { useT } from '../i18n/useT'
+import { checkPersistence, isStandalone, requestPersistence, storageUsageMB, type PersistState } from '../lib/storage'
+
+const REST_OPTIONS = [60, 90, 120, 150, 180, 240]
+
+export function SettingsPage() {
+  const t = useT()
+  const settings = useSettings()
+  const [persist, setPersist] = useState<PersistState>()
+  const [usedMB, setUsedMB] = useState<number>()
+
+  useEffect(() => {
+    checkPersistence().then(setPersist)
+    storageUsageMB().then(setUsedMB)
+  }, [])
+
+  const persistText =
+    persist === 'persisted' ? t('settings.persisted')
+    : persist === 'not-persisted' ? t('settings.notPersisted')
+    : t('settings.persistUnsupported')
+
+  return (
+    <Page title={t('settings.title')} back="/more">
+      <Section>
+        <Row className="justify-between">
+          <span>{t('settings.language')}</span>
+          <Segmented<Lang>
+            label={t('settings.language')}
+            value={settings.language}
+            onChange={(language) => updateSettings({ language })}
+            options={[{ value: 'th', label: 'ไทย' }, { value: 'en', label: 'EN' }]}
+          />
+        </Row>
+        <Row className="justify-between">
+          <span>{t('settings.weightUnit')}</span>
+          <Segmented<WeightUnit>
+            label={t('settings.weightUnit')}
+            value={settings.weightUnit}
+            onChange={(weightUnit) => updateSettings({ weightUnit })}
+            options={[{ value: 'kg', label: 'kg' }, { value: 'lb', label: 'lb' }]}
+          />
+        </Row>
+        <Row className="justify-between">
+          <label htmlFor="rest">{t('settings.restTime')}</label>
+          <select
+            id="rest"
+            value={settings.defaultRestSec}
+            onChange={(e) => updateSettings({ defaultRestSec: Number(e.target.value) })}
+            className="min-h-[40px] rounded-lg border border-line bg-bg px-3 text-[16px]"
+          >
+            {REST_OPTIONS.map((s) => (
+              <option key={s} value={s}>{s} {t('settings.seconds')}</option>
+            ))}
+          </select>
+        </Row>
+      </Section>
+      <p className="-mt-3 mb-5 px-1 text-[13px] text-muted">{t('settings.weightUnitNote')}</p>
+
+      <Section title={t('settings.storage')}>
+        <Row>
+          <span className="flex-1 text-[15px]">{persistText}</span>
+          {persist === 'not-persisted' && (
+            <button
+              onClick={() => requestPersistence().then(setPersist)}
+              className="min-h-[36px] rounded-lg border border-line px-3 text-[14px] font-semibold"
+            >
+              {t('settings.requestPersist')}
+            </button>
+          )}
+        </Row>
+        {usedMB !== undefined && (
+          <Row className="justify-between text-[15px]">
+            <span>{t('settings.used')}</span>
+            <span className="text-muted">{usedMB} MB</span>
+          </Row>
+        )}
+      </Section>
+
+      <Section title={t('settings.install')}>
+        <Row className="text-[15px]">{isStandalone() ? t('settings.installed') : t('settings.notInstalled')}</Row>
+      </Section>
+
+      <p className="px-1 text-[13px] text-muted">{t('settings.version')} 0.1.0</p>
+    </Page>
+  )
+}
