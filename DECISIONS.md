@@ -39,6 +39,10 @@ One line per choice made where SPEC.md and AUTOPILOT.md were silent, with the re
 - `eraseEverything` wipes all stores then re-seeds and re-creates settings in one flow.
 
 ## Phase 8: Muscle picker
+- `BodyModelPicker` wraps an interactive SVG figure + the existing `MusclePicker` chips (accessible fallback).
+- Display model (`BodyModel`) remains visible on the ExerciseDetail read-only view; `BodyModelPicker` replaces it only in edit mode.
+- SVG shapes are inline path/ellipse data matching the existing `BodyModel` layout; regions click to cycle none → primary → secondary → none.
+- No `db.version` bump needed; no new stores or index changes.
 
 ## Suggestions
 - (none yet)

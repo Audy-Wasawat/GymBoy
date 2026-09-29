@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { MusclePicker } from '../../components/Muscles'
+import { BodyModelPicker } from '../../components/BodyModelPicker'
 import { Page } from '../../components/Page'
 import { db } from '../../db/db'
 import type { BodyPart, Equipment, Muscle } from '../../db/types'
@@ -46,7 +46,7 @@ export function ExerciseNew() {
       <section className="mb-5">
         <h2 className="mb-2 text-[15px] font-semibold text-muted">{t('ex.muscles')}</h2>
         <div className="rounded-xl border border-line bg-surface p-4">
-          <MusclePicker primary={primary} secondary={secondary} onChange={(p, s) => { setPrimary(p); setSecondary(s) }} />
+          <BodyModelPicker primary={primary} secondary={secondary} onChange={(p, s) => { setPrimary(p); setSecondary(s) }} />
         </div>
       </section>
 

@@ -3,7 +3,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { ChevronRight, Copy, LineChart } from 'lucide-react'
 import { BodyModel } from '../../components/BodyModel'
-import { MuscleList, MusclePicker } from '../../components/Muscles'
+import { BodyModelPicker } from '../../components/BodyModelPicker'
+import { MuscleList } from '../../components/Muscles'
 import { Page, Section } from '../../components/Page'
 import { db } from '../../db/db'
 import type { Exercise } from '../../db/types'
@@ -48,15 +49,17 @@ export function ExerciseDetail() {
           </button>
         </div>
         <div className="rounded-xl border border-line bg-surface p-4">
-          <BodyModel primary={ex.primaryMuscles} secondary={ex.secondaryMuscles} height={240} className="mx-auto mb-4 block" />
           {editingMuscles ? (
-            <MusclePicker
+            <BodyModelPicker
               primary={ex.primaryMuscles}
               secondary={ex.secondaryMuscles}
               onChange={(primaryMuscles, secondaryMuscles) => update({ primaryMuscles, secondaryMuscles })}
             />
           ) : (
-            <MuscleList primary={ex.primaryMuscles} secondary={ex.secondaryMuscles} />
+            <>
+              <BodyModel primary={ex.primaryMuscles} secondary={ex.secondaryMuscles} height={240} className="mx-auto mb-4 block" />
+              <MuscleList primary={ex.primaryMuscles} secondary={ex.secondaryMuscles} />
+            </>
           )}
         </div>
       </section>

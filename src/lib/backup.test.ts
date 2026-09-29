@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach } from 'vitest'
-import { clearHistory, eraseEverything, getDeleteCounts, aiPeriodPreset } from './backup'
+import { clearHistory, eraseEverything, aiPeriodPreset } from './backup'
 import { db, ensureSettings } from '../db/db'
 import { resetDb } from '../test/resetDb'
 import { seedExercises } from '../db/seed'
