@@ -201,13 +201,13 @@ Each entry records date and body weight, with an optional progress photo. A weig
 ## Build phases
 
 1. [done] Project setup: PWA, Dexie schema, Thai/English, theme, tabs, Today, Settings.
-2. Weights core: seeded exercise library (249, no images), the body model drawing (front/back SVG with highlighting), custom exercises and muscle editing, programs, session logging (sets, warm-ups, failure, left/right, timed, notes) and the rest timer. At the end of phase 2 the Today screen shows the body model for today's logged exercises.
-3. History and progress: per-exercise history, charts, PR badge and weight-increase hint.
-4. Running: run log (including optional heart rate and treadmill/outdoor tag), interval plan vs actual, templates, shoes, charts.
-5. Food, other activities and body tracking.
-6. Today screen details, weekly/monthly summary with the activity grid, and goals.
-7. Full backup, restore, browser-tab banner and AI export.
-8. Body model: tap regions on the model to mark muscles primary or secondary (replaces the chip picker).
+2. [done] Weights core: seeded exercise library (249, no images), the body model drawing (front/back SVG with highlighting), custom exercises and muscle editing, programs, session logging (sets, warm-ups, failure, left/right, timed, notes) and the rest timer. At the end of phase 2 the Today screen shows the body model for today's logged exercises.
+3. [done] History and progress: per-exercise history, charts, PR badge and weight-increase hint.
+4. [done] Running: run log (including optional heart rate and treadmill/outdoor tag), interval plan vs actual, templates, shoes, charts.
+5. [done] Food, other activities and body tracking.
+6. [done] Today screen details, weekly/monthly summary with the activity grid, and goals.
+7. [done] Full backup, restore, browser-tab banner and AI export.
+8. [done] Body model: tap regions on the model to mark muscles primary or secondary (replaces the chip picker).
 
 Phase 2 draws the body model for display; picking muscles uses chips until phase 8 adds tapping on the model.
 
