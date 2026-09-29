@@ -11,11 +11,15 @@ export function parseCount(text: string): number | undefined {
   return n === undefined ? undefined : Math.round(n)
 }
 
-/** Accepts plain seconds ("45") or minutes:seconds ("1:30"). */
+/** Accepts plain seconds ("45") or minutes:seconds ("1:30"); the seconds part must be 0-59. */
 export function parseDuration(text: string): number | undefined {
   const t = text.trim()
   const m = /^(\d+):(\d{1,2})$/.exec(t)
-  if (m) return Number(m[1]) * 60 + Number(m[2])
+  if (m) {
+    const secs = Number(m[2])
+    if (secs > 59) return undefined
+    return Number(m[1]) * 60 + secs
+  }
   return parseCount(t)
 }
 

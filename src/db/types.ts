@@ -85,11 +85,21 @@ export interface SetDraft {
   toFailure: boolean
 }
 
+export type Surface = 'treadmill' | 'outdoor'
+/** A rep is planned either by distance (distanceM) or by time (durationSec), never both. */
 export interface IntervalPlan { reps: number; distanceM?: number; durationSec?: number; targetPaceSecPerKm?: number; restSec?: number }
-export interface IntervalRepResult { rep: number; durationSec?: number; paceSecPerKm?: number }
+/**
+ * One rep's actual result. For a distance-based plan the rep time (durationSec) is entered;
+ * for a time-based plan the rep distance (distanceM) is entered. paceSecPerKm is calculated and
+ * stored so history, charts and the AI export need no recomputation.
+ */
+export interface IntervalRepResult { rep: number; durationSec?: number; distanceM?: number; paceSecPerKm?: number }
 export interface RunLog {
   id?: number; date: string; type: RunType; distanceKm: number; durationSec: number
   shoeId?: number; note?: string; plan?: IntervalPlan; repResults?: IntervalRepResult[]
+  /** Optional whole beats per minute, 30-250. */
+  avgHr?: number; maxHr?: number
+  surface?: Surface
 }
 export interface RunTemplate { id?: number; name: string; type: RunType; plan: IntervalPlan }
 export interface Shoe { id?: number; name: string; retired: boolean }

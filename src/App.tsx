@@ -17,6 +17,11 @@ import { Programs } from './pages/weights/Programs'
 import { SessionPage } from './pages/weights/Session'
 import { StaleSessionPrompt } from './pages/weights/StaleSessionPrompt'
 import { Weights } from './pages/weights/Weights'
+import { Running } from './pages/running/Running'
+import { RunEditor } from './pages/running/RunEditor'
+import { RunCharts } from './pages/running/RunCharts'
+import { Templates } from './pages/running/Templates'
+import { Shoes } from './pages/Shoes'
 
 function Shell() {
   return (
@@ -45,13 +50,17 @@ function AppRoutes() {
         <Route path="weights/programs/:id" element={<ProgramDetail />} />
         <Route path="weights/programs/:id/days/:dayId" element={<DayEditor />} />
         <Route path="weights/session" element={<SessionPage />} />
-        <Route path="running" element={<Soon title={t('running.title')} />} />
+        <Route path="running" element={<Running />} />
+        <Route path="running/new" element={<RunEditor />} />
+        <Route path="running/charts" element={<RunCharts />} />
+        <Route path="running/templates" element={<Templates />} />
+        <Route path="running/:id" element={<RunEditor />} />
         <Route path="food" element={<Soon title={t('food.title')} />} />
         <Route path="more" element={<More />} />
         <Route path="more/summary" element={<Soon title={t('more.summary')} back="/more" />} />
         <Route path="more/body" element={<Soon title={t('more.body')} back="/more" />} />
         <Route path="more/activities" element={<Soon title={t('more.activities')} back="/more" />} />
-        <Route path="more/shoes" element={<Soon title={t('more.shoes')} back="/more" />} />
+        <Route path="more/shoes" element={<Shoes />} />
         <Route path="more/backup" element={<Soon title={t('more.backup')} back="/more" />} />
         <Route path="more/settings" element={<SettingsPage />} />
       </Route>

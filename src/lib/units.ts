@@ -11,7 +11,9 @@ export const fromDisplayWeight = (value: number, unit: WeightUnit) =>
   unit === 'kg' ? value : value / LB_PER_KG
 
 export const formatPace = (secPerKm: number) => {
-  const m = Math.floor(secPerKm / 60)
-  const s = Math.round(secPerKm % 60)
+  // Round the total first, then split, so a seconds field that rounds to 60 carries into the minute.
+  const total = Math.round(secPerKm)
+  const m = Math.floor(total / 60)
+  const s = total % 60
   return `${m}:${String(s).padStart(2, '0')}`
 }
