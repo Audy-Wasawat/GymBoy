@@ -1,7 +1,7 @@
 import type { Table } from 'dexie'
 import { db } from './db'
 import type { BodyPart, Exercise } from './types'
-import { BODY_PARTS } from '../lib/exercises'
+import { BODY_PARTS, bodyPartOf } from '../lib/exercises'
 
 /** Defaults when an exercise is added to a program day; every value can be edited per exercise. */
 export const DAY_DEFAULTS = { sets: 2, repMin: 6, repMax: 8, timedMin: 30, timedMax: 60 }
@@ -63,7 +63,7 @@ export async function addDayExercise(dayId: number, ex: Exercise, restSec: numbe
 export async function dayBodyParts(dayId: number): Promise<BodyPart[]> {
   const rows = await db.programExercises.where('dayId').equals(dayId).toArray()
   const exs = await db.exercises.bulkGet(rows.map((r) => r.exerciseId))
-  const parts = new Set(exs.map((e) => e?.bodyPart))
+  const parts = new Set(exs.map((e) => (e ? bodyPartOf(e) : undefined)))
   return BODY_PARTS.filter((p) => parts.has(p))
 }
 

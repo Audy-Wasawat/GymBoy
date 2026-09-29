@@ -10,6 +10,7 @@ import { db } from '../../db/db'
 import type { Equipment } from '../../db/types'
 import { useT } from '../../i18n/useT'
 import { BODY_PARTS, EQUIPMENT, groupOf, type LibraryGroup } from '../../lib/exercises'
+import { searchExercises } from '../../lib/exerciseSearch'
 
 const GROUPS: LibraryGroup[] = [...BODY_PARTS, 'mine']
 
@@ -32,11 +33,9 @@ export function ExerciseLibrary() {
 
   const groups = useMemo(() => {
     if (!all) return []
-    const needle = q.trim().toLowerCase()
-    const shown = all
+    // Search order (name matches first) is kept inside each group.
+    const shown = searchExercises(all, q)
       .filter((e) => (!part || groupOf(e) === part) && (!equip || e.equipment === equip))
-      .filter((e) => !needle || e.name.toLowerCase().includes(needle))
-      .sort((a, b) => a.name.localeCompare(b.name))
     return GROUPS.map((g) => ({ group: g, items: shown.filter((e) => groupOf(e) === g) })).filter((g) => g.items.length > 0)
   }, [all, q, part, equip])
 

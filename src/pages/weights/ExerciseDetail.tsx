@@ -7,6 +7,7 @@ import { BodyModelPicker } from '../../components/BodyModelPicker'
 import { MuscleList } from '../../components/Muscles'
 import { Page, Section } from '../../components/Page'
 import { db } from '../../db/db'
+import { recomputeAllBodyParts } from '../../db/sessions'
 import type { Exercise } from '../../db/types'
 import { useT } from '../../i18n/useT'
 import { DetailFields, LoggingFields } from './ExerciseFields'
@@ -27,7 +28,11 @@ export function ExerciseDetail() {
   if (ex === null) return <Page title={t('ex.notFound')} back={BACK}>{null}</Page>
 
   // Edits change the library entry only; sessions keep the values they copied when logged.
-  const update = (patch: Partial<Exercise>) => db.exercises.update(id, patch)
+  const update = async (patch: Partial<Exercise>) => {
+    await db.exercises.update(id, patch)
+    // Session labels use the exercise's body part, which follows its muscles.
+    if ('bodyPart' in patch || 'primaryMuscles' in patch) await recomputeAllBodyParts()
+  }
 
   const duplicate = async () => {
     const { id: _id, seedKey: _seedKey, ...rest } = ex

@@ -505,6 +505,13 @@ const th = {
   'sum.nextMonth': 'เดือนถัดไป',
   'error.generic': 'เกิดข้อผิดพลาด ลองอีกครั้ง',
   'backup.restoreFailed': 'กู้คืนไม่สำเร็จ ข้อมูลเดิมยังอยู่ครบ',
+  'pick.create': 'สร้างท่าใหม่',
+  'pick.createAndPick': 'บันทึกและเลือกท่านี้',
+  'ex.dupTitle': 'มีท่าชื่อนี้อยู่แล้ว',
+  'ex.dupBody': 'ท่า “{name}” มีอยู่ในคลังแล้ว จะใช้ท่านั้น หรือสร้างท่าใหม่ต่อไป?',
+  'ex.dupUse': 'ใช้ท่าที่มีอยู่',
+  'ex.dupCreate': 'สร้างใหม่ต่อไป',
+  'ex.dupBack': 'กลับไปแก้ชื่อ',
 } as const
 
 export type StringKey = keyof typeof th
@@ -1016,6 +1023,13 @@ const en: Record<StringKey, string> = {
   'sum.nextMonth': 'Next month',
   'error.generic': 'Something went wrong. Please try again.',
   'backup.restoreFailed': 'Restore failed. Your existing data is unchanged.',
+  'pick.create': 'Create new exercise',
+  'pick.createAndPick': 'Save and use this exercise',
+  'ex.dupTitle': 'An exercise with this name exists',
+  'ex.dupBody': '“{name}” is already in the library. Use it, or create a new one anyway?',
+  'ex.dupUse': 'Use the existing one',
+  'ex.dupCreate': 'Create anyway',
+  'ex.dupBack': 'Go back and rename',
 }
 
 export const strings = { th, en }

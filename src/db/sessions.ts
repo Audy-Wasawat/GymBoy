@@ -2,7 +2,7 @@ import { db } from './db'
 import { nextOrder } from './programs'
 import type { BodyPart, Exercise, SessionExercise, SetDraft, SetLog, SetType, WeightUnit } from './types'
 import { localDate } from '../lib/dates'
-import { BODY_PARTS } from '../lib/exercises'
+import { BODY_PARTS, bodyPartOf } from '../lib/exercises'
 import { formatDuration, parseCount, parseDecimal, parseDuration } from '../lib/numbers'
 import { fromDisplayWeight, toDisplayWeight } from '../lib/units'
 
@@ -87,10 +87,39 @@ export async function refreshBodyParts(sessionId: number) {
   for (const se of ses) {
     const worked = await db.sets.where('sessionExerciseId').equals(se.id!).filter((s) => s.type === 'working').count()
     if (!worked) continue
-    const part = (await db.exercises.get(se.exerciseId))?.bodyPart
-    if (part) parts.add(part)
+    const ex = await db.exercises.get(se.exerciseId)
+    const part = ex ? bodyPartOf(ex) : undefined
+    if (part && part !== 'mine') parts.add(part)
   }
   await db.sessions.update(sessionId, { bodyParts: BODY_PARTS.filter((p) => parts.has(p)) })
+}
+
+/**
+ * Works every session's body parts out again from the exercises as they are now. A custom
+ * exercise's body part comes from its muscles, so editing an exercise (or an older session that
+ * predates this rule) must not leave a stale label. Only sessions whose value changes are written.
+ */
+export async function recomputeAllBodyParts() {
+  await db.transaction('rw', [db.sessions, db.sessionExercises, db.sets, db.exercises], async () => {
+    const [sessions, ses, exercises] = await Promise.all([
+      db.sessions.toArray(), db.sessionExercises.toArray(), db.exercises.toArray()
+    ])
+    const withWorking = new Set<number>()
+    await db.sets.filter((s) => s.type === 'working').each((s) => withWorking.add(s.sessionExerciseId))
+    const partOf = new Map(exercises.map((e) => [e.id!, bodyPartOf(e)]))
+    const bySession = new Map<number, Set<BodyPart>>()
+    for (const se of ses) {
+      if (!withWorking.has(se.id!)) continue
+      const part = partOf.get(se.exerciseId)
+      if (!part || part === 'mine') continue
+      if (!bySession.has(se.sessionId)) bySession.set(se.sessionId, new Set())
+      bySession.get(se.sessionId)!.add(part)
+    }
+    for (const s of sessions) {
+      const next = BODY_PARTS.filter((p) => bySession.get(s.id!)?.has(p))
+      if (next.join() !== (s.bodyParts ?? []).join()) await db.sessions.update(s.id!, { bodyParts: next })
+    }
+  })
 }
 
 type SetValues = Pick<SetLog, 'weightKg' | 'reps' | 'repsLeft' | 'repsRight' | 'durationSec' | 'durationLeftSec' | 'durationRightSec'>
