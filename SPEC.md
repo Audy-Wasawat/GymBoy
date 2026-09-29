@@ -50,16 +50,34 @@ Programs are reusable, editable templates; a session records what was actually d
 
 **Programs**
 
+- Programs are optional: training by feel with empty sessions needs no program at all.
 - Several programs can be stored (for example "Upper/Lower Sep"). One is active at a time and stays active until the user switches it; there is no end date.
-- A program has named days (Upper A, Lower A, ...). Each day lists the body parts trained and an ordered list of exercises.
+- Programs and days are free-form, with no built-in templates: the user names each day and picks its exercises (a day may cover a single body part, for example "Chest only"). Days are ordered, and each day has an ordered list of exercises. A day's body parts are worked out from its exercises, never picked by hand.
 - Each exercise in a day has a target number of sets, a target rep range (for example 6-8) and a rest time in seconds (default 90 s app-wide). For timed exercises the target range is in seconds (for example 30-45 s).
+- An exercise added to a day starts at 2 sets of 6-8 reps (timed: 30-60 s) with the app-wide rest time; each value can be edited per exercise.
+- Deleting a program or a day never changes sessions already logged.
 
 **Session flow**
 
-1. Start a session and choose a day from the active program (no automatic suggestion), or start an empty session and add exercises as you go.
-2. The day's exercises appear with last session's sets (weight x reps) beside the inputs and a "copy previous set" button.
-3. Log each set: weight, reps, and a "to failure" tick. Each exercise also has a free-text note. Timed exercises log a duration in seconds instead of reps (typing mm:ss is also accepted), with an optional weight field for added load; there is no hold timer.
-4. Changing, adding or removing exercises during a session affects that session only; the program stays as it was.
+1. Start a session from a day of the active program (no automatic suggestion; to train another program, switch the active program first), or start an empty session with one tap. The Weights screen always offers the empty session, with or without programs. Only one session is open at a time.
+2. Exercises can be added from the library at any time during a session: search, filter by body part and by equipment, with the 10 most recently used exercises listed first.
+3. Each exercise shows the previous session's working sets (weight x reps, in the chosen unit) beside the matching rows, set by set; "previous" is the most recent other session with that exercise, whether or not it came from a program. Rows beyond the previous session's count show nothing. Tapping the previous value copies it into the row (or copies the set above when there is no previous value).
+4. Log each set: weight, reps, and a "to failure" tick, then save it with ✓. Each exercise also has a free-text note. Timed exercises log a duration in seconds instead of reps (typing mm:ss is also accepted), with an optional weight field for added load; there is no hold timer. Number fields accept "," as the decimal mark.
+5. Changing, adding or removing exercises during a session affects that session only; the program stays as it was.
+6. A session's date is the device's local date when it starts. A session without a program day is named after the body parts actually trained (for example "Chest, Shoulders") on every screen that shows sessions. Body parts count only exercises with at least one saved working set.
+
+**Drafts and recovery**
+
+- Values typed into a row but not yet saved with ✓ are kept in the database as drafts, so they survive iOS closing the app in the background or switching apps.
+- Drafts never count as logged sets: they do not affect "previous", PRs or the Today muscle highlight.
+
+**Finishing a session**
+
+- Finish: if any row has something typed but is not saved, the app asks "Save" or "Discard"; nothing is dropped silently. Completely empty rows are dropped without asking, and rows missing a required value cannot be saved (the prompt says how many will be dropped).
+- Exercises left with no saved sets are removed from the session when it finishes, after a confirmation listing them.
+- A session with no saved sets at all is deleted when finished, after a confirmation.
+- Cancel session deletes the open session and its sets, after a confirmation.
+- If a session from an earlier day is still open when the app is opened (or brought back), the app asks "Finish" or "Keep going". Finishing follows the rules above; keeping going leaves the session on its original date.
 
 **Set types and left/right**
 
@@ -71,8 +89,10 @@ Programs are reusable, editable templates; a session records what was actually d
 
 **Rest timer**
 
-- Starts when a set is completed, using the exercise's rest time (else the default), and can be adjusted on the spot.
-- It stores the end time rather than counting down, so it is correct after the screen locks; the screen is kept awake during a session where iOS allows (Screen Wake Lock), and the alarm sound plays only while the app is open.
+- Starts only when a working set is saved with ✓ (never after a warm-up set), using the exercise's rest time (else the default). It can be adjusted by ±15 s or skipped.
+- When the time is up the bar turns red and flashes. It sits above the tab bar and hides while a field is being typed in, so it never covers an input.
+- iOS only allows sound after a tap, so sound is unlocked on the tap that saves a set.
+- It stores the end time rather than counting down, so it is correct after the screen locks; the screen is kept awake during a session where iOS allows (Screen Wake Lock, requested again whenever the app returns to the foreground; if it is unavailable the app carries on), and the alarm sound plays only while the app is open.
 
 **Progress signals**
 

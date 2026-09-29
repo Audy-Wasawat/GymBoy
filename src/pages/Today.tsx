@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Dumbbell, Footprints, Plus, UtensilsCrossed } from 'lucide-react'
+import { BodyModel } from '../components/BodyModel'
 import { Page, Section } from '../components/Page'
 import { db } from '../db/db'
+import type { Muscle } from '../db/types'
 import { useSettings } from '../db/useSettings'
 import { useT } from '../i18n/useT'
 import { localDate, startOfWeek } from '../lib/dates'
+import { sessionTitle } from '../lib/sessionTitle'
 import { round } from '../lib/units'
 
 function useTodayData() {
@@ -32,6 +35,24 @@ function useTodayData() {
   }, [])
 }
 
+/**
+ * Muscles of every exercise with at least one saved working set today, including exercises added
+ * to a session on the spot. Drafts and warm-up-only exercises do not count. Primary wins over secondary.
+ */
+function useTodayMuscles() {
+  return useLiveQuery(async () => {
+    const sets = await db.sets.where('date').equals(localDate()).filter((s) => s.type === 'working').toArray()
+    const exs = await db.exercises.bulkGet([...new Set(sets.map((s) => s.exerciseId))])
+    const primary = new Set<Muscle>()
+    const secondary = new Set<Muscle>()
+    for (const e of exs) {
+      e?.primaryMuscles.forEach((m) => primary.add(m))
+      e?.secondaryMuscles.forEach((m) => secondary.add(m))
+    }
+    return { primary: [...primary], secondary: [...secondary].filter((m) => !primary.has(m)) }
+  }, [])
+}
+
 function Stat({ label, value, goal, unit }: { label: string; value: number; goal?: number; unit: string }) {
   return (
     <div className="flex-1 px-4 py-3">
@@ -48,6 +69,7 @@ export function Today() {
   const t = useT()
   const { goals, language } = useSettings()
   const data = useTodayData()
+  const muscles = useTodayMuscles()
   const dateLabel = new Date().toLocaleDateString(language === 'th' ? 'th-TH' : 'en-GB', {
     weekday: 'long', day: 'numeric', month: 'long'
   })
@@ -71,7 +93,7 @@ export function Today() {
             {data?.sessions.map((s) => (
               <li key={`s${s.id}`} className="border-b border-line px-4 py-3 last:border-b-0">
                 <span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-weights" aria-hidden />
-                {s.dayName ?? t('tab.weights')}
+                {sessionTitle(s, t)}
               </li>
             ))}
             {data?.runs.map((r) => (
@@ -89,6 +111,14 @@ export function Today() {
           </ul>
         )}
       </Section>
+
+      {muscles && muscles.primary.length + muscles.secondary.length > 0 && (
+        <Section title={t('today.muscles')}>
+          <div className="flex justify-center p-4">
+            <BodyModel primary={muscles.primary} secondary={muscles.secondary} height={220} />
+          </div>
+        </Section>
+      )}
 
       <Section title={t('today.food')}>
         <div className="flex divide-x divide-line">

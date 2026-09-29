@@ -43,10 +43,14 @@ export interface ProgramExercise {
 }
 
 export interface WorkoutSession {
-  id?: number; date: string; programId?: number; dayName?: string; bodyParts: string[]
+  id?: number; date: string; programId?: number; dayName?: string
+  /** Body parts of the exercises that have saved working sets, worked out automatically. */
+  bodyParts: BodyPart[]
   startedAt: number
   /** Set when the session is finished; at most one session is open at a time. */
   finishedAt?: number
+  /** Rest timer: stores the end time, not a countdown, so it survives the screen locking. */
+  restEndsAt?: number; restTotalSec?: number
 }
 /** Copies the exercise and program values at the time of logging so later edits never change history. */
 export interface SessionExercise {
@@ -64,6 +68,20 @@ export interface SetLog {
   reps?: number; repsLeft?: number; repsRight?: number
   /** Used instead of reps for timed exercises. */
   durationSec?: number; durationLeftSec?: number; durationRightSec?: number
+  toFailure: boolean
+}
+
+/**
+ * A set row typed in but not saved with ✓ yet. Kept in its own table so iOS closing the app
+ * never loses it, and so it can never count as a logged set. Values are the raw typed text.
+ */
+export interface SetDraft {
+  id?: number; sessionExerciseId: number; order: number; type: SetType
+  weight: string
+  /** Unit the weight was typed in, so changing the setting mid-session cannot misread it. */
+  unit?: WeightUnit
+  /** Reps, or a duration for timed exercises; left/right are used by left/right exercises. */
+  value: string; left: string; right: string
   toFailure: boolean
 }
 

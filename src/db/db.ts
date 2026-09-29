@@ -1,7 +1,7 @@
 import Dexie, { type Table } from 'dexie'
 import type {
   Activity, BodyEntry, Exercise, Food, FoodEntry, Program, ProgramDay, ProgramExercise,
-  RunLog, RunTemplate, SessionExercise, SetLog, Settings, Shoe, WorkoutSession
+  RunLog, RunTemplate, SessionExercise, SetDraft, SetLog, Settings, Shoe, WorkoutSession
 } from './types'
 
 export class GymboyDB extends Dexie {
@@ -12,6 +12,7 @@ export class GymboyDB extends Dexie {
   sessions!: Table<WorkoutSession, number>
   sessionExercises!: Table<SessionExercise, number>
   sets!: Table<SetLog, number>
+  setDrafts!: Table<SetDraft, number>
   runs!: Table<RunLog, number>
   runTemplates!: Table<RunTemplate, number>
   shoes!: Table<Shoe, number>
@@ -47,6 +48,7 @@ export class GymboyDB extends Dexie {
       exercises: '++id, name, equipment, bodyPart, &seedKey',
       programs: '++id',
       shoes: '++id',
+      setDrafts: '++id, sessionExerciseId',
       sessions: '++id, date, programId, startedAt',
       sets: '++id, sessionExerciseId, exerciseId, date, type, [exerciseId+date]'
     }).upgrade(async (tx) => {
