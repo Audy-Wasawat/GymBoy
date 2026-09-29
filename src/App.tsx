@@ -29,6 +29,7 @@ import { FoodLibraryEditor } from './pages/food/FoodLibraryEditor'
 import { Activities, ActivityEditor } from './pages/Activities'
 import { Body } from './pages/body/Body'
 import { BodyEntryEditor } from './pages/body/BodyEntryEditor'
+import { Summary } from './pages/Summary'
 
 function Shell() {
   return (
@@ -69,7 +70,7 @@ function AppRoutes() {
         <Route path="food/library/new" element={<FoodLibraryEditor />} />
         <Route path="food/library/:id" element={<FoodLibraryEditor />} />
         <Route path="more" element={<More />} />
-        <Route path="more/summary" element={<Soon title={t('more.summary')} back="/more" />} />
+        <Route path="more/summary" element={<Summary />} />
         <Route path="more/body" element={<Body />} />
         <Route path="more/body/new" element={<BodyEntryEditor />} />
         <Route path="more/body/:id" element={<BodyEntryEditor />} />

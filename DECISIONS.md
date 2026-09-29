@@ -25,6 +25,10 @@ One line per choice made where SPEC.md and AUTOPILOT.md were silent, with the re
 - `capture="user"` on body photo input to open the front camera by default.
 
 ## Phase 6: Today details, summary, daily grid
+- Today screen had all required content already (muscles, food totals, week stats, quick buttons) — no changes needed beyond Phase 5 goals wiring.
+- ActivityGrid uses horizontal scroll with week-columns and weekday-rows (22+ weeks fit as needed). Cells are buttons with aria-labels.
+- Day popup is a bottom sheet (fixed + items-end) to match iOS patterns; tapping outside dismisses it.
+- Summary and grid are on one page (`/more/summary`) — no separate grid route needed.
 
 ## Phase 7: Data
 
