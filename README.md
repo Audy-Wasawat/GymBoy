@@ -62,8 +62,8 @@ muscles you trained, full backups, and JSON exports you can hand to an AI coach.
 You need [Node.js](https://nodejs.org) 18 or newer.
 
 ```bash
-git clone https://github.com/<your-username>/gymboy.git
-cd gymboy
+git clone https://github.com/Audy-Wasawat/GymBoy.git
+cd GymBoy
 npm install
 npm run dev
 ```
