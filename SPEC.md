@@ -96,10 +96,29 @@ Programs are reusable, editable templates; a session records what was actually d
 
 **Progress signals**
 
-- Weight-increase hint: shown when every working set reaches the top of the target rep range (both sides for left/right exercises). It only notifies and changes nothing.
-- PR: the heaviest weight ever lifted in a working set for that exercise, reps ignored. A badge appears when it is beaten. For bodyweight exercises the PR is the heaviest added weight, or the most reps in one set if extra weight has never been used. For timed exercises the PR is the heaviest added weight, or the longest duration in one set if extra weight has never been used.
-- For timed exercises the weight-increase hint uses the target range in seconds: it shows when every working set reaches the top of the range.
+- Weight-increase hint: shown when every working set of the previous session with that exercise reached the top of the target range that session had copied (both sides for left/right exercises; for timed exercises the top of the range in seconds), and that session had at least as many working sets as its target. Warm-ups never count. Exercises whose previous session had no target (for example added to an empty session) get no hint. It appears on the exercise card in the next session (for example "Last time you hit 8 reps on every set at 60 kg. Try adding weight.") and on the exercise's history screen, and it hides once the current session has a saved working set heavier than last time. It only notifies and changes nothing.
+- What a set is measured by (for PRs and the chart): normal exercises use weight, reps ignored (left and right share one weight). Bodyweight and timed exercises use the heaviest added weight if weight has ever been added to that exercise; otherwise the most reps (bodyweight) or longest duration (timed) in one set, taking the lower side for left/right exercises. The exercise's current bodyweight and timed settings decide this; sets without the value measured are left out.
+- PR: a working set is a PR when it beats every earlier working set of that exercise (ordered by date, then session, then set). Sets in the very first session with that exercise are never PRs, since there is nothing to compare with; within a later session every set that beats all sets before it counts. Warm-ups never count.
+- PRs are always worked out from the logged sets and never stored, so editing, moving or deleting history keeps them correct.
+- A PR badge shows on the set row in the session as soon as the set is saved, and on every record-setting set in the history. The exercise's history screen shows the current record separately at the top.
 - Session duration is not recorded.
+
+**History**
+
+- Session history (from the Weights screen) lists finished sessions, newest first, with date, name, number of exercises and number of sets.
+- Opening a finished session allows editing: set values, warm-up/working type and the "to failure" tick; deleting a set, an exercise or the whole session (each asks for confirmation); adding sets or exercises; and changing the date (never to a future date). Moving a session also moves the date stored on each of its sets.
+- Rows added in history are kept on screen only until saved with ✓; nothing is stored as a draft in a finished session. Leaving the screen through an in-app link (the back arrow or the tab bar) while such a row has numbers typed asks first ("Leave without saving" or "Stay"); with nothing typed it leaves without asking.
+- Deleting the last set of an exercise removes the exercise, and removing the last exercise deletes the session; the confirmation says so. No finished session or exercise is ever left without sets.
+- A past session can be added for any date up to today. It starts empty and is created when its first set is saved.
+- A session's body parts are worked out again after every edit or delete.
+- Weights are shown in the chosen unit and always stored in kg.
+
+**Exercise history and chart**
+
+- Each exercise has a history screen, opened from the exercise's detail screen or from its card during a session: the current record, the weight-increase hint, a chart, and every session with that exercise (date, name and working sets such as "60×8, 60×7", with record-setting sets marked). Tapping a session opens it.
+- The chart is a line chart with one point per session: the best set by the same measure as PRs. Tapping a point shows its date and value. It uses the weights plate red and follows light and dark mode.
+- With fewer than two sessions a short message replaces the chart. Sessions left off because none of their sets has the value measured (for example after the exercise's settings changed) are counted in a short note.
+- The chart library is loaded only when a chart is shown and is cached for offline use like the rest of the app.
 
 ## Exercise library and body model
 
@@ -173,6 +192,7 @@ Each entry records date and body weight, with an optional progress photo. A weig
 ## Settings and defaults
 
 - Language: Thai or English (interface only; seeded exercise names stay in English).
+- Dates always show the Common Era (Gregorian) year, in Thai too (for example "27 ก.ย. 2026"); Thai keeps Thai month names.
 - Theme: follows the phone's light/dark setting.
 - Units: weight in kg or lb (stored in kg, shown in the chosen unit); distance in km, pace in min/km.
 - Default rest time: 90 s.

@@ -8,9 +8,13 @@ import { formatDuration, parseDecimal } from '../../lib/numbers'
 import { unlockAudio } from '../../lib/sound'
 import { fromDisplayWeight, toDisplayWeight } from '../../lib/units'
 
-export type Row = { kind: 'draft'; draft: SetDraft } | { kind: 'set'; set: SetLog }
-export const rowOrder = (r: Row) => (r.kind === 'draft' ? r.draft.order : r.set.setNumber)
-export const rowType = (r: Row) => (r.kind === 'draft' ? r.draft.type : r.set.type)
+/**
+ * A row is a saved set, a draft stored in the database (live sessions), or a new row kept only on
+ * screen (history editing, where drafts must never be left behind in a finished session).
+ */
+export type Row = { kind: 'draft' | 'new'; draft: SetDraft } | { kind: 'set'; set: SetLog }
+export const rowOrder = (r: Row) => (r.kind === 'set' ? r.set.setNumber : r.draft.order)
+export const rowType = (r: Row) => (r.kind === 'set' ? r.set.type : r.draft.type)
 
 type Text = { weight: string; value: string; left: string; right: string }
 
@@ -30,9 +34,15 @@ export function setSummary(s: SetLog, se: SessionExercise, unit: WeightUnit) {
   return `${se.bodyweight || se.timed ? '+' : ''}${w}×${val}`
 }
 
-export function SetRow({ se, row, label, prev, above, unit, date, onLabel, onSaved }: {
+export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, onSaved, onSaveNew, onNewChange }: {
   se: SessionExercise; row: Row; label: string; prev?: SetLog; above?: Text; unit: WeightUnit; date: string
-  onLabel: () => void; onSaved: (row: SetDraft) => void
+  /** This saved set beat every earlier working set of the exercise. */
+  pr?: boolean
+  onLabel: () => void; onSaved?: (row: SetDraft) => void
+  /** Saves a 'new' row; resolves false when the row is incomplete. */
+  onSaveNew?: (row: SetDraft) => Promise<boolean>
+  /** Keeps the parent's copy of a 'new' row in step with what is typed. */
+  onNewChange?: (patch: Partial<SetDraft>) => void
 }) {
   const t = useT()
   const [text, setText] = useState<Text>(() => {
@@ -49,7 +59,8 @@ export function SetRow({ se, row, label, prev, above, unit, date, onLabel, onSav
   })
   const [error, setError] = useState(false)
   const saved = row.kind === 'set'
-  const failure = row.kind === 'draft' ? row.draft.toFailure : row.set.toFailure
+  const [newFailure, setNewFailure] = useState(row.kind === 'new' && row.draft.toFailure)
+  const failure = row.kind === 'set' ? row.set.toFailure : row.kind === 'draft' ? row.draft.toFailure : newFailure
 
   // Drafts are written on every keystroke so nothing is lost if iOS closes the app.
   // Saved sets are updated whenever the edited values are complete.
@@ -58,21 +69,27 @@ export function SetRow({ se, row, label, prev, above, unit, date, onLabel, onSav
     setText(next)
     setError(false)
     if (row.kind === 'draft') void db.setDrafts.update(row.draft.id!, 'weight' in patch ? { ...patch, unit } : patch)
-    else {
+    else if (row.kind === 'new') onNewChange?.(patch)
+    else if (row.kind === 'set') {
       const values = readSetValues(next, se, unit)
       if (values) void db.sets.update(row.set.id!, values)
     }
   }
   const toggleFailure = () => {
     if (row.kind === 'draft') void db.setDrafts.update(row.draft.id!, { toFailure: !failure })
-    else void db.sets.update(row.set.id!, { toFailure: !failure })
+    else if (row.kind === 'set') void db.sets.update(row.set.id!, { toFailure: !failure })
+    else { setNewFailure(!failure); onNewChange?.({ toFailure: !failure }) }
   }
   const confirm = async () => {
-    if (row.kind !== 'draft') return
+    if (row.kind === 'set') return
+    if (row.kind === 'new') {
+      if (!(await onSaveNew?.({ ...row.draft, ...text, toFailure: newFailure, unit }))) setError(true)
+      return
+    }
     // Must run inside the tap itself for iOS to allow sound later.
     unlockAudio()
     const draft = { ...row.draft, ...text, unit }
-    if (await saveDraft(draft, se, unit, date)) onSaved(draft)
+    if (await saveDraft(draft, se, unit, date)) onSaved?.(draft)
     else setError(true)
   }
   const copyFrom = prev ? setToText(prev, se, unit) : above
@@ -98,15 +115,17 @@ export function SetRow({ se, row, label, prev, above, unit, date, onLabel, onSav
     <div className={`grid items-center gap-1 rounded-lg py-1 ${rowGrid(se.leftRight)} ${saved ? 'bg-weights/10' : ''}`}>
       <button
         onClick={onLabel}
-        aria-label={`${t('set.rowMenu')} ${label}`}
-        className={`flex h-11 items-center justify-center rounded-md text-[15px] font-semibold ${rowType(row) === 'warmup' ? 'text-muted' : ''}`}
+        aria-label={`${t('set.rowMenu')} ${label}${pr ? ` · ${t('pr.badge')}` : ''}`}
+        className={`flex h-11 flex-col items-center justify-center rounded-md text-[15px] font-semibold leading-none ${rowType(row) === 'warmup' ? 'text-muted' : ''}`}
       >
         {label}
+        {pr && <span className="mt-0.5 rounded bg-weights px-1 text-[9px] font-bold leading-[14px] text-white">PR</span>}
       </button>
       <button
         onClick={() => canCopy && change(copyFrom!)}
         disabled={!canCopy}
-        aria-label={prev ? `${t('set.copyPrev')} ${setSummary(prev, se, unit)}` : t('set.copyAbove')}
+        aria-label={prev ? `${t('set.copyPrev')} ${setSummary(prev, se, unit)}` : canCopy ? t('set.copyAbove') : undefined}
+        aria-hidden={!prev && !canCopy}
         className="flex h-11 min-w-0 items-center justify-center rounded-md text-[12px] leading-tight text-muted disabled:opacity-100"
       >
         {prev ? <span className="truncate">{setSummary(prev, se, unit)}</span> : canCopy ? <CopyPlus size={16} aria-hidden /> : '–'}
@@ -135,6 +154,25 @@ export function SetRow({ se, row, label, prev, above, unit, date, onLabel, onSav
       >
         <Check size={20} aria-hidden />
       </button>
+    </div>
+  )
+}
+
+/** Column titles above the set rows. */
+export function SetHeader({ se, unit }: { se: SessionExercise; unit: WeightUnit }) {
+  const t = useT()
+  return (
+    <div className={`grid gap-1 pb-1 text-center text-[12px] text-muted ${rowGrid(se.leftRight)}`}>
+      <span>{t('set.set')}</span>
+      <span>{t('set.prev')}</span>
+      <span>{se.bodyweight || se.timed ? `+${unit}` : unit}</span>
+      {se.leftRight ? (
+        <><span>{t('set.left')}</span><span>{t('set.right')}</span></>
+      ) : (
+        <span>{se.timed ? t('set.sec') : t('set.reps')}</span>
+      )}
+      <span>F</span>
+      <span />
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { ChevronRight, Library, ListChecks, Play } from 'lucide-react'
+import { ChevronRight, History as HistoryIcon, Library, ListChecks, Play } from 'lucide-react'
 import { Page, Section } from '../../components/Page'
 import { Sheet, SheetButton } from '../../components/Sheet'
 import { db } from '../../db/db'
@@ -66,6 +66,14 @@ export function Weights() {
           <span className="flex-1">
             <span className="block text-[16px]">{t('program.title')}</span>
             <span className="block text-[13px] text-muted">{program ? program.name : t('program.noneActive')}</span>
+          </span>
+          <ChevronRight size={18} className="text-muted" aria-hidden />
+        </Link>
+        <Link to="/weights/history" className="flex min-h-[60px] items-center gap-3 border-b border-line px-4 py-2">
+          <HistoryIcon size={22} className="text-weights" aria-hidden />
+          <span className="flex-1">
+            <span className="block text-[16px]">{t('history.title')}</span>
+            <span className="block text-[13px] text-muted">{t('history.note')}</span>
           </span>
           <ChevronRight size={18} className="text-muted" aria-hidden />
         </Link>

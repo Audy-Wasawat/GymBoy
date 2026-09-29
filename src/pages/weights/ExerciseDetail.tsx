@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { Copy } from 'lucide-react'
+import { ChevronRight, Copy, LineChart } from 'lucide-react'
 import { BodyModel } from '../../components/BodyModel'
 import { MuscleList, MusclePicker } from '../../components/Muscles'
 import { Page, Section } from '../../components/Page'
@@ -82,6 +82,11 @@ export function ExerciseDetail() {
       )}
 
       <Section>
+        <Link to={`/weights/exercises/${id}/history`} className="flex min-h-[52px] w-full items-center gap-3 border-b border-line px-4">
+          <LineChart size={20} className="text-weights" aria-hidden />
+          <span className="flex-1 text-[16px]">{t('history.exercise')}</span>
+          <ChevronRight size={18} className="text-muted" aria-hidden />
+        </Link>
         <button onClick={duplicate} className="flex min-h-[52px] w-full items-center gap-3 px-4 text-left">
           <Copy size={20} className="text-muted" aria-hidden />
           <span className="flex-1 text-[16px]">{t('ex.duplicate')}</span>

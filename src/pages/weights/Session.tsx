@@ -8,19 +8,21 @@ import { Sheet, SheetButton } from '../../components/Sheet'
 import { db } from '../../db/db'
 import { moveRow } from '../../db/programs'
 import {
-  addExerciseToSession, cancelSession, deleteSet, emptyDraft, getOpenSession, previousWorkingSets,
+  addExerciseToSession, cancelSession, deleteSet, emptyDraft, getOpenSession, previousEntry,
   refreshBodyParts, removeSessionExercise, replaceSessionExercise, setToText, startRest
 } from '../../db/sessions'
 import type { SessionExercise, SetDraft, SetLog, WeightUnit, WorkoutSession } from '../../db/types'
 import { useSettings } from '../../db/useSettings'
 import { useT } from '../../i18n/useT'
+import { loadProgress, weightHint, type WeightHint } from '../../lib/progress'
 import { sessionTitle } from '../../lib/sessionTitle'
 import { useWakeLock } from '../../lib/useWakeLock'
 import { FinishFlow } from './FinishFlow'
 import { RestBar } from './RestBar'
-import { rowGrid, rowOrder, rowType, SetRow, type Row } from './SetRow'
+import { HintNote } from './HintNote'
+import { rowOrder, rowType, SetHeader, SetRow, type Row } from './SetRow'
 
-interface Block { se: SessionExercise; rows: Row[]; prev: SetLog[]; unit: WeightUnit }
+interface Block { se: SessionExercise; rows: Row[]; prev: SetLog[]; unit: WeightUnit; prIds: Set<number>; hint?: WeightHint }
 
 export function SessionPage() {
   const t = useT()
@@ -39,15 +41,21 @@ export function SessionPage() {
       db.settings.get('app')
     ])
     const unit = settings?.weightUnit ?? 'kg'
-    return Promise.all(ses.map(async (se) => ({
-      se,
-      rows: [
-        ...sets.filter((s) => s.sessionExerciseId === se.id).map((set): Row => ({ kind: 'set', set })),
-        ...drafts.filter((d) => d.sessionExerciseId === se.id).map((draft): Row => ({ kind: 'draft', draft }))
-      ].sort((a, b) => rowOrder(a) - rowOrder(b)),
-      prev: await previousWorkingSets(se.exerciseId, session.id!),
-      unit
-    })))
+    return Promise.all(ses.map(async (se) => {
+      const saved = sets.filter((s) => s.sessionExerciseId === se.id)
+      const prev = await previousEntry(se.exerciseId, session.id!)
+      return {
+        se,
+        rows: [
+          ...saved.map((set): Row => ({ kind: 'set', set })),
+          ...drafts.filter((d) => d.sessionExerciseId === se.id).map((draft): Row => ({ kind: 'draft', draft }))
+        ].sort((a, b) => rowOrder(a) - rowOrder(b)),
+        prev: prev?.sets.filter((s) => s.type === 'working') ?? [],
+        unit,
+        prIds: (await loadProgress(se.exerciseId))?.prIds ?? new Set<number>(),
+        hint: weightHint(prev, saved)
+      }
+    }))
   }, [session?.id])
   const [sheet, setSheet] = useState<'add' | 'cancel'>()
   const [finishing, setFinishing] = useState(false)
@@ -106,7 +114,8 @@ function ExerciseBlock({ block, session, ses, index }: {
 }) {
   const t = useT()
   const { defaultRestSec } = useSettings()
-  const { se, rows, prev, unit: weightUnit } = block
+  const navigate = useNavigate()
+  const { se, rows, prev, unit: weightUnit, prIds, hint } = block
   const [menu, setMenu] = useState<'menu' | 'swap' | 'remove'>()
   const [rowMenu, setRowMenu] = useState<Row>()
   const [note, setNote] = useState(se.note ?? '')
@@ -129,7 +138,7 @@ function ExerciseBlock({ block, session, ses, index }: {
     const isWorking = rowType(r) === 'working'
     const n = isWorking ? working++ : -1
     const aboveRow = rows[i - 1]
-    const above = aboveRow && (aboveRow.kind === 'draft' ? aboveRow.draft : setToText(aboveRow.set, se, weightUnit))
+    const above = aboveRow && (aboveRow.kind === 'set' ? setToText(aboveRow.set, se, weightUnit) : aboveRow.draft)
     return { r, label: isWorking ? String(n + 1) : 'W', prev: isWorking ? prev[n] : undefined, above: above && (above.weight || above.value || above.left) ? above : undefined }
   })
 
@@ -143,28 +152,19 @@ function ExerciseBlock({ block, session, ses, index }: {
         <div className="min-w-0 flex-1">
           <h2 className="text-[17px] font-semibold leading-snug">{se.name}</h2>
           <p className="text-[13px] text-muted">{[target, rest].filter(Boolean).join(' · ')}</p>
+          {hint && <HintNote hint={hint} unit={weightUnit} />}
         </div>
         <button onClick={() => setMenu('menu')} aria-label={t('session.exerciseMenu')} className="-mr-1 -mt-1 flex h-11 w-11 items-center justify-center text-muted">
           <MoreHorizontal size={22} aria-hidden />
         </button>
       </div>
 
-      <div className={`grid gap-1 pb-1 text-center text-[12px] text-muted ${rowGrid(se.leftRight)}`}>
-        <span>{t('set.set')}</span>
-        <span>{t('set.prev')}</span>
-        <span>{se.bodyweight || se.timed ? `+${weightUnit}` : weightUnit}</span>
-        {se.leftRight ? (
-          <><span>{t('set.left')}</span><span>{t('set.right')}</span></>
-        ) : (
-          <span>{se.timed ? t('set.sec') : t('set.reps')}</span>
-        )}
-        <span>F</span>
-        <span />
-      </div>
+      <SetHeader se={se} unit={weightUnit} />
       {labelled.map(({ r, label, prev: p, above }) => (
         <SetRow
-          key={r.kind === 'draft' ? `d${r.draft.id}` : `s${r.set.id}`}
+          key={r.kind === 'set' ? `s${r.set.id}` : `d${r.draft.id}`}
           se={se} row={r} label={label} prev={p} above={above}
+          pr={r.kind === 'set' && prIds.has(r.set.id!)}
           unit={weightUnit} date={session.date}
           onLabel={() => setRowMenu(r)}
           onSaved={onSaved}
@@ -187,6 +187,7 @@ function ExerciseBlock({ block, session, ses, index }: {
       <Sheet open={menu === 'menu'} onClose={() => setMenu(undefined)} title={se.name}>
         {index > 0 && <SheetButton onClick={() => { void moveRow(db.sessionExercises, ses, se.id!, -1); setMenu(undefined) }}>{t('common.moveUp')}</SheetButton>}
         {index < ses.length - 1 && <SheetButton onClick={() => { void moveRow(db.sessionExercises, ses, se.id!, 1); setMenu(undefined) }}>{t('common.moveDown')}</SheetButton>}
+        <SheetButton onClick={() => navigate(`/weights/exercises/${se.exerciseId}/history`, { state: { from: '/weights/session' } })}>{t('history.exercise')}</SheetButton>
         {savedCount === 0 && <SheetButton onClick={() => setMenu('swap')}>{t('session.swap')}</SheetButton>}
         <SheetButton tone="danger" onClick={() => (savedCount ? setMenu('remove') : void removeSessionExercise(se))}>{t('session.removeExercise')}</SheetButton>
         <SheetButton onClick={() => setMenu(undefined)}>{t('common.cancel')}</SheetButton>
@@ -207,14 +208,14 @@ function ExerciseBlock({ block, session, ses, index }: {
           <>
             <SheetButton onClick={async () => {
               const type = rowType(rowMenu) === 'working' ? 'warmup' : 'working'
-              if (rowMenu.kind === 'draft') await db.setDrafts.update(rowMenu.draft.id!, { type })
+              if (rowMenu.kind !== 'set') await db.setDrafts.update(rowMenu.draft.id!, { type })
               else { await db.sets.update(rowMenu.set.id!, { type }); await refreshBodyParts(session.id!) }
               setRowMenu(undefined)
             }}>
               {rowType(rowMenu) === 'working' ? t('set.makeWarmup') : t('set.makeWorking')}
             </SheetButton>
             <SheetButton tone="danger" onClick={async () => {
-              if (rowMenu.kind === 'draft') await db.setDrafts.delete(rowMenu.draft.id!)
+              if (rowMenu.kind !== 'set') await db.setDrafts.delete(rowMenu.draft.id!)
               else await deleteSet(rowMenu.set, session.id!)
               setRowMenu(undefined)
             }}>

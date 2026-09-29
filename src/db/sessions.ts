@@ -9,7 +9,7 @@ import { fromDisplayWeight, toDisplayWeight } from '../lib/units'
 // At most one session is open; finishedAt is a number, so the open one is found with a filter.
 export const getOpenSession = () => db.sessions.filter((s) => !s.finishedAt).first()
 
-const copyOf = (ex: Exercise) => ({
+export const copyOf = (ex: Exercise) => ({
   exerciseId: ex.id!, name: ex.name, equipment: ex.equipment,
   leftRight: ex.leftRight, bodyweight: ex.bodyweight, timed: ex.timed
 })
@@ -205,20 +205,20 @@ export async function finishSession(sessionId: number, keepDrafts: boolean, unit
   })
 }
 
-/** Working sets of the most recent other session with this exercise, in set order. */
-export async function previousWorkingSets(exerciseId: number, currentSessionId: number): Promise<SetLog[]> {
+/** The most recent other session with this exercise: its copied targets and its working sets in set order. */
+export async function previousEntry(exerciseId: number, currentSessionId: number): Promise<{ se: SessionExercise; sets: SetLog[] } | undefined> {
   const sets = await db.sets.where('exerciseId').equals(exerciseId).filter((s) => s.type === 'working').toArray()
   const seIds = [...new Set(sets.map((s) => s.sessionExerciseId))]
   const ses = await db.sessionExercises.bulkGet(seIds)
-  let best: { seId: number; date: string } | undefined
+  let best: { se: SessionExercise; date: string } | undefined
   ses.forEach((se, i) => {
     if (!se || se.sessionId === currentSessionId) return
     const date = sets.find((s) => s.sessionExerciseId === seIds[i])!.date
-    if (!best || date > best.date || (date === best.date && seIds[i] > best.seId)) best = { seId: seIds[i], date }
+    if (!best || date > best.date || (date === best.date && se.id! > best.se.id!)) best = { se, date }
   })
-  if (!best) return []
-  const seId = best.seId
-  return sets.filter((s) => s.sessionExerciseId === seId).sort((a, b) => a.setNumber - b.setNumber)
+  if (!best) return undefined
+  const se = best.se
+  return { se, sets: sets.filter((s) => s.sessionExerciseId === se.id).sort((a, b) => a.setNumber - b.setNumber) }
 }
 
 export const startRest = (sessionId: number, sec: number) =>

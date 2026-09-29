@@ -7,6 +7,9 @@ import { Soon } from './pages/Soon'
 import { Today } from './pages/Today'
 import { DayEditor } from './pages/weights/DayEditor'
 import { ExerciseDetail } from './pages/weights/ExerciseDetail'
+import { ExerciseHistory } from './pages/weights/ExerciseHistory'
+import { History } from './pages/weights/History'
+import { HistoryDetail } from './pages/weights/HistoryDetail'
 import { ExerciseLibrary } from './pages/weights/ExerciseLibrary'
 import { ExerciseNew } from './pages/weights/ExerciseNew'
 import { ProgramDetail } from './pages/weights/ProgramDetail'
@@ -35,6 +38,9 @@ function AppRoutes() {
         <Route path="weights/exercises" element={<ExerciseLibrary />} />
         <Route path="weights/exercises/new" element={<ExerciseNew />} />
         <Route path="weights/exercises/:id" element={<ExerciseDetail />} />
+        <Route path="weights/exercises/:id/history" element={<ExerciseHistory />} />
+        <Route path="weights/history" element={<History />} />
+        <Route path="weights/history/:id" element={<HistoryDetail />} />
         <Route path="weights/programs" element={<Programs />} />
         <Route path="weights/programs/:id" element={<ProgramDetail />} />
         <Route path="weights/programs/:id/days/:dayId" element={<DayEditor />} />
