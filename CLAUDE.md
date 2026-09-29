@@ -23,7 +23,7 @@ Read `SPEC.md` before any feature work. It is the source of truth for behaviour.
 - All UI text goes through `src/i18n/strings.ts` with both `th` and `en` entries.
 - Category colours are competition-plate tokens in `src/index.css` and `tailwind.config.js`: weights red, running blue, other sports yellow, food green. Use the tokens, never raw hex in components.
 - Touch targets at least 44 px; respect `env(safe-area-inset-*)`; everything must work offline.
-- The installed app must work fully offline and never call an external host at runtime: no CDNs, online fonts, analytics or remote APIs (the owner is often in China without a VPN). Bundle every asset.
+- The installed app must work fully offline and never call an external host at runtime: no CDNs, online fonts, analytics or remote APIs (the owner often has no VPN or a stable connection). Bundle every asset.
 - Changing the Dexie schema needs a new `db.version(n)` with an upgrade, never an edit to an existing version once released.
 - Never index a boolean field in Dexie (IndexedDB cannot index booleans); read such flags with `.filter()`.
 - v1 has no exercise photos or drawings. free-exercise-db (public domain) is used only for exercise names and muscle data; the body model (`src/components/BodyModel.tsx`) shows the muscles.

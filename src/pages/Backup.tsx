@@ -7,7 +7,7 @@ import { useSettings } from '../db/useSettings'
 import { useT } from '../i18n/useT'
 import {
   aiExportFilename, aiPeriodPreset, backupFilename, clearHistory, createAIExport,
-  createBackup, eraseEverything, getDeleteCounts, parseBackup, restoreBackup, shareOrDownload,
+  confirmWordMatches, createBackup, eraseEverything, getDeleteCounts, parseBackup, restoreBackup, shareOrDownload,
   type AICategory, type BackupCounts, type DeleteCategory, type DeleteCounts
 } from '../lib/backup'
 import { localDate } from '../lib/dates'
@@ -26,8 +26,8 @@ function FullBackup() {
       const blob = await createBackup()
       const ok = await shareOrDownload(blob, backupFilename())
       if (ok) await updateSettings({ lastBackupAt: Date.now() })
-    } catch (e) {
-      setErr(String(e))
+    } catch {
+      setErr(t('error.generic'))
     } finally {
       setBusy(false)
     }
@@ -84,8 +84,8 @@ function Restore() {
     try {
       await restoreBackup(pending)
       setDone(true)
-    } catch (e) {
-      setErr(String(e))
+    } catch {
+      setErr(t('backup.restoreFailed'))
     } finally {
       setBusy(false)
     }
@@ -177,8 +177,8 @@ function AIExport() {
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
       }
-    } catch (e) {
-      setErr(String(e))
+    } catch {
+      setErr(t('error.generic'))
     } finally {
       setBusy(false)
     }
@@ -278,13 +278,13 @@ function ClearHistory() {
   }, [cats])
 
   async function handleDelete() {
-    if (word !== confirmWord) { setErr(t('delete.wrongWord')); return }
+    if (!confirmWordMatches(word, confirmWord)) { setErr(t('delete.wrongWord')); return }
     setBusy(true)
     try {
       await clearHistory(cats)
       setDone(true)
-    } catch (e) {
-      setErr(String(e))
+    } catch {
+      setErr(t('error.generic'))
     } finally {
       setBusy(false)
     }
@@ -347,7 +347,7 @@ function ClearHistory() {
           <Row>
             <button
               onClick={handleDelete}
-              disabled={busy || word !== confirmWord}
+              disabled={busy || !confirmWordMatches(word, confirmWord)}
               className="w-full min-h-[44px] rounded-lg border border-weights text-[15px] font-semibold text-weights disabled:opacity-40"
             >
               {t('delete.proceed')}
@@ -369,13 +369,13 @@ function EraseEverything() {
   const confirmWord = language === 'th' ? t('delete.confirmWordTh') : t('delete.confirmWordEn')
 
   async function handleErase() {
-    if (word !== confirmWord) { setErr(t('delete.wrongWord')); return }
+    if (!confirmWordMatches(word, confirmWord)) { setErr(t('delete.wrongWord')); return }
     setBusy(true)
     try {
       await eraseEverything()
       nav('/', { replace: true })
-    } catch (e) {
-      setErr(String(e))
+    } catch {
+      setErr(t('error.generic'))
     } finally {
       setBusy(false)
     }
@@ -403,7 +403,7 @@ function EraseEverything() {
       <Row>
         <button
           onClick={handleErase}
-          disabled={busy || word !== confirmWord}
+          disabled={busy || !confirmWordMatches(word, confirmWord)}
           className="w-full min-h-[44px] rounded-lg bg-weights text-[15px] font-semibold text-white disabled:opacity-40"
         >
           {t('delete.proceed')}

@@ -39,7 +39,7 @@ export function ExercisePicker({ open, onPick, onClose }: {
 
   if (!open) return null
   return (
-    <div className="fixed inset-0 z-40 flex flex-col bg-bg" role="dialog" aria-modal="true" aria-label={t('pick.title')}>
+    <div className="fixed inset-0 z-50 flex flex-col bg-bg" role="dialog" aria-modal="true" aria-label={t('pick.title')}>
       <div className="mx-auto w-full max-w-xl px-4" style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}>
         <div className="mb-3 flex items-center gap-2">
           <h2 className="flex-1 text-[22px] font-semibold">{t('pick.title')}</h2>

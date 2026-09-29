@@ -7,7 +7,7 @@ import { listRuns } from '../../db/runs'
 import { useSettings } from '../../db/useSettings'
 import { useT } from '../../i18n/useT'
 import { formatDate } from '../../lib/dates'
-import { chartPace } from '../../lib/running'
+import { listPace } from '../../lib/running'
 import { formatPace, round } from '../../lib/units'
 
 const TYPE_KEY = { easy: 'run.typeEasy', lsd: 'run.typeLsd', tempo: 'run.typeTempo', interval: 'run.typeInterval' } as const
@@ -58,7 +58,7 @@ export function Running() {
       ) : (
         <ul className="rounded-xl border border-line bg-surface empty:hidden">
           {runs?.map((r) => {
-            const pace = chartPace(r)
+            const pace = listPace(r)
             return (
               <li key={r.id} className="border-b border-line last:border-b-0">
                 <Link to={`/running/${r.id}`} className="flex items-center gap-3 px-4 py-3">

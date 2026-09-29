@@ -101,7 +101,7 @@ export function Body() {
               }}
               className={`flex w-full min-h-[56px] items-center gap-3 border-b border-line px-4 py-2 last:border-b-0 text-left ${compareMode ? (e.photo ? (selected.includes(e.id!) ? 'bg-weights/10' : '') : 'opacity-30') : ''}`}
             >
-              <PhotoThumb blob={e.photo} label={e.date} />
+              <PhotoThumb blob={e.photo} label={`${t('body.photo')} ${formatDate(e.date, language)}`} />
               <span className="flex-1">
                 <span className="block text-[16px]">{toDisplayWeight(e.weightKg, weightUnit)} {weightUnit}</span>
                 <span className="block text-[13px] text-muted">{formatDate(e.date, language)}</span>
@@ -118,6 +118,7 @@ export function Body() {
 }
 
 function CompareView({ entries, weightUnit, language }: { entries: BodyEntry[]; weightUnit: 'kg' | 'lb'; language: 'th' | 'en' }) {
+  const t = useT()
   const url0 = usePhotoUrl(entries[0]?.photo)
   const url1 = usePhotoUrl(entries[1]?.photo)
   return (
@@ -128,7 +129,7 @@ function CompareView({ entries, weightUnit, language }: { entries: BodyEntry[]; 
           const url = i === 0 ? url0 : url1
           return (
             <div key={i} className={`${i === 0 ? 'border-r border-line' : ''}`}>
-              {url && <img src={url} alt={e?.date} className="w-full aspect-square object-cover" />}
+              {url && <img src={url} alt={e ? `${t('body.photo')} ${formatDate(e.date, language)}` : ''} className="w-full aspect-square object-cover" />}
               <div className="p-2 text-center">
                 <div className="text-[13px] font-semibold">{e ? toDisplayWeight(e.weightKg, weightUnit) + ' ' + weightUnit : ''}</div>
                 <div className="text-[12px] text-muted">{e ? formatDate(e.date, language) : ''}</div>

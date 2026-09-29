@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Page, Section } from '../components/Page'
 import { ActivityGrid } from '../components/ActivityGrid'
 import { db } from '../db/db'
+import { workoutSessions } from '../db/workoutDays'
 import { useSettings } from '../db/useSettings'
 import { useT } from '../i18n/useT'
 import { formatDate, localDate, parseLocalDate } from '../lib/dates'
@@ -30,7 +31,7 @@ export function Summary() {
 
   const data = useLiveQuery(async () => {
     const [sessions, runs, activities, foodEntries] = await Promise.all([
-      db.sessions.where('date').between(from, to, true, true).toArray(),
+      workoutSessions(from, to),
       db.runs.where('date').between(from, to, true, true).toArray(),
       db.activities.where('date').between(from, to, true, true).toArray(),
       db.foodEntries.where('date').between(from, to, true, true).toArray()
@@ -69,7 +70,7 @@ export function Summary() {
     // Current week workout days (for weekly goal progress bar)
     const now = new Date()
     const weekStart = localDate(new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7)))
-    const weekSessions = await db.sessions.where('date').aboveOrEqual(weekStart).toArray()
+    const weekSessions = await workoutSessions(weekStart)
     const weekRuns = await db.runs.where('date').aboveOrEqual(weekStart).toArray()
     const weekActivities = await db.activities.where('date').aboveOrEqual(weekStart).toArray()
     const weekDays = new Set([...weekSessions, ...weekRuns, ...weekActivities].map((x) => x.date)).size
@@ -87,11 +88,11 @@ export function Summary() {
     <Page title={t('more.summary')} back="/more">
       {/* month nav */}
       <div className="mb-5 flex items-center justify-between rounded-xl border border-line bg-surface px-3 py-2">
-        <button onClick={() => nav(-1)} className="flex h-10 w-10 items-center justify-center" aria-label="Previous month">
+        <button onClick={() => nav(-1)} className="flex h-10 w-10 items-center justify-center" aria-label={t('sum.prevMonth')}>
           <ChevronLeft size={20} aria-hidden />
         </button>
         <span className="text-[15px] font-semibold">{monthLabel(year, month, language)}</span>
-        <button onClick={() => { if (!isCurrentMonth) nav(1) }} disabled={isCurrentMonth} className="flex h-10 w-10 items-center justify-center disabled:opacity-30" aria-label="Next month">
+        <button onClick={() => { if (!isCurrentMonth) nav(1) }} disabled={isCurrentMonth} className="flex h-10 w-10 items-center justify-center disabled:opacity-30" aria-label={t('sum.nextMonth')}>
           <ChevronRight size={20} aria-hidden />
         </button>
       </div>

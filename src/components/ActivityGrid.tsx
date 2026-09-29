@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db/db'
+import { workoutSessions } from '../db/workoutDays'
 import { useSettings } from '../db/useSettings'
 import { useT } from '../i18n/useT'
 import { formatDate, localDate, parseLocalDate, startOfWeek } from '../lib/dates'
 import type { StringKey } from '../i18n/strings'
+import { gridCellLabel } from '../lib/gridLabel'
 
 type Filter = 'all' | 'weights' | 'running'
 type DayColor = 'weights' | 'running' | 'both' | 'other' | 'none' | 'blank'
@@ -48,12 +50,13 @@ export function ActivityGrid() {
   const t = useT()
   const [filter, setFilter] = useState<Filter>('all')
   const [popup, setPopup] = useState<DaySummaryPopup | null>(null)
+  const { language } = useSettings()
 
   const today = localDate()
 
   const allData = useLiveQuery(async () => {
     const [sessions, runs, activities] = await Promise.all([
-      db.sessions.toArray(),
+      workoutSessions(),
       db.runs.toArray(),
       db.activities.toArray()
     ])
@@ -167,7 +170,7 @@ export function ActivityGrid() {
                   <button
                     key={i}
                     onClick={() => setPopup(data)}
-                    aria-label={`${dateStr}: ${col}`}
+                    aria-label={gridCellLabel(dateStr, col, language, t)}
                     className={`h-7 w-7 rounded-sm ${col === 'both' ? '' : cellBg(col)} overflow-hidden`}
                     style={col === 'both' ? {} : undefined}
                   >

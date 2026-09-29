@@ -36,6 +36,13 @@ export function chartPace(run: RunLog): number | undefined {
   return paceSecPerKm(run.distanceKm, run.durationSec)
 }
 
+/**
+ * Pace shown on the run list: the run's overall average pace (distance and total time) for every
+ * type. An interval run is never shown by its fast reps alone, so the number always means the same
+ * thing; the fast-rep pace lives in the run detail and the chart.
+ */
+export const listPace = (run: RunLog) => paceSecPerKm(run.distanceKm, run.durationSec)
+
 /** Total km run in a pair of shoes. */
 export const shoeDistanceKm = (runs: RunLog[], shoeId: number) =>
   runs.filter((r) => r.shoeId === shoeId).reduce((s, r) => s + r.distanceKm, 0)

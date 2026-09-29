@@ -499,7 +499,12 @@ const th = {
   'body.futureDate': 'เลือกวันในอนาคตไม่ได้',
   'body.notFound': 'ไม่พบรายการนี้',
   'body.front': 'หน้า',
-  'body.back': 'หลัง'
+  'body.back': 'หลัง',
+  'common.back': 'ย้อนกลับ',
+  'sum.prevMonth': 'เดือนก่อนหน้า',
+  'sum.nextMonth': 'เดือนถัดไป',
+  'error.generic': 'เกิดข้อผิดพลาด ลองอีกครั้ง',
+  'backup.restoreFailed': 'กู้คืนไม่สำเร็จ ข้อมูลเดิมยังอยู่ครบ',
 } as const
 
 export type StringKey = keyof typeof th
@@ -1005,7 +1010,12 @@ const en: Record<StringKey, string> = {
   'body.futureDate': 'The date cannot be in the future',
   'body.notFound': 'Not found',
   'body.front': 'Front',
-  'body.back': 'Back'
+  'body.back': 'Back',
+  'common.back': 'Back',
+  'sum.prevMonth': 'Previous month',
+  'sum.nextMonth': 'Next month',
+  'error.generic': 'Something went wrong. Please try again.',
+  'backup.restoreFailed': 'Restore failed. Your existing data is unchanged.',
 }
 
 export const strings = { th, en }

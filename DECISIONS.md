@@ -6,7 +6,7 @@ One line per choice made where SPEC.md and AUTOPILOT.md were silent, with the re
 ## Test infrastructure
 - Chose `vitest` + `fake-indexeddb` (both approved). Node environment; the app UI is exercised by the qa subagents in a browser, so no jsdom dependency was added.
 - Time zones are passed to tests through a `GYMBOY_TZ` env var read in `src/test/setup.ts`, because this Windows shell strips a bare `TZ=` prefix before it reaches Node. `npm run test:tz` loops the four required zones.
-- Playwright was not installed (owner in mainland China; download risk). Recorded per AUTOPILOT permission to skip it.
+- Playwright was not installed (the browser download can stall on a poor connection). Recorded per AUTOPILOT permission to skip it.
 
 ## Phase 4: Running
 - HR, surface (treadmill/outdoor) and per-rep distance were added as **non-indexed** fields on the existing `runs` store, so no `db.version` bump was needed (allowed by AUTOPILOT).

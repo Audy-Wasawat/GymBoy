@@ -193,27 +193,38 @@ export async function createAIExport(opts: AIExportOptions): Promise<Blob> {
 
   if (categories.has('weights')) {
     const sessions = await db.sessions.where('date').between(from, to, true, true).filter((s) => s.finishedAt != null).toArray()
+    sessions.sort((a, b) => a.date.localeCompare(b.date) || a.startedAt - b.startedAt || a.id! - b.id!)
     const sessionIds = sessions.map((s) => s.id!)
-    const [sessionExercises, sets, exercises] = await Promise.all([
-      db.sessionExercises.where('sessionId').anyOf(sessionIds).toArray(),
-      db.sets.where('date').between(from, to, true, true).filter((s) => s.type === 'working').toArray(),
+    const sessionExercises = await db.sessionExercises.where('sessionId').anyOf(sessionIds).toArray()
+    const [sets, exercises] = await Promise.all([
+      db.sets.where('sessionExerciseId').anyOf(sessionExercises.map((se) => se.id!)).toArray(),
       db.exercises.toArray()
     ])
     const exMap = new Map(exercises.map((e) => [e.id!, e]))
+    // Warm-up sets are included (the type field tells them apart). Exercises and sets are written in
+    // the order they were done, so the file is the same every time it is exported.
     result.weights = sessions.map((s) => ({
       id: s.id, date: s.date, dayName: s.dayName,
-      exercises: sessionExercises.filter((se) => se.sessionId === s.id).map((se) => {
-        const ex = exMap.get(se.exerciseId)
-        return {
-          name: se.name, equipment: se.equipment,
-          muscles: ex ? { primary: ex.primaryMuscles, secondary: ex.secondaryMuscles } : undefined,
-          sets: sets.filter((set) => set.sessionExerciseId === se.id).map((set) => ({
-            type: set.type, weightKg: set.weightKg, reps: set.reps,
-            repsLeft: set.repsLeft, repsRight: set.repsRight,
-            durationSec: set.durationSec, toFailure: set.toFailure
-          }))
-        }
-      })
+      exercises: sessionExercises
+        .filter((se) => se.sessionId === s.id)
+        .sort((a, b) => a.order - b.order || a.id! - b.id!)
+        .map((se) => {
+          const ex = exMap.get(se.exerciseId)
+          return {
+            order: se.order, name: se.name, equipment: se.equipment,
+            muscles: ex ? { primary: ex.primaryMuscles, secondary: ex.secondaryMuscles } : undefined,
+            note: se.note,
+            sets: sets
+              .filter((set) => set.sessionExerciseId === se.id)
+              .sort((a, b) => a.setNumber - b.setNumber || a.id! - b.id!)
+              .map((set) => ({
+                setNumber: set.setNumber, type: set.type, weightKg: set.weightKg, reps: set.reps,
+                repsLeft: set.repsLeft, repsRight: set.repsRight,
+                durationSec: set.durationSec, durationLeftSec: set.durationLeftSec, durationRightSec: set.durationRightSec,
+                toFailure: set.toFailure
+              }))
+          }
+        })
     }))
   }
 
@@ -322,19 +333,8 @@ export async function eraseEverything(): Promise<void> {
   await ensureSettings()
 }
 
-/** Shares or downloads a file. Returns true when the share or download succeeded. */
-export async function shareOrDownload(blob: Blob, filename: string): Promise<boolean> {
-  const file = new File([blob], filename, { type: blob.type })
-  if (navigator.canShare?.({ files: [file] })) {
-    try {
-      await navigator.share({ files: [file], title: filename })
-      return true
-    } catch (e) {
-      if ((e as DOMException).name === 'AbortError') return false
-      throw e
-    }
-  }
-  // Fallback: download link
+/** Saves a blob through a temporary download link. */
+export function downloadBlob(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
@@ -343,7 +343,31 @@ export async function shareOrDownload(blob: Blob, filename: string): Promise<boo
   a.click()
   document.body.removeChild(a)
   setTimeout(() => URL.revokeObjectURL(url), 100)
+}
+
+/**
+ * Shares a file through the share sheet, or downloads it. Returns false only when the owner
+ * dismissed the share sheet (AbortError). Any other share failure (for example NotAllowedError
+ * on iOS when the tap has expired) falls back to the download, so a backup is never lost.
+ */
+export async function shareOrDownload(blob: Blob, filename: string): Promise<boolean> {
+  const file = new File([blob], filename, { type: blob.type })
+  if (typeof navigator.share === 'function' && navigator.canShare?.({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: filename })
+      return true
+    } catch (e) {
+      if ((e as DOMException)?.name === 'AbortError') return false
+    }
+  }
+  downloadBlob(blob, filename)
   return true
+}
+
+/** True when the typed confirmation matches the word, ignoring surrounding spaces and letter case. */
+export function confirmWordMatches(typed: string, word: string): boolean {
+  const norm = (s: string) => s.normalize('NFC').trim().toLowerCase()
+  return norm(word) !== '' && norm(typed) === norm(word)
 }
 
 export function backupFilename(): string {

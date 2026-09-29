@@ -5,6 +5,7 @@ import { BodyModel } from '../components/BodyModel'
 import { Page, Section } from '../components/Page'
 import { db } from '../db/db'
 import type { Muscle } from '../db/types'
+import { workoutSessions } from '../db/workoutDays'
 import { useSettings } from '../db/useSettings'
 import { useT } from '../i18n/useT'
 import { localDate, startOfWeek } from '../lib/dates'
@@ -16,11 +17,11 @@ function useTodayData() {
     const today = localDate()
     const weekStart = localDate(startOfWeek())
     const [sessions, runs, activities, food, weekSessions, weekRuns, weekActivities] = await Promise.all([
-      db.sessions.where('date').equals(today).toArray(),
+      workoutSessions(today, today),
       db.runs.where('date').equals(today).toArray(),
       db.activities.where('date').equals(today).toArray(),
       db.foodEntries.where('date').equals(today).toArray(),
-      db.sessions.where('date').aboveOrEqual(weekStart).toArray(),
+      workoutSessions(weekStart),
       db.runs.where('date').aboveOrEqual(weekStart).toArray(),
       db.activities.where('date').aboveOrEqual(weekStart).toArray()
     ])

@@ -12,7 +12,7 @@ export function Sheet({ open, onClose, title, children }: {
   }, [open, onClose])
   if (!open) return null
   return (
-    <div className="fixed inset-0 z-40 flex items-end justify-center" role="dialog" aria-modal="true" aria-label={title}>
+    <div className="fixed inset-0 z-50 flex items-end justify-center" role="dialog" aria-modal="true" aria-label={title}>
       <div className="absolute inset-0 bg-ink/40" onClick={onClose} aria-hidden />
       <div
         className="relative max-h-[85vh] w-full max-w-xl overflow-y-auto rounded-t-2xl bg-surface px-4 pt-4"
