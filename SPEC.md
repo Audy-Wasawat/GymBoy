@@ -124,16 +124,25 @@ Programs are reusable, editable templates; a session records what was actually d
 
 **Seeded exercises**
 
-- 249 popular exercises across barbell, dumbbell, machine/cable and bodyweight, grouped by body part and named in English only. Bodyweight core moves such as hanging knee raise are included.
+- 625 exercises across barbell, dumbbell, machine, cable, bodyweight and other equipment (kettlebell, bands, balls, rings), grouped by body part and named in English only. Bodyweight core moves such as hanging knee raise are included. Every muscle region has at least 10 exercises, and each main movement family (curl, press, row, raise, extension, pulldown/pull-up, squat, lunge, hinge, crunch/leg raise, calf raise, hip thrust) exists in at least three equipment types where it really exists.
+- The library is the 249 hand-picked exercises of the first release (never changed), then every other strength and powerlifting entry of free-exercise-db converted by rule, then extra exercises the source lacks (seed keys starting with "extra-"). Olympic lifts (for example power clean), assisted variants, foam rolling, stretching, cardio, plyometrics and strongman moves are left out. Seeding only adds missing entries and never overwrites a person's edits.
 - Each exercise carries primary muscles, secondary muscles, a left/right flag and a timed flag. Seeded timed exercises: plank, side plank (left/right), farmer's walk and plate pinch.
 - v1 has no exercise photos or drawings. Exercise names and muscle data come from free-exercise-db (https://github.com/yuhonas/free-exercise-db, Unlicense / public domain); its images are not used. Its coarse muscle names are remapped to the detailed regions below. An empty `image` field is kept in the data for later.
 - The list shows a small front-and-back body model beside each exercise, and the detail screen a larger one, with the muscle names also shown as text chips.
 - Machine and cable variants are separate entries where the muscle emphasis differs; any entry can be duplicated and adjusted. The muscles of any seeded exercise can be re-marked on the body model if they feel wrong.
 
+**Search**
+
+- The picker and the library search one query: it is split into words, every word must match some word of the exercise text (as a prefix or a contained piece), in any order. The text is the name plus the equipment, body part and primary muscles, in English and in Thai whatever the app language is. bicep/biceps, tricep/triceps and singular/plural forms count as the same word; common Thai and English synonyms (for example "ไบเซป", "abs", "หน้าท้อง", "ขา") also match.
+- Results are ordered: word matches in the name first, then matches in muscles, equipment or body part, then alphabetical. An empty query lists everything.
+- The picker starts clean every time it is opened: no search text and no filters carry over from the last time.
+- While searching, the first row of the picker is "Create new exercise" (also shown when nothing matches). It opens a full-screen form over the picker with the search text as the name, and saving creates the exercise and picks it at once. The same form is used on the New exercise screen. If the name already exists (ignoring case) the app warns and offers to use the existing exercise or create the new one anyway.
+
 **Custom exercises**
 
 - The user enters the name and equipment, then taps muscles on the body model to mark each one primary or secondary. Custom exercises have no photo. An exercise with no muscles marked is simply not highlighted.
 - Every exercise, seeded or custom, has "Left/right" and "Timed" switches on its detail screen. Changing them affects the next sessions only.
+- An exercise's body part is the one set on it, otherwise the one of its first primary muscle (chest_* -> chest; lats, mid-back, lower back, traps -> back; delts -> shoulders; abs and obliques -> core; quads and adductors -> quads; and so on), otherwise it is listed under "My exercises". It is worked out on read, so it follows edits to the muscles, and it labels sessions and program days.
 
 **Body model**
 
@@ -201,7 +210,7 @@ Each entry records date and body weight, with an optional progress photo. A weig
 ## Build phases
 
 1. [done] Project setup: PWA, Dexie schema, Thai/English, theme, tabs, Today, Settings.
-2. [done] Weights core: seeded exercise library (249, no images), the body model drawing (front/back SVG with highlighting), custom exercises and muscle editing, programs, session logging (sets, warm-ups, failure, left/right, timed, notes) and the rest timer. At the end of phase 2 the Today screen shows the body model for today's logged exercises.
+2. [done] Weights core: seeded exercise library (625, no images), the body model drawing (front/back SVG with highlighting), custom exercises and muscle editing, programs, session logging (sets, warm-ups, failure, left/right, timed, notes) and the rest timer. At the end of phase 2 the Today screen shows the body model for today's logged exercises.
 3. [done] History and progress: per-exercise history, charts, PR badge and weight-increase hint.
 4. [done] Running: run log (including optional heart rate and treadmill/outdoor tag), interval plan vs actual, templates, shoes, charts.
 5. [done] Food, other activities and body tracking.

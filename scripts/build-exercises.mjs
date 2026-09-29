@@ -3,11 +3,20 @@
 //   node scripts/build-exercises.mjs --check   validate picks and print the list, write nothing
 //   node scripts/build-exercises.mjs --no-images  write src/data/exercises.json only; entries get no image
 //   node scripts/build-exercises.mjs           also write public/exercises/*.webp (needs sharp)
+//   add --source-file=path/to/exercises.json to read a saved copy of the source's dist/exercises.json
+//   instead of downloading it (the data must be the pinned commit named in exercise-picks.json)
 //
 // Any pick whose id is missing from the source data stops the build; nothing is skipped silently.
+//
+// The library is, in this order:
+//   1. the hand-picked exercises in scripts/exercise-picks.json (their keys, muscles and order never change),
+//   2. every other strength / powerlifting entry of the source data, converted by scripts/exercise-rules.mjs,
+//   3. exercises the source lacks, in scripts/extra-exercises.json (seed keys start with "extra-").
+// Seeding only adds keys that are missing, so existing installs keep their rows untouched.
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { autoExercise, CATEGORIES, isExcluded, PART_OF_MUSCLE } from './exercise-rules.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const checkOnly = process.argv.includes('--check')
@@ -51,9 +60,16 @@ function mapEquipment(src) {
 const unique = (xs) => [...new Set(xs)]
 
 const { source, picks } = JSON.parse(await readFile(join(root, 'scripts/exercise-picks.json'), 'utf8'))
-const res = await fetch(`${source}/dist/exercises.json`)
-if (!res.ok) throw new Error(`Could not download source data: HTTP ${res.status}`)
-const byId = new Map((await res.json()).map((e) => [e.id, e]))
+const sourceFile = process.argv.find((a) => a.startsWith('--source-file='))?.slice('--source-file='.length)
+let sourceData
+if (sourceFile) {
+  sourceData = JSON.parse(await readFile(sourceFile, 'utf8'))
+} else {
+  const res = await fetch(`${source}/dist/exercises.json`)
+  if (!res.ok) throw new Error(`Could not download source data: HTTP ${res.status}`)
+  sourceData = await res.json()
+}
+const byId = new Map(sourceData.map((e) => [e.id, e]))
 
 const errors = []
 const seenKeys = new Set()
@@ -87,8 +103,47 @@ for (const p of picks) {
   })
 }
 
+// 2. The rest of the source data, converted by rule.
+const pickedIds = new Set(picks.map((p) => p.id))
+const norm = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+const usedNames = new Set(out.map((e) => norm(e.name)))
+const excluded = []
+const auto = []
+for (const src of [...byId.values()].sort((a, b) => a.id.localeCompare(b.id))) {
+  if (!CATEGORIES.has(src.category) || pickedIds.has(src.id)) continue
+  const why = isExcluded(src)
+  if (why) { excluded.push(`${src.id}: ${why}`); continue }
+  const e = autoExercise(src)
+  // A name already taken gets its equipment added, so no two exercises share a name.
+  if (usedNames.has(norm(e.name))) e.name = `${e.name} (${e.equipment})`
+  if (usedNames.has(norm(e.name))) { errors.push(`name clash: ${e.name}`); continue }
+  usedNames.add(norm(e.name))
+  auto.push(e)
+}
+out.push(...auto)
+
+// 3. Exercises the source lacks.
+const extras = JSON.parse(await readFile(join(root, 'scripts/extra-exercises.json'), 'utf8'))
+for (const x of extras) {
+  if (!x.key?.startsWith('extra-')) errors.push(`extra key must start with "extra-": ${x.key}`)
+  if (seenKeys.has(x.key) || out.some((e) => e.key === x.key)) errors.push(`duplicate key: ${x.key}`)
+  if (usedNames.has(norm(x.name))) { errors.push(`extra duplicates an existing name: ${x.name}`); continue }
+  usedNames.add(norm(x.name))
+  if (!EQUIPMENT.has(x.equipment)) errors.push(`${x.key}: bad equipment "${x.equipment}"`)
+  for (const m of [...x.primary, ...(x.secondary ?? [])]) if (!MUSCLES.has(m)) errors.push(`${x.key}: bad muscle "${m}"`)
+  if (!x.primary?.length) errors.push(`${x.key}: needs a primary muscle`)
+  out.push({
+    key: x.key, name: x.name, equipment: x.equipment,
+    bodyPart: x.bodyPart ?? PART_OF_MUSCLE[x.primary[0]],
+    image: undefined,
+    primaryMuscles: x.primary, secondaryMuscles: x.secondary ?? [],
+    leftRight: x.leftRight ?? false, timed: x.timed ?? false,
+    bodyweight: x.bodyweight ?? x.equipment === 'bodyweight'
+  })
+}
+
 if (errors.length) {
-  console.error(`Stopped: ${errors.length} problem(s) in scripts/exercise-picks.json`)
+  console.error(`Stopped: ${errors.length} problem(s) in the exercise sources`)
   for (const e of errors) console.error(`  - ${e}`)
   process.exit(1)
 }
@@ -102,7 +157,9 @@ if (checkOnly) {
       `| ${i + 1} | ${e.name} | ${e.equipment}${e.bodyweight && e.equipment !== 'bodyweight' ? ' (bw)' : ''} | ${e.leftRight ? 'L/R' : ''} | ${e.timed ? 'timed' : ''} | ${e.primaryMuscles.join(', ')} | ${e.secondaryMuscles.join(', ')} |`
     ))
   }
-  console.log(`\nTotal: ${out.length}`)
+  console.log(`\nTotal: ${out.length} (${picks.length} picked, ${auto.length} by rule, ${extras.length} extra)`)
+  console.log(`Excluded from the source data: ${excluded.length}`)
+  for (const e of excluded) console.log(`  - ${e}`)
   process.exit(0)
 }
 

@@ -43,7 +43,7 @@ Each part of the app wears the colour of a competition bumper plate.
 | ![](https://img.shields.io/badge/-%20-C48A0A) | **Other sports** | Badminton or anything else, in minutes with effort rating, counted toward your weekly workout days |
 | ![](https://img.shields.io/badge/-%20-2C8046) | **Food** | Personal food library with kcal and protein, portion multiplier, optional photos, daily goals and totals |
 
-Also: body weight tracking with progress photos, weekly and monthly summaries, an interactive body model that lights up the muscles you trained (tap regions to assign muscles to custom exercises), full backups, and JSON exports you can hand to an AI coach.
+Also: a library of 625 exercises with a forgiving search (English and Thai, any word order), the option to create your own exercise right from the picker, body weight tracking with progress photos, weekly and monthly summaries, an interactive body model that lights up the muscles you trained (tap regions to assign muscles to custom exercises), full backups, and JSON exports you can hand to an AI coach.
 
 ## Getting started
 
