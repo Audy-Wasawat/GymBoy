@@ -3,9 +3,9 @@
 Kept current so a compacted or restarted session can resume. See AUTOPILOT.md for the plan.
 
 ## Status
-- **Current phase:** 8 (Muscle picker on body model) — done.
-- **Last passing build:** Phase 8 — 52 tests green.
-- **Next:** Stage 2 — run all 6 agents.
+- **Stage 2 complete.** All 6 agents ran; all HIGH and MEDIUM findings fixed and committed.
+- **Last passing build:** Stage 2 fixes — 52 tests green.
+- **Next:** Final report.
 
 ## Dev/preview servers
 - A Vite dev server was started on http://localhost:5173 for the qa/mobile agents (HashRouter). Remember to stop it (`npm run dev` background task) before finishing the run.
@@ -23,4 +23,4 @@ Kept current so a compacted or restarted session can resume. See AUTOPILOT.md fo
 - [x] Phase 6 — Today details, summary, daily grid
 - [x] Phase 7 — Backup, restore, AI export, banner, data deletion
 - [x] Phase 8 — Muscle picker on the body model
-- [ ] Stage 2 — Agents + final pass
+- [x] Stage 2 — Agents + final pass

@@ -44,5 +44,21 @@ One line per choice made where SPEC.md and AUTOPILOT.md were silent, with the re
 - SVG shapes are inline path/ellipse data matching the existing `BodyModel` layout; regions click to cycle none → primary → secondary → none.
 - No `db.version` bump needed; no new stores or index changes.
 
+## Stage 2 agent findings (fixed)
+- **Today locale**: `'th-TH'` → `'th-TH-u-ca-gregory'` to show CE year (Gregorian) per spec.
+- **Today quick buttons**: now go directly to `/running/new` and `/food/add` per spec ("Quick buttons: start a run entry, add food").
+- **window.confirm() → Sheet**: FoodEntryEditor, BodyEntryEditor, Activities, FoodLibraryEditor, Backup (restore) — `window.confirm` is silently blocked on iOS PWA installed mode.
+- **Input validation**: FoodEntryEditor rejects negative/zero/Infinity portion and kcal; BodyEntryEditor uses `isFinite` to reject Infinity weight (e.g. `1e500`).
+- **ActivityGrid filter**: running filter active button uses `bg-running` not `bg-weights`.
+- **BodyChartView**: passes `language` prop from Body.tsx; both `formatDate` calls use it; raw RGBA grid color replaced with `rgb(var(--line)/0.4)` token.
+- **BodyModelPicker**: SVG is `aria-hidden`, toggle buttons have `aria-pressed`, 'Front'/'Back' use i18n strings.
+- **Segmented**: min-h 36→44 px throughout the app.
+- **RunEditor repDurationSec**: `inputMode="text"` so iOS shows a colon key (mm:ss format).
+- **Food.tsx**: jump-to-date via transparent `<input type="date">` overlay on the date label.
+- **SetRow**: double-tap guard with `confirming` state flag.
+- **backup.ts**: `parseBackup` validates all required table keys are arrays; schema version < 1 now rejected; v1 backup migration (nameEn/nameTh → name) applied on restore; `ensureSettings()` called after restore; `shareOrDownload` rethrows non-AbortError; URL revoke delayed 100 ms; AI export filters open sessions; inline pace division replaced with `paceSecPerKm()` helper.
+- **Backup.tsx**: ClearHistory calls `getDeleteCounts` and displays count summary; custom date range with from > to is rejected with error message; all raw Tailwind red tokens replaced with `text-weights` / `border-weights` / `bg-weights`.
+- **LOW findings deferred**: DST edge-case in Summary.tsx Sunday arithmetic (Thailand has no DST), RestBar aria-live tick announcements, duplicate icon entries in SW precache, Page.tsx hardcoded "Back" aria-label — none affect correctness for the primary use case.
+
 ## Suggestions
 - (none yet)
