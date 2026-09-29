@@ -1,6 +1,7 @@
 import { db, ensureSettings } from '../db/db'
 import { seedExercises } from '../db/seed'
 import { localDate, parseLocalDate } from './dates'
+import { paceSecPerKm as calcPace } from './running'
 
 const SCHEMA_VERSION = 2
 const APP_VERSION = '0.1.0'
@@ -74,12 +75,22 @@ export async function createBackup(): Promise<Blob> {
   return new Blob([JSON.stringify(payload)], { type: 'application/json' })
 }
 
+const REQUIRED_TABLES = [
+  'exercises', 'programs', 'programDays', 'programExercises',
+  'sessions', 'sessionExercises', 'sets', 'setDrafts',
+  'runs', 'runTemplates', 'shoes',
+  'activities', 'foods', 'foodEntries', 'bodyEntries', 'settings'
+]
+
 /** Parses a backup file and returns counts without committing anything. */
 export async function parseBackup(file: File): Promise<{ counts: BackupCounts; data: Record<string, unknown[]> }> {
   const text = await file.text()
   const obj = JSON.parse(text)
   if (obj.format !== FORMAT) throw new Error('invalid format')
-  if (typeof obj.schemaVersion !== 'number' || obj.schemaVersion > SCHEMA_VERSION) throw new Error('schema too new')
+  if (typeof obj.schemaVersion !== 'number' || obj.schemaVersion < 1 || obj.schemaVersion > SCHEMA_VERSION) throw new Error('schema too new')
+  for (const key of REQUIRED_TABLES) {
+    if (!Array.isArray(obj[key])) throw new Error(`invalid format: missing ${key}`)
+  }
   const counts: BackupCounts = {
     sessions: (obj.sessions as unknown[]).length,
     runs: (obj.runs as unknown[]).length,
@@ -92,6 +103,12 @@ export async function parseBackup(file: File): Promise<{ counts: BackupCounts; d
 
 /** Replaces all data with the backup contents in one transaction. */
 export async function restoreBackup(data: Record<string, unknown[]>): Promise<void> {
+  // Migrate v1 exercises (nameEn/nameTh → name) if needed
+  const schemaVersion = (data as Record<string, unknown>).schemaVersion as number
+  const exercises = (data.exercises as Array<Record<string, unknown>>).map((e) =>
+    schemaVersion < 2 ? { ...e, name: (e.nameEn ?? e.nameTh ?? '') as string, timed: false } : e
+  )
+
   // Convert photo data URLs back to Blobs
   const foods = (data.foods as Array<Record<string, unknown>>).map((f) => ({
     ...f,
@@ -115,7 +132,7 @@ export async function restoreBackup(data: Record<string, unknown[]>): Promise<vo
       db.activities.clear(), db.foods.clear(), db.foodEntries.clear(), db.bodyEntries.clear(), db.settings.clear()
     ])
     await Promise.all([
-      db.exercises.bulkAdd(data.exercises as never[]),
+      db.exercises.bulkAdd(exercises as never[]),
       db.programs.bulkAdd(data.programs as never[]),
       db.programDays.bulkAdd(data.programDays as never[]),
       db.programExercises.bulkAdd(data.programExercises as never[]),
@@ -137,6 +154,7 @@ export async function restoreBackup(data: Record<string, unknown[]>): Promise<vo
   // Re-seed exercises if none were in the backup
   const count = await db.exercises.count()
   if (count === 0) await seedExercises()
+  await ensureSettings()
 }
 
 // ─── AI Export ────────────────────────────────────────────────────────────────
@@ -174,7 +192,7 @@ export async function createAIExport(opts: AIExportOptions): Promise<Blob> {
   }
 
   if (categories.has('weights')) {
-    const sessions = await db.sessions.where('date').between(from, to, true, true).toArray()
+    const sessions = await db.sessions.where('date').between(from, to, true, true).filter((s) => s.finishedAt != null).toArray()
     const sessionIds = sessions.map((s) => s.id!)
     const [sessionExercises, sets, exercises] = await Promise.all([
       db.sessionExercises.where('sessionId').anyOf(sessionIds).toArray(),
@@ -206,7 +224,7 @@ export async function createAIExport(opts: AIExportOptions): Promise<Blob> {
     result.running = runs.map((r) => ({
       id: r.id, date: r.date, type: r.type,
       distanceKm: r.distanceKm, durationSec: r.durationSec,
-      paceSecPerKm: r.durationSec / r.distanceKm,
+      paceSecPerKm: calcPace(r.distanceKm, r.durationSec) ?? null,
       shoe: r.shoeId ? shoeMap.get(r.shoeId) : undefined,
       avgHr: r.avgHr, maxHr: r.maxHr, surface: r.surface,
       note: r.note, plan: r.plan, repResults: r.repResults
@@ -313,6 +331,7 @@ export async function shareOrDownload(blob: Blob, filename: string): Promise<boo
       return true
     } catch (e) {
       if ((e as DOMException).name === 'AbortError') return false
+      throw e
     }
   }
   // Fallback: download link
@@ -323,7 +342,7 @@ export async function shareOrDownload(blob: Blob, filename: string): Promise<boo
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
-  URL.revokeObjectURL(url)
+  setTimeout(() => URL.revokeObjectURL(url), 100)
   return true
 }
 

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { ChevronRight, Plus } from 'lucide-react'
 import { Page, Row, Section } from '../components/Page'
+import { Sheet, SheetButton } from '../components/Sheet'
 import { addActivity, deleteActivity, listActivities, listSportSuggestions, updateActivity } from '../db/activities'
 import { db } from '../db/db'
 import { useSettings } from '../db/useSettings'
@@ -72,6 +73,7 @@ export function ActivityEditor() {
   const [date, setDate] = useState(localDate())
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [deleteSheet, setDeleteSheet] = useState(false)
 
   const loaded = useRef(false)
   useEffect(() => {
@@ -105,7 +107,6 @@ export function ActivityEditor() {
 
   async function handleDelete() {
     if (!id) return
-    if (!confirm(t('act.deleteConfirm'))) return
     await deleteActivity(Number(id))
     nav('/more/activities', { replace: true })
   }
@@ -180,7 +181,7 @@ export function ActivityEditor() {
         </Row>
       </Section>
 
-      {error && <p className="mb-3 text-[14px] text-red-500">{error}</p>}
+      {error && <p className="mb-3 text-[14px] text-weights">{error}</p>}
 
       <button
         onClick={handleSave}
@@ -192,12 +193,17 @@ export function ActivityEditor() {
 
       {!isNew && (
         <button
-          onClick={handleDelete}
-          className="w-full min-h-[52px] rounded-xl border border-red-400 text-[16px] text-red-500"
+          onClick={() => setDeleteSheet(true)}
+          className="w-full min-h-[52px] rounded-xl border border-line text-[16px] text-weights"
         >
           {t('act.delete')}
         </button>
       )}
+
+      <Sheet open={deleteSheet} onClose={() => setDeleteSheet(false)} title={t('act.deleteConfirm')}>
+        <SheetButton tone="danger" onClick={handleDelete}>{t('act.delete')}</SheetButton>
+        <SheetButton onClick={() => setDeleteSheet(false)}>{t('common.cancel')}</SheetButton>
+      </Sheet>
     </Page>
   )
 }

@@ -64,7 +64,7 @@ export function Body() {
 
       {showChart && entries && entries.length >= 2 && (
         <Suspense fallback={null}>
-          <BodyChartView entries={entries} weightUnit={weightUnit} />
+          <BodyChartView entries={entries} weightUnit={weightUnit} language={language} />
         </Suspense>
       )}
 
@@ -95,8 +95,11 @@ export function Body() {
           {entries?.map((e) => (
             <button
               key={e.id}
-              onClick={() => compareMode && e.photo ? toggleSelect(e.id!) : nav(`/more/body/${e.id}`)}
-              className={`flex w-full min-h-[56px] items-center gap-3 border-b border-line px-4 py-2 last:border-b-0 text-left ${compareMode && e.photo ? (selected.includes(e.id!) ? 'bg-weights/10' : '') : ''}`}
+              onClick={() => {
+                if (compareMode) { if (e.photo) toggleSelect(e.id!) }
+                else nav(`/more/body/${e.id}`)
+              }}
+              className={`flex w-full min-h-[56px] items-center gap-3 border-b border-line px-4 py-2 last:border-b-0 text-left ${compareMode ? (e.photo ? (selected.includes(e.id!) ? 'bg-weights/10' : '') : 'opacity-30') : ''}`}
             >
               <PhotoThumb blob={e.photo} label={e.date} />
               <span className="flex-1">

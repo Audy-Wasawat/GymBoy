@@ -352,6 +352,13 @@ const th = {
   'delete.catFood': 'รายการอาหาร',
   'delete.catActivities': 'กิจกรรม',
   'delete.catBody': 'บันทึกน้ำหนักร่างกาย',
+  'delete.countSessions': 'เซสชัน',
+  'delete.countSets': 'เซต',
+  'delete.countRuns': 'การวิ่ง',
+  'delete.countFoodEntries': 'รายการอาหาร',
+  'delete.countActivities': 'กิจกรรม',
+  'delete.countBodyEntries': 'บันทึกน้ำหนัก',
+  'backup.invalidRange': 'วันที่เริ่มต้องไม่เกินวันสุดท้าย',
 
   'sum.workoutDays': 'วันออกกำลังกาย',
   'sum.weekGoal': 'เป้าหมาย/สัปดาห์',
@@ -417,6 +424,7 @@ const th = {
   'food.date': 'วันที่',
   'food.prevDay': 'วันก่อน',
   'food.nextDay': 'วันถัดไป',
+  'food.jumpToDate': 'ไปที่วันที่',
   'food.total': 'รวม',
   'food.remaining': 'คงเหลือ',
   'food.kcal': 'แคล',
@@ -444,6 +452,7 @@ const th = {
   'food.changePhoto': 'เปลี่ยนรูป',
   'food.nameRequired': 'กรุณาใส่ชื่ออาหาร',
   'food.kcalRequired': 'กรุณาใส่แคลอรี',
+  'food.portionInvalid': 'ปริมาณต้องมากกว่า 0',
   'food.notFound': 'ไม่พบรายการนี้',
   'food.pickFromLibrary': 'เลือกจากคลัง',
   'food.enterManually': 'กรอกเอง',
@@ -488,7 +497,9 @@ const th = {
   'body.chart': 'กราฟน้ำหนัก',
   'body.weightRequired': 'กรุณาใส่น้ำหนัก',
   'body.futureDate': 'เลือกวันในอนาคตไม่ได้',
-  'body.notFound': 'ไม่พบรายการนี้'
+  'body.notFound': 'ไม่พบรายการนี้',
+  'body.front': 'หน้า',
+  'body.back': 'หลัง'
 } as const
 
 export type StringKey = keyof typeof th
@@ -847,6 +858,13 @@ const en: Record<StringKey, string> = {
   'delete.catFood': 'Food entries',
   'delete.catActivities': 'Activities',
   'delete.catBody': 'Body weight entries',
+  'delete.countSessions': 'sessions',
+  'delete.countSets': 'sets',
+  'delete.countRuns': 'runs',
+  'delete.countFoodEntries': 'food entries',
+  'delete.countActivities': 'activities',
+  'delete.countBodyEntries': 'body entries',
+  'backup.invalidRange': 'Start date must be before end date',
 
   'sum.workoutDays': 'Workout days',
   'sum.weekGoal': 'Goal / week',
@@ -912,6 +930,7 @@ const en: Record<StringKey, string> = {
   'food.date': 'Date',
   'food.prevDay': 'Previous day',
   'food.nextDay': 'Next day',
+  'food.jumpToDate': 'Go to date',
   'food.total': 'Total',
   'food.remaining': 'Remaining',
   'food.kcal': 'kcal',
@@ -939,6 +958,7 @@ const en: Record<StringKey, string> = {
   'food.changePhoto': 'Change photo',
   'food.nameRequired': 'Please enter a name',
   'food.kcalRequired': 'Please enter calories',
+  'food.portionInvalid': 'Portion must be greater than 0',
   'food.notFound': 'Not found',
   'food.pickFromLibrary': 'Pick from library',
   'food.enterManually': 'Enter manually',
@@ -983,7 +1003,9 @@ const en: Record<StringKey, string> = {
   'body.chart': 'Weight chart',
   'body.weightRequired': 'Please enter weight',
   'body.futureDate': 'The date cannot be in the future',
-  'body.notFound': 'Not found'
+  'body.notFound': 'Not found',
+  'body.front': 'Front',
+  'body.back': 'Back'
 }
 
 export const strings = { th, en }

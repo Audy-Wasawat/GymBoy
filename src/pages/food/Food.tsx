@@ -37,18 +37,28 @@ export function Food() {
       <div className="mb-5 flex items-center justify-between rounded-xl border border-line bg-surface px-3 py-2">
         <button
           onClick={() => setDate(addDays(date, -1))}
-          className="flex h-10 w-10 items-center justify-center"
+          className="flex h-11 w-11 items-center justify-center"
           aria-label={t('food.prevDay')}
         >
           <ChevronLeft size={20} aria-hidden />
         </button>
-        <span className="text-[15px] font-semibold">
-          {isToday ? `${formatDate(date, language)} (${t('today.title')})` : formatDate(date, language)}
-        </span>
+        <label className="relative cursor-pointer text-center">
+          <span className="text-[15px] font-semibold">
+            {isToday ? `${formatDate(date, language)} (${t('today.title')})` : formatDate(date, language)}
+          </span>
+          <input
+            type="date"
+            value={date}
+            max={localDate()}
+            onChange={(e) => { if (e.target.value) setDate(e.target.value) }}
+            className="absolute inset-0 cursor-pointer opacity-0"
+            aria-label={t('food.jumpToDate')}
+          />
+        </label>
         <button
           onClick={() => { if (!isToday) setDate(addDays(date, 1)) }}
           disabled={isToday}
-          className="flex h-10 w-10 items-center justify-center disabled:opacity-30"
+          className="flex h-11 w-11 items-center justify-center disabled:opacity-30"
           aria-label={t('food.nextDay')}
         >
           <ChevronRight size={20} aria-hidden />
@@ -103,7 +113,7 @@ export function Food() {
             >
               <span className="flex-1">
                 <span className="block text-[16px]">{e.name}{e.portion !== 1 ? ` ×${e.portion}` : ''}</span>
-                <span className="block text-[13px] text-muted">{e.kcal} kcal · {Math.round(e.proteinG * 10) / 10} {t('food.gramUnit')} protein</span>
+                <span className="block text-[13px] text-muted">{e.kcal} kcal · {Math.round(e.proteinG * 10) / 10} {t('food.gramUnit')} {t('food.protein')}</span>
               </span>
               <ChevronRight size={18} className="text-muted" aria-hidden />
             </Link>

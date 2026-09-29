@@ -132,7 +132,7 @@ export function ActivityGrid() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`min-h-[36px] rounded-lg px-4 text-[14px] font-semibold ${filter === f ? 'bg-weights text-white' : 'border border-line bg-surface'}`}
+            className={`min-h-[44px] rounded-lg px-4 text-[14px] font-semibold ${filter === f ? (f === 'running' ? 'bg-running text-white' : 'bg-weights text-white') : 'border border-line bg-surface'}`}
           >
             {f === 'all' ? t('grid.all') : f === 'weights' ? t('grid.weights') : t('grid.running')}
           </button>

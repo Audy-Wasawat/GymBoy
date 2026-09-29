@@ -11,7 +11,7 @@ export function Segmented<T extends string>({ value, options, onChange, label }:
           role="radio"
           aria-checked={value === o.value}
           onClick={() => onChange(o.value)}
-          className={`min-h-[36px] min-w-[56px] rounded-md px-3 text-[15px] ${
+          className={`min-h-[44px] min-w-[56px] rounded-md px-3 text-[15px] ${
             value === o.value ? 'bg-surface font-semibold shadow-sm' : 'text-muted'
           }`}
         >

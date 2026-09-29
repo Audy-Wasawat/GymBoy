@@ -113,9 +113,10 @@ export function BodyModelPicker({ primary, secondary, onChange }: {
           <button
             key={v}
             onClick={() => setView(v)}
-            className={`min-h-[36px] rounded-lg px-4 text-[14px] font-semibold ${view === v ? 'bg-weights text-white' : 'border border-line'}`}
+            aria-pressed={view === v}
+            className={`min-h-[44px] rounded-lg px-4 text-[14px] font-semibold ${view === v ? 'bg-weights text-white' : 'border border-line'}`}
           >
-            {v === 'front' ? 'Front' : 'Back'}
+            {v === 'front' ? t('body.front') : t('body.back')}
           </button>
         ))}
       </div>
@@ -126,8 +127,7 @@ export function BodyModelPicker({ primary, secondary, onChange }: {
           viewBox="0 0 100 200"
           height={220}
           width={110}
-          aria-label={t('ex.pickerHint')}
-          role="group"
+          aria-hidden="true"
         >
           <InteractiveFigure
             shapes={shapes}

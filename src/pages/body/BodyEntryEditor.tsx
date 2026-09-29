@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Page, Row, Section } from '../../components/Page'
+import { Sheet, SheetButton } from '../../components/Sheet'
 import { addBodyEntry, deleteBodyEntry, updateBodyEntry } from '../../db/body'
 import { db } from '../../db/db'
 import { useSettings } from '../../db/useSettings'
@@ -28,6 +29,7 @@ export function BodyEntryEditor() {
   const [photo, setPhoto] = useState<Blob | undefined>()
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [deleteSheet, setDeleteSheet] = useState(false)
 
   const loaded = useRef(false)
   useEffect(() => {
@@ -50,7 +52,7 @@ export function BodyEntryEditor() {
 
   async function handleSave() {
     const w = parseFloat(weightStr)
-    if (!weightStr || isNaN(w) || w <= 0) { setError(t('body.weightRequired')); return }
+    if (!weightStr || !isFinite(w) || w <= 0) { setError(t('body.weightRequired')); return }
     if (!isPastOrToday(date)) { setError(t('body.futureDate')); return }
     setSaving(true)
     try {
@@ -68,12 +70,12 @@ export function BodyEntryEditor() {
 
   async function handleDelete() {
     if (!id) return
-    if (!confirm(t('body.deleteConfirm'))) return
     await deleteBodyEntry(Number(id))
     nav('/more/body', { replace: true })
   }
 
   if (existing === undefined) return null
+  if (!isNew && existing === null) return <Page title={t('body.editTitle')} back="/more/body">{null}</Page>
 
   return (
     <Page title={isNew ? t('body.addTitle') : t('body.editTitle')} back="/more/body">
@@ -111,7 +113,7 @@ export function BodyEntryEditor() {
         </div>
       </Section>
 
-      {error && <p className="mb-3 text-[14px] text-red-500">{error}</p>}
+      {error && <p className="mb-3 text-[14px] text-weights">{error}</p>}
 
       <button
         onClick={handleSave}
@@ -123,12 +125,17 @@ export function BodyEntryEditor() {
 
       {!isNew && (
         <button
-          onClick={handleDelete}
-          className="w-full min-h-[52px] rounded-xl border border-red-400 text-[16px] text-red-500"
+          onClick={() => setDeleteSheet(true)}
+          className="w-full min-h-[52px] rounded-xl border border-line text-[16px] text-weights"
         >
           {t('body.delete')}
         </button>
       )}
+
+      <Sheet open={deleteSheet} onClose={() => setDeleteSheet(false)} title={t('body.deleteConfirm')}>
+        <SheetButton tone="danger" onClick={handleDelete}>{t('body.delete')}</SheetButton>
+        <SheetButton onClick={() => setDeleteSheet(false)}>{t('common.cancel')}</SheetButton>
+      </Sheet>
     </Page>
   )
 }

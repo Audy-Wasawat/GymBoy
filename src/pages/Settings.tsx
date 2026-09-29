@@ -52,7 +52,7 @@ export function SettingsPage() {
             id="rest"
             value={settings.defaultRestSec}
             onChange={(e) => updateSettings({ defaultRestSec: Number(e.target.value) })}
-            className="min-h-[40px] rounded-lg border border-line bg-bg px-3 text-[16px]"
+            className="min-h-[44px] rounded-lg border border-line bg-bg px-3 text-[16px]"
           >
             {REST_OPTIONS.map((s) => (
               <option key={s} value={s}>{s} {t('settings.seconds')}</option>

@@ -298,7 +298,7 @@ export function RunEditor() {
                 </Field>
               ) : (
                 <Field label={t('run.repDurationSec')}>
-                  <TextInput value={repDurationSec} onChange={setRepDurationSec} inputMode="numeric" ariaLabel={t('run.repDurationSec')} />
+                  <TextInput value={repDurationSec} onChange={setRepDurationSec} inputMode="text" ariaLabel={t('run.repDurationSec')} />
                 </Field>
               )}
               <Field label={t('run.targetPace')}>

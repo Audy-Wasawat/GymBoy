@@ -70,7 +70,7 @@ export function Today() {
   const { goals, language } = useSettings()
   const data = useTodayData()
   const muscles = useTodayMuscles()
-  const dateLabel = new Date().toLocaleDateString(language === 'th' ? 'th-TH' : 'en-GB', {
+  const dateLabel = new Date().toLocaleDateString(language === 'th' ? 'th-TH-u-ca-gregory' : 'en-GB', {
     weekday: 'long', day: 'numeric', month: 'long'
   })
   const nothing = data && data.sessions.length + data.runs.length + data.activities.length === 0
@@ -81,8 +81,8 @@ export function Today() {
 
       <div className="mb-5 grid grid-cols-3 gap-2">
         <QuickAction to="/weights" icon={Dumbbell} label={t('today.startWeights')} tone="bg-weights" />
-        <QuickAction to="/running" icon={Footprints} label={t('today.logRun')} tone="bg-running" />
-        <QuickAction to="/food" icon={UtensilsCrossed} label={t('today.addFood')} tone="bg-food" />
+        <QuickAction to="/running/new" icon={Footprints} label={t('today.logRun')} tone="bg-running" />
+        <QuickAction to={`/food/add?date=${localDate()}`} icon={UtensilsCrossed} label={t('today.addFood')} tone="bg-food" />
       </div>
 
       <Section title={t('today.done')}>

@@ -1,13 +1,14 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Page, Row, Section } from '../components/Page'
+import { Sheet, SheetButton } from '../components/Sheet'
 import { updateSettings } from '../db/db'
 import { useSettings } from '../db/useSettings'
 import { useT } from '../i18n/useT'
 import {
   aiExportFilename, aiPeriodPreset, backupFilename, clearHistory, createAIExport,
-  createBackup, eraseEverything, parseBackup, restoreBackup, shareOrDownload,
-  type AICategory, type BackupCounts, type DeleteCategory
+  createBackup, eraseEverything, getDeleteCounts, parseBackup, restoreBackup, shareOrDownload,
+  type AICategory, type BackupCounts, type DeleteCategory, type DeleteCounts
 } from '../lib/backup'
 import { localDate } from '../lib/dates'
 
@@ -35,7 +36,7 @@ function FullBackup() {
   return (
     <Section title={t('backup.full')}>
       <Row className="text-[14px] text-muted">{t('backup.fullNote')}</Row>
-      {err && <Row className="text-[14px] text-red-500">{err}</Row>}
+      {err && <Row className="text-[14px] text-weights">{err}</Row>}
       <Row>
         <button
           onClick={handleBackup}
@@ -58,6 +59,7 @@ function Restore() {
   const [err, setErr] = useState('')
   const [busy, setBusy] = useState(false)
   const [done, setDone] = useState(false)
+  const [restoreSheet, setRestoreSheet] = useState(false)
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -77,7 +79,7 @@ function Restore() {
 
   async function handleRestore() {
     if (!pending) return
-    if (!confirm(t('backup.restoreConfirm'))) return
+    setRestoreSheet(false)
     setBusy(true)
     try {
       await restoreBackup(pending)
@@ -99,7 +101,7 @@ function Restore() {
     <Section title={t('backup.restore')}>
       <Row className="text-[14px] text-muted">{t('backup.restoreNote')}</Row>
       <Row className="text-[14px] text-muted">{t('backup.restoreWarning')}</Row>
-      {err && <Row className="text-[14px] text-red-500">{err}</Row>}
+      {err && <Row className="text-[14px] text-weights">{err}</Row>}
       {counts && (
         <Row className="text-[14px]">
           {t('backup.restoreCount')
@@ -110,13 +112,19 @@ function Restore() {
       )}
       <Row>
         {counts ? (
-          <button
-            onClick={handleRestore}
-            disabled={busy}
-            className="w-full min-h-[44px] rounded-lg bg-weights text-[16px] font-semibold text-white disabled:opacity-50"
-          >
-            {busy ? '…' : t('backup.restore')}
-          </button>
+          <>
+            <button
+              onClick={() => setRestoreSheet(true)}
+              disabled={busy}
+              className="w-full min-h-[44px] rounded-lg bg-weights text-[16px] font-semibold text-white disabled:opacity-50"
+            >
+              {busy ? '…' : t('backup.restore')}
+            </button>
+            <Sheet open={restoreSheet} onClose={() => setRestoreSheet(false)} title={t('backup.restoreConfirm')}>
+              <SheetButton tone="danger" onClick={handleRestore}>{t('backup.restore')}</SheetButton>
+              <SheetButton onClick={() => setRestoreSheet(false)}>{t('common.cancel')}</SheetButton>
+            </Sheet>
+          </>
         ) : (
           <label className="flex w-full min-h-[44px] cursor-pointer items-center justify-center rounded-lg border border-line bg-surface text-[16px] font-semibold">
             {t('backup.restore')}
@@ -155,6 +163,7 @@ function AIExport() {
   }
 
   async function handleExport() {
+    if (period === 'custom' && customFrom > customTo) { setErr(t('backup.invalidRange')); return }
     setBusy(true)
     setErr('')
     const { from, to } = range()
@@ -227,7 +236,7 @@ function AIExport() {
         </div>
       </div>
 
-      {err && <Row className="text-[14px] text-red-500">{err}</Row>}
+      {err && <Row className="text-[14px] text-weights">{err}</Row>}
 
       <Row>
         <button
@@ -256,11 +265,17 @@ function ClearHistory() {
   const [err, setErr] = useState('')
 
   const confirmWord = language === 'th' ? t('delete.confirmWordTh') : t('delete.confirmWordEn')
+  const [deleteCounts, setDeleteCounts] = useState<DeleteCounts | null>(null)
 
   const CAT_LABELS: Record<DeleteCategory, string> = {
     weights: t('delete.catWeights'), runs: t('delete.catRuns'), food: t('delete.catFood'),
     activities: t('delete.catActivities'), body: t('delete.catBody')
   }
+
+  useEffect(() => {
+    if (cats.size === 0) { setDeleteCounts(null); return }
+    getDeleteCounts(cats).then(setDeleteCounts).catch(() => setDeleteCounts(null))
+  }, [cats])
 
   async function handleDelete() {
     if (word !== confirmWord) { setErr(t('delete.wrongWord')); return }
@@ -301,6 +316,18 @@ function ClearHistory() {
 
       {cats.size > 0 && (
         <>
+          {deleteCounts && (
+            <Row className="text-[14px] text-muted">
+              {[
+                deleteCounts.sessions > 0 && `${deleteCounts.sessions} ${t('delete.countSessions')}`,
+                deleteCounts.sets > 0 && `${deleteCounts.sets} ${t('delete.countSets')}`,
+                deleteCounts.runs > 0 && `${deleteCounts.runs} ${t('delete.countRuns')}`,
+                deleteCounts.foodEntries > 0 && `${deleteCounts.foodEntries} ${t('delete.countFoodEntries')}`,
+                deleteCounts.activities > 0 && `${deleteCounts.activities} ${t('delete.countActivities')}`,
+                deleteCounts.bodyEntries > 0 && `${deleteCounts.bodyEntries} ${t('delete.countBodyEntries')}`
+              ].filter(Boolean).join(' · ')}
+            </Row>
+          )}
           <Row>
             <Link to="/more/backup" className="text-[14px] underline text-running">{t('delete.backupFirst')}</Link>
           </Row>
@@ -316,12 +343,12 @@ function ClearHistory() {
               autoCorrect="off"
             />
           </Row>
-          {err && <Row className="text-[14px] text-red-500">{err}</Row>}
+          {err && <Row className="text-[14px] text-weights">{err}</Row>}
           <Row>
             <button
               onClick={handleDelete}
               disabled={busy || word !== confirmWord}
-              className="w-full min-h-[44px] rounded-lg border border-red-400 text-[15px] font-semibold text-red-500 disabled:opacity-40"
+              className="w-full min-h-[44px] rounded-lg border border-weights text-[15px] font-semibold text-weights disabled:opacity-40"
             >
               {t('delete.proceed')}
             </button>
@@ -372,12 +399,12 @@ function EraseEverything() {
           autoCorrect="off"
         />
       </Row>
-      {err && <Row className="text-[14px] text-red-500">{err}</Row>}
+      {err && <Row className="text-[14px] text-weights">{err}</Row>}
       <Row>
         <button
           onClick={handleErase}
           disabled={busy || word !== confirmWord}
-          className="w-full min-h-[44px] rounded-lg bg-red-500 text-[15px] font-semibold text-white disabled:opacity-40"
+          className="w-full min-h-[44px] rounded-lg bg-weights text-[15px] font-semibold text-white disabled:opacity-40"
         >
           {t('delete.proceed')}
         </button>
@@ -396,7 +423,7 @@ export function BackupPage() {
       <Restore />
       <AIExport />
 
-      <h2 className="mb-2 text-[15px] font-semibold text-red-500">{t('delete.title')}</h2>
+      <h2 className="mb-2 text-[15px] font-semibold text-weights">{t('delete.title')}</h2>
       <ClearHistory />
       <EraseEverything />
     </Page>

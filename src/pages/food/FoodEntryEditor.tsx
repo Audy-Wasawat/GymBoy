@@ -3,6 +3,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { ChevronRight } from 'lucide-react'
 import { Page, Row, Section } from '../../components/Page'
+import { Sheet, SheetButton } from '../../components/Sheet'
 import { addFood, addFoodEntry, deleteFoodEntry, listFoodsMRU, updateFoodEntry } from '../../db/food'
 import { db } from '../../db/db'
 import type { Food } from '../../db/types'
@@ -39,6 +40,7 @@ export function FoodEntryEditor() {
   const [date, setDate] = useState(initDate)
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [deleteSheet, setDeleteSheet] = useState(false)
 
   const loaded = useRef(false)
   useEffect(() => {
@@ -66,15 +68,21 @@ export function FoodEntryEditor() {
     setMode('manual')
   }
 
-  const portion = parseFloat(portionStr) || 1
-  const baseKcal = parseFloat(kcalStr) || 0
-  const baseProtein = parseFloat(proteinStr) || 0
+  const portionVal = parseFloat(portionStr)
+  const portion = isFinite(portionVal) && portionVal > 0 ? portionVal : 1
+  const baseKcalVal = parseFloat(kcalStr)
+  const baseKcal = isFinite(baseKcalVal) && baseKcalVal >= 0 ? baseKcalVal : 0
+  const baseProteinVal = parseFloat(proteinStr)
+  const baseProtein = isFinite(baseProteinVal) && baseProteinVal >= 0 ? baseProteinVal : 0
   const finalKcal = Math.round(baseKcal * portion)
   const finalProtein = Math.round(baseProtein * portion * 10) / 10
 
   async function handleSave() {
     if (!name.trim()) { setError(t('food.nameRequired')); return }
-    if (!kcalStr.trim() || isNaN(Number(kcalStr))) { setError(t('food.kcalRequired')); return }
+    const kcalNum = parseFloat(kcalStr)
+    if (!kcalStr.trim() || !isFinite(kcalNum) || kcalNum < 0) { setError(t('food.kcalRequired')); return }
+    const portionNum = parseFloat(portionStr)
+    if (!portionStr.trim() || !isFinite(portionNum) || portionNum <= 0) { setError(t('food.portionInvalid')); return }
     if (!isPastOrToday(date)) { setError(t('run.futureDate')); return }
     setSaving(true)
     try {
@@ -104,17 +112,17 @@ export function FoodEntryEditor() {
 
   async function handleDelete() {
     if (!id) return
-    if (!confirm(t('food.deleteConfirm'))) return
     await deleteFoodEntry(Number(id))
     nav('/food', { replace: true })
   }
 
   if (existingEntry === undefined) return null
+  if (!isNew && existingEntry === null) return <Page title={t('food.editTitle')} back="/food">{null}</Page>
 
   const title = isNew ? t('food.addTitle') : t('food.editTitle')
 
   return (
-    <Page title={title} back={isNew ? `/food` : undefined}>
+    <Page title={title} back="/food">
       {/* mode selector when new */}
       {isNew && !picked && (
         <>
@@ -232,7 +240,7 @@ export function FoodEntryEditor() {
             </Section>
           )}
 
-          {error && <p className="mb-3 text-[14px] text-red-500">{error}</p>}
+          {error && <p className="mb-3 text-[14px] text-weights">{error}</p>}
 
           <button
             onClick={handleSave}
@@ -244,12 +252,17 @@ export function FoodEntryEditor() {
 
           {!isNew && (
             <button
-              onClick={handleDelete}
-              className="w-full min-h-[52px] rounded-xl border border-red-400 text-[16px] text-red-500"
+              onClick={() => setDeleteSheet(true)}
+              className="w-full min-h-[52px] rounded-xl border border-line text-[16px] text-weights"
             >
               {t('food.delete')}
             </button>
           )}
+
+          <Sheet open={deleteSheet} onClose={() => setDeleteSheet(false)} title={t('food.deleteConfirm')}>
+            <SheetButton tone="danger" onClick={handleDelete}>{t('food.delete')}</SheetButton>
+            <SheetButton onClick={() => setDeleteSheet(false)}>{t('common.cancel')}</SheetButton>
+          </Sheet>
         </>
       )}
     </Page>

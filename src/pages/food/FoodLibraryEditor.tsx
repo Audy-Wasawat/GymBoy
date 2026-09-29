@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Page, Row, Section } from '../../components/Page'
+import { Sheet, SheetButton } from '../../components/Sheet'
 import { addFood, deleteFood, updateFood } from '../../db/food'
 import { db } from '../../db/db'
 import { useT } from '../../i18n/useT'
@@ -25,6 +26,7 @@ export function FoodLibraryEditor() {
   const [photo, setPhoto] = useState<Blob | undefined>()
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [deleteSheet, setDeleteSheet] = useState(false)
 
   const loaded = useRef(false)
   useEffect(() => {
@@ -70,7 +72,6 @@ export function FoodLibraryEditor() {
 
   async function handleDelete() {
     if (!id) return
-    if (!confirm(t('food.deleteLibraryConfirm'))) return
     await deleteFood(Number(id))
     nav('/food/library', { replace: true })
   }
@@ -123,7 +124,7 @@ export function FoodLibraryEditor() {
         </div>
       </Section>
 
-      {error && <p className="mb-3 text-[14px] text-red-500">{error}</p>}
+      {error && <p className="mb-3 text-[14px] text-weights">{error}</p>}
 
       <button
         onClick={handleSave}
@@ -135,12 +136,17 @@ export function FoodLibraryEditor() {
 
       {!isNew && (
         <button
-          onClick={handleDelete}
-          className="w-full min-h-[52px] rounded-xl border border-red-400 text-[16px] text-red-500"
+          onClick={() => setDeleteSheet(true)}
+          className="w-full min-h-[52px] rounded-xl border border-line text-[16px] text-weights"
         >
           {t('food.deleteLibrary')}
         </button>
       )}
+
+      <Sheet open={deleteSheet} onClose={() => setDeleteSheet(false)} title={t('food.deleteLibraryConfirm')}>
+        <SheetButton tone="danger" onClick={handleDelete}>{t('food.deleteLibrary')}</SheetButton>
+        <SheetButton onClick={() => setDeleteSheet(false)}>{t('common.cancel')}</SheetButton>
+      </Sheet>
     </Page>
   )
 }

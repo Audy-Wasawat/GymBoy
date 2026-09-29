@@ -80,17 +80,24 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
     else if (row.kind === 'set') void db.sets.update(row.set.id!, { toFailure: !failure })
     else { setNewFailure(!failure); onNewChange?.({ toFailure: !failure }) }
   }
+  const [confirming, setConfirming] = useState(false)
   const confirm = async () => {
     if (row.kind === 'set') return
-    if (row.kind === 'new') {
-      if (!(await onSaveNew?.({ ...row.draft, ...text, toFailure: newFailure, unit }))) setError(true)
-      return
+    if (confirming) return
+    setConfirming(true)
+    try {
+      if (row.kind === 'new') {
+        if (!(await onSaveNew?.({ ...row.draft, ...text, toFailure: newFailure, unit }))) setError(true)
+        return
+      }
+      // Must run inside the tap itself for iOS to allow sound later.
+      unlockAudio()
+      const draft = { ...row.draft, ...text, unit }
+      if (await saveDraft(draft, se, unit, date)) onSaved?.(draft)
+      else setError(true)
+    } finally {
+      setConfirming(false)
     }
-    // Must run inside the tap itself for iOS to allow sound later.
-    unlockAudio()
-    const draft = { ...row.draft, ...text, unit }
-    if (await saveDraft(draft, se, unit, date)) onSaved?.(draft)
-    else setError(true)
   }
   const copyFrom = prev ? setToText(prev, se, unit) : above
   const canCopy = !saved && !!copyFrom
