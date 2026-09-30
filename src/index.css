@@ -47,6 +47,7 @@ body {
   font-feature-settings: 'tnum';
 }
 button, a, input, select { touch-action: manipulation; }
+input.border-line, select.border-line, textarea.border-line, button.border-line, label.border-line { border-color: rgb(var(--control)); }
 input::placeholder, textarea::placeholder { color: rgb(var(--muted)); opacity: 1; }
 /* In dark mode the plate colours are bright, so text on them is dark (white on them fails 4.5:1). */
 @media (prefers-color-scheme: dark) { .text-white { color: rgb(var(--bg)); } }

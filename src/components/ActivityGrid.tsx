@@ -144,42 +144,43 @@ export function ActivityGrid() {
 
       {/* day-of-week row labels */}
       <div className="flex">
-        <div className="w-7 shrink-0" />
-        <div className="flex gap-0.5 overflow-hidden">
+        <div className="w-11 shrink-0" />
+        <div className="flex overflow-hidden">
           {DAY_KEYS.map((k) => (
-            <div key={k} className="w-7 text-center text-[10px] text-muted">{t(k)}</div>
+            <div key={k} className="w-11 text-center text-[10px] text-muted">{t(k)}</div>
           ))}
         </div>
       </div>
 
       {/* grid — scrolls horizontally (weeks = columns, days of week = rows) */}
       <div className="overflow-x-auto pb-2">
-        <div className="flex gap-0.5" style={{ width: `${weeks.length * 30}px` }}>
+        <div className="flex" style={{ width: `${weeks.length * 44}px` }}>
           {weeks.map((monday) => (
-            <div key={monday} className="flex flex-col gap-0.5">
+            <div key={monday} className="flex flex-col">
               {[0, 1, 2, 3, 4, 5, 6].map((i) => {
                 const d = parseLocalDate(monday)
                 d.setDate(d.getDate() + i)
                 const dateStr = localDate(d)
                 const data = days.get(dateStr)
-                if (!data) return <div key={i} className="h-7 w-7" />
+                if (!data) return <div key={i} className="h-11 w-11" />
                 const col = dayColor(data, filter)
-                if (col === 'blank') return <div key={i} className="h-7 w-7" />
+                if (col === 'blank') return <div key={i} className="h-11 w-11" />
 
                 return (
                   <button
                     key={i}
                     onClick={() => setPopup(data)}
                     aria-label={gridCellLabel(dateStr, col, language, t)}
-                    className={`h-7 w-7 rounded-sm ${col === 'both' ? '' : cellBg(col)} overflow-hidden`}
-                    style={col === 'both' ? {} : undefined}
+                    className="flex h-11 w-11 items-center justify-center"
                   >
-                    {col === 'both' && (
-                      <div className="flex h-full w-full">
-                        <div className="flex-1 bg-weights" />
-                        <div className="flex-1 bg-running" />
-                      </div>
-                    )}
+                    <span className={`block h-7 w-7 overflow-hidden rounded-sm ${col === 'both' ? '' : cellBg(col)}`}>
+                      {col === 'both' && (
+                        <span className="flex h-full w-full">
+                          <span className="flex-1 bg-weights" />
+                          <span className="flex-1 bg-running" />
+                        </span>
+                      )}
+                    </span>
                   </button>
                 )
               })}

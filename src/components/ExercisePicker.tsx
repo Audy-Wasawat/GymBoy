@@ -71,20 +71,23 @@ export function PickerBody({ onPick, onClose }: { onPick: (ex: Exercise) => void
             className="min-w-0 flex-1 bg-transparent text-[16px] outline-none"
           />
         </label>
-        <div className="-mx-4 mb-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
-          <Chip selected={!part} onClick={() => dispatch({ type: 'part', part: '' })}>{t('lib.allParts')}</Chip>
-          {GROUPS.filter((g) => g !== 'mine' || all?.some((e) => groupOf(e) === 'mine')).map((g) => (
-            <Chip key={g} selected={part === g} onClick={() => dispatch({ type: 'part', part: part === g ? '' : g })}>{t(`part.${g}`)}</Chip>
-          ))}
-        </div>
-        <div className="-mx-4 mb-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
-          <Chip selected={!equip} onClick={() => dispatch({ type: 'equip', equip: '' })}>{t('lib.allEquipment')}</Chip>
-          {EQUIPMENT.map((eq) => (
-            <Chip key={eq} selected={equip === eq} onClick={() => dispatch({ type: 'equip', equip: equip === eq ? '' : eq })}>{t(`equip.${eq}`)}</Chip>
-          ))}
-        </div>
       </div>
-      <ul className="mx-auto w-full max-w-xl flex-1 overflow-y-auto px-4" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)' }}>
+      <div className="flex-1 overflow-y-auto" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)' }}>
+      <div className="mx-auto w-full max-w-xl px-4">
+      <div className="-mx-4 mb-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
+        <Chip selected={!part} onClick={() => dispatch({ type: 'part', part: '' })}>{t('lib.allParts')}</Chip>
+        {GROUPS.filter((g) => g !== 'mine' || all?.some((e) => groupOf(e) === 'mine')).map((g) => (
+          <Chip key={g} selected={part === g} onClick={() => dispatch({ type: 'part', part: part === g ? '' : g })}>{t(`part.${g}`)}</Chip>
+        ))}
+      </div>
+      <div className="-mx-4 mb-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
+        <Chip selected={!equip} onClick={() => dispatch({ type: 'equip', equip: '' })}>{t('lib.allEquipment')}</Chip>
+        {EQUIPMENT.map((eq) => (
+          <Chip key={eq} selected={equip === eq} onClick={() => dispatch({ type: 'equip', equip: equip === eq ? '' : eq })}>{t(`equip.${eq}`)}</Chip>
+        ))}
+      </div>
+      </div>
+      <ul className="mx-auto w-full max-w-xl px-4">
         {showCreate && (
           <li className="sticky top-0 z-10 border-b border-line bg-bg">
             <button onClick={() => setCreating(true)} className="flex min-h-[56px] w-full items-center gap-3 py-2 text-left text-weights">
@@ -106,6 +109,7 @@ export function PickerBody({ onPick, onClose }: { onPick: (ex: Exercise) => void
         )}
         {shown.map((e) => <PickRow key={e.id} e={e} onPick={pick} />)}
       </ul>
+      </div>
 
       {creating && (
         <Dialog label={t('ex.newTitle')} onClose={() => setCreating(false)}>

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Page, Row, Section } from '../components/Page'
 import { Segmented } from '../components/Segmented'
+import { Switch } from '../components/Switch'
+import { canVibrate } from '../lib/vibrate'
 import { updateSettings } from '../db/db'
 import { useSettings } from '../db/useSettings'
 import type { Lang, WeightUnit } from '../db/types'
@@ -46,6 +48,15 @@ export function SettingsPage() {
             options={[{ value: 'kg', label: 'kg' }, { value: 'lb', label: 'lb' }]}
           />
         </Row>
+        {canVibrate() && (
+          <Row className="justify-between">
+            <span className="flex-1">
+              <span className="block">{t('settings.restVibrate')}</span>
+              <span className="block text-[13px] text-muted">{t('settings.restVibrateNote')}</span>
+            </span>
+            <Switch checked={settings.restVibrate !== false} onChange={(restVibrate) => updateSettings({ restVibrate })} label={t('settings.restVibrate')} />
+          </Row>
+        )}
         <Row className="justify-between">
           <label htmlFor="rest">{t('settings.restTime')}</label>
           <select

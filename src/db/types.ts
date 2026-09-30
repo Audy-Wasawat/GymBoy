@@ -126,6 +126,8 @@ export interface Settings {
   language: Lang
   weightUnit: WeightUnit
   defaultRestSec: number
+  /** Vibrate when the rest is over, where the browser can (Android). Missing means on. */
+  restVibrate?: boolean
   goals: Goals
   lastBackupAt?: number
 }

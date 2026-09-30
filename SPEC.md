@@ -30,7 +30,7 @@ v1 is a local-first React PWA with no backend, installed on iPhone through Safar
 | Languages | Thai and English, switchable | |
 | Hosting | Vercel | HTTPS is required for a PWA |
 
-iOS limits to design around: no reliable alerts while the screen is locked, no Web vibration, and no automatic writing to Files (backups are exported manually).
+iOS limits to design around: no reliable alerts while the screen is locked, no Web vibration on iPhone (Android browsers allow it), and no automatic writing to Files (backups are exported manually).
 
 ## Navigation and Today screen
 
@@ -94,6 +94,7 @@ Programs are reusable, editable templates; a session records what was actually d
 - Starts only when a working set is saved with ✓ (never after a warm-up set), using the exercise's rest time (else the default). It can be adjusted by ±15 s or skipped.
 - When the time is up the bar turns red and flashes. It sits above the tab bar and hides while a field is being typed in, so it never covers an input.
 - iOS only allows sound after a tap, so sound is unlocked on the tap that saves a set.
+- When the rest is over the phone also vibrates (a short-short-long pattern), where the browser allows it: Android yes, iPhone no (iOS gives web apps no vibration, so there the bar and the sound are the only signals). Like the sound it only happens while the app is open and the rest ended a moment ago. Settings has a "Vibrate when rest is over" switch (on by default), shown only on phones that can vibrate.
 - It stores the end time rather than counting down, so it is correct after the screen locks; the screen is kept awake during a session where iOS allows (Screen Wake Lock, requested again whenever the app returns to the foreground; if it is unavailable the app carries on), and the alarm sound plays only while the app is open.
 
 **Progress signals**
@@ -135,6 +136,7 @@ Programs are reusable, editable templates; a session records what was actually d
 
 **Search**
 
+- In the picker only the title and the search box stay fixed; the two filter rows scroll with the list, so the list keeps the screen when the keyboard is up.
 - The picker and the library search one query: it is split into words, every word must match some word of the exercise text (as a prefix or a contained piece), in any order. The text is the name plus the equipment, body part and primary muscles, in English and in Thai whatever the app language is. bicep/biceps, tricep/triceps and singular/plural forms count as the same word; common Thai and English synonyms (for example "ไบเซป", "abs", "หน้าท้อง", "ขา") also match.
 - Results are ordered: word matches in the name first, then matches in muscles, equipment or body part, then alphabetical. An empty query lists everything.
 - The picker starts clean every time it is opened: no search text and no filters carry over from the last time.

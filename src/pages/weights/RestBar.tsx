@@ -5,6 +5,8 @@ import type { WorkoutSession } from '../../db/types'
 import { useT } from '../../i18n/useT'
 import { formatDuration } from '../../lib/numbers'
 import { playRestDone } from '../../lib/sound'
+import { vibrateRestDone } from '../../lib/vibrate'
+import { useSettings } from '../../db/useSettings'
 
 /** True while a text field has focus, i.e. while the on-screen keyboard is likely open. */
 function useTyping() {
@@ -30,6 +32,8 @@ function useTyping() {
  */
 export function RestBar({ session }: { session: WorkoutSession }) {
   const t = useT()
+  const { restVibrate } = useSettings()
+  const vibrate = restVibrate !== false
   const typing = useTyping()
   const [now, setNow] = useState(Date.now())
   const alerted = useRef<number>()
@@ -48,9 +52,12 @@ export function RestBar({ session }: { session: WorkoutSession }) {
     // Sound once per timer, and only if it finished while the app was open (not long ago).
     if (done && endsAt && alerted.current !== endsAt) {
       alerted.current = endsAt
-      if (Date.now() - endsAt < 5000) playRestDone()
+      if (Date.now() - endsAt < 5000) {
+        playRestDone()
+        vibrateRestDone(vibrate)
+      }
     }
-  }, [done, endsAt])
+  }, [done, endsAt, vibrate])
 
   if (!endsAt || typing) return null
 

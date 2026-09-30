@@ -174,7 +174,7 @@ const th = {
   'ex.name': 'ชื่อท่า',
   'ex.equipment': 'อุปกรณ์',
   'ex.bodyPart': 'ส่วนของร่างกาย',
-  'ex.bodyPartNone': 'ไม่ระบุ (ท่าของฉัน)',
+  'ex.bodyPartNone': 'ไม่ระบุ (ดูจากกล้ามเนื้อ)',
   'ex.custom': 'ท่าที่สร้างเอง',
   'ex.newTitle': 'สร้างท่าเอง',
   'ex.save': 'บันทึก',
@@ -530,6 +530,8 @@ const th = {
   'food.libraryEmpty': 'ยังไม่มีอาหารในคลัง เพิ่มอาหารแรกได้เลย',
   'food.noMatch': 'ไม่พบอาหารที่ค้นหา',
   'error.tooLarge': 'ค่าสูงเกินไป ตรวจตัวเลขอีกครั้ง',
+  'settings.restVibrate': 'สั่นเมื่อครบเวลาพัก',
+  'settings.restVibrateNote': 'ทำงานตอนเปิดแอปอยู่ ใช้ได้บนเครื่องที่รองรับ (เช่น Android) iPhone ไม่รองรับการสั่นจากเว็บ',
 } as const
 
 export type StringKey = keyof typeof th
@@ -710,7 +712,7 @@ const en: Record<StringKey, string> = {
   'ex.name': 'Name',
   'ex.equipment': 'Equipment',
   'ex.bodyPart': 'Body part',
-  'ex.bodyPartNone': 'None (My exercises)',
+  'ex.bodyPartNone': 'None (from the muscles)',
   'ex.custom': 'Custom exercise',
   'ex.newTitle': 'New exercise',
   'ex.save': 'Save',
@@ -1066,6 +1068,8 @@ const en: Record<StringKey, string> = {
   'food.libraryEmpty': 'No foods in the library yet. Add your first one.',
   'food.noMatch': 'No food matches',
   'error.tooLarge': 'That value is too large. Check the number.',
+  'settings.restVibrate': 'Vibrate when rest is over',
+  'settings.restVibrateNote': 'Works while the app is open, on phones that allow it (for example Android). iPhone does not allow vibration from a web app.',
 }
 
 export const strings = { th, en }
