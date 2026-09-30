@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { HashRouter, Outlet, Route, Routes } from 'react-router-dom'
+import { useSettings } from './db/useSettings'
 import { TabBar } from './components/TabBar'
 import { More } from './pages/More'
 import { SettingsPage } from './pages/Settings'
@@ -32,8 +34,11 @@ import { BrowserBanner } from './components/BrowserBanner'
 import { BackupPage } from './pages/Backup'
 
 function Shell() {
+  const { language } = useSettings()
+  // Screen readers pick the voice from this.
+  useEffect(() => { document.documentElement.lang = language }, [language])
   return (
-    <div style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)' }}>
+    <div style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px + var(--banner-h, 0px))' }}>
       <Outlet />
       <TabBar />
       <StaleSessionPrompt />

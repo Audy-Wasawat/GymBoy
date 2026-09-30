@@ -11,10 +11,13 @@ export interface NewExercise {
   timed: boolean
 }
 
+/** Trimmed, with runs of spaces made single. */
+export const tidyName = (name: string) => name.normalize('NFC').trim().replace(/\s+/g, ' ')
+
 /** Creates a custom exercise (no photo, no seed key) and returns it with its id. */
 export async function createExercise(v: NewExercise): Promise<Exercise> {
   const exercise: Exercise = {
-    name: v.name.trim(), equipment: v.equipment, bodyPart: v.bodyPart,
+    name: tidyName(v.name), equipment: v.equipment, bodyPart: v.bodyPart,
     primaryMuscles: v.primaryMuscles, secondaryMuscles: v.secondaryMuscles,
     leftRight: v.leftRight, timed: v.timed, bodyweight: v.equipment === 'bodyweight', isCustom: true
   }
@@ -24,7 +27,7 @@ export async function createExercise(v: NewExercise): Promise<Exercise> {
 
 /** An exercise with this name, ignoring case and surrounding spaces. */
 export async function findExerciseByName(name: string): Promise<Exercise | undefined> {
-  const key = name.normalize('NFC').trim().toLowerCase()
+  const key = tidyName(name).toLowerCase()
   if (!key) return undefined
-  return db.exercises.filter((e) => e.name.normalize('NFC').trim().toLowerCase() === key).first()
+  return db.exercises.filter((e) => tidyName(e.name).toLowerCase() === key).first()
 }

@@ -20,6 +20,7 @@ export function DetailFields({ name, equipment, bodyPart, onName, onNameBlur, on
         <input
           id="ex-name"
           value={name}
+          maxLength={80}
           onChange={(e) => onName(e.target.value)}
           onBlur={onNameBlur}
           autoComplete="off"

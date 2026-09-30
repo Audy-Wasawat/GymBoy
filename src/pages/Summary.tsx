@@ -88,11 +88,11 @@ export function Summary() {
     <Page title={t('more.summary')} back="/more">
       {/* month nav */}
       <div className="mb-5 flex items-center justify-between rounded-xl border border-line bg-surface px-3 py-2">
-        <button onClick={() => nav(-1)} className="flex h-10 w-10 items-center justify-center" aria-label={t('sum.prevMonth')}>
+        <button onClick={() => nav(-1)} className="flex h-11 w-11 items-center justify-center" aria-label={t('sum.prevMonth')}>
           <ChevronLeft size={20} aria-hidden />
         </button>
         <span className="text-[15px] font-semibold">{monthLabel(year, month, language)}</span>
-        <button onClick={() => { if (!isCurrentMonth) nav(1) }} disabled={isCurrentMonth} className="flex h-10 w-10 items-center justify-center disabled:opacity-30" aria-label={t('sum.nextMonth')}>
+        <button onClick={() => { if (!isCurrentMonth) nav(1) }} disabled={isCurrentMonth} className="flex h-11 w-11 items-center justify-center disabled:opacity-30" aria-label={t('sum.nextMonth')}>
           <ChevronRight size={20} aria-hidden />
         </button>
       </div>
@@ -146,7 +146,7 @@ export function Summary() {
             <Section title={t('sum.avgProtein')}>
               <div className="px-4 py-3">
                 <div className="text-[28px] font-semibold">{round(data.avgProtein, 1)}</div>
-                <div className="text-[13px] text-muted">g protein · {t('sum.noFood')}</div>
+                <div className="text-[13px] text-muted">{t('food.gramUnit')} {t('food.protein')} · {t('sum.noFood')}</div>
               </div>
             </Section>
           )}

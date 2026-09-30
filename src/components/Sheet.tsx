@@ -1,18 +1,19 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useDialog } from './Dialog'
 
 /** Bottom sheet for choices and confirmations. Tapping the backdrop or pressing Escape closes it. */
 export function Sheet({ open, onClose, title, children }: {
   open: boolean; onClose: () => void; title?: string; children: ReactNode
 }) {
-  useEffect(() => {
-    if (!open) return
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [open, onClose])
   if (!open) return null
+  return <SheetBody onClose={onClose} title={title}>{children}</SheetBody>
+}
+
+function SheetBody({ onClose, title, children }: { onClose: () => void; title?: string; children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null)
+  useDialog(ref, onClose)
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center" role="dialog" aria-modal="true" aria-label={title}>
+    <div ref={ref} className="fixed inset-0 z-50 flex items-end justify-center outline-none" role="dialog" aria-modal="true" aria-label={title}>
       <div className="absolute inset-0 bg-ink/40" onClick={onClose} aria-hidden />
       <div
         className="relative max-h-[85vh] w-full max-w-xl overflow-y-auto rounded-t-2xl bg-surface px-4 pt-4"

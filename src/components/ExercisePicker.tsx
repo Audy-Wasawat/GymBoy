@@ -9,6 +9,7 @@ import { BODY_PARTS, EQUIPMENT, groupOf, type LibraryGroup } from '../lib/exerci
 import { searchExercises } from '../lib/exerciseSearch'
 import { ExerciseForm } from '../pages/weights/ExerciseForm'
 import { Chip } from './Chip'
+import { Dialog } from './Dialog'
 import { initialPickerState, pickerReducer } from './pickerState'
 
 const GROUPS: LibraryGroup[] = [...BODY_PARTS, 'mine']
@@ -51,7 +52,7 @@ export function PickerBody({ onPick, onClose }: { onPick: (ex: Exercise) => void
   const pick = (ex: Exercise) => { dispatch({ type: 'reset' }); onPick(ex) }
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-bg" role="dialog" aria-modal="true" aria-label={t('pick.title')}>
+    <Dialog label={t('pick.title')} onClose={onClose}>
       <div className="mx-auto w-full max-w-xl px-4" style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}>
         <div className="mb-3 flex items-center gap-2">
           <h2 className="flex-1 text-[22px] font-semibold">{t('pick.title')}</h2>
@@ -107,7 +108,7 @@ export function PickerBody({ onPick, onClose }: { onPick: (ex: Exercise) => void
       </ul>
 
       {creating && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-bg" role="dialog" aria-modal="true" aria-label={t('ex.newTitle')}>
+        <Dialog label={t('ex.newTitle')} onClose={() => setCreating(false)}>
           <div className="mx-auto flex w-full max-w-xl items-center gap-2 px-4" style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}>
             <h2 className="flex-1 text-[22px] font-semibold">{t('ex.newTitle')}</h2>
             <button onClick={() => setCreating(false)} aria-label={t('common.close')} className="flex h-11 w-11 items-center justify-center text-muted">
@@ -122,9 +123,9 @@ export function PickerBody({ onPick, onClose }: { onPick: (ex: Exercise) => void
               onUseExisting={(ex) => { setCreating(false); pick(ex) }}
             />
           </div>
-        </div>
+        </Dialog>
       )}
-    </div>
+    </Dialog>
   )
 }
 

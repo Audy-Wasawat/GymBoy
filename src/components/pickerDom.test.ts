@@ -35,8 +35,8 @@ async function type(value: string) {
 }
 const click = (el: Element) => act(async () => { (el as HTMLElement).click() })
 
-function show(open: boolean, onPick: (e: Exercise) => void = () => {}) {
-  return act(async () => { root.render(createElement(ExercisePicker, { open, onPick, onClose: () => {} })) })
+function show(open: boolean, onPick: (e: Exercise) => void = () => {}, onClose: () => void = () => {}) {
+  return act(async () => { root.render(createElement(ExercisePicker, { open, onPick, onClose })) })
 }
 
 beforeEach(async () => {
@@ -124,5 +124,31 @@ describe('the exercise picker in a DOM (B1)', () => {
     await until(() => picked.length === 1)
     expect(picked[0].name).toBe('My Special Move')
     expect((await db.exercises.where('name').equals('My Special Move').count())).toBe(1)
+  })
+
+  it('moves focus into the dialog, closes on Escape, keeps Tab inside and gives focus back', async () => {
+    const opener = document.createElement('button')
+    document.body.appendChild(opener)
+    opener.focus()
+    const onClose = vi.fn()
+    await show(true, () => {}, onClose)
+    await until(() => rowNames().length > 50)
+    const dialog = container.querySelector('[role=dialog]')!
+    expect(dialog.contains(document.activeElement)).toBe(true)
+
+    // Tab from the last control wraps to the first one; Shift+Tab from the first wraps to the last.
+    const items = [...dialog.querySelectorAll<HTMLElement>('a[href],button:not([disabled]),input:not([disabled]),select,textarea')]
+    items[items.length - 1].focus()
+    await act(async () => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })) })
+    expect(document.activeElement).toBe(items[0])
+    await act(async () => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true })) })
+    expect(document.activeElement).toBe(items[items.length - 1])
+
+    await act(async () => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })) })
+    expect(onClose).toHaveBeenCalledOnce()
+
+    await show(false)
+    expect(document.activeElement).toBe(opener)
+    opener.remove()
   })
 })

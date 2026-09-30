@@ -18,6 +18,20 @@ export function fieldsFromEntry(e: { kcal: number; proteinG: number; portion: nu
 export const sameFields = (a: EntryFields, b: EntryFields) =>
   a.kcal === b.kcal && a.protein === b.protein && a.portion === b.portion
 
+/** Largest numbers accepted, well above anything real; a typo like 999999999 is refused. */
+export const MAX_KCAL = 10000 // per portion
+export const MAX_PROTEIN_G = 1000 // per portion
+export const MAX_PORTION = 100
+export const MAX_BODY_KG = 500
+
+/** True when a typed kcal, protein or portion is far too large to be real. */
+export function tooLarge(f: EntryFields): boolean {
+  const k = parseDecimal(f.kcal)
+  const p = parseDecimal(f.protein)
+  const q = parseDecimal(f.portion)
+  return (k !== undefined && k > MAX_KCAL) || (p !== undefined && p > MAX_PROTEIN_G) || (q !== undefined && q > MAX_PORTION)
+}
+
 /** Portion, per-portion values and the final kcal (whole) and protein (1 decimal) of typed fields; empty or bad numbers read as 0 (portion 1). */
 export function finalValues(f: EntryFields) {
   const p = parseDecimal(f.portion)

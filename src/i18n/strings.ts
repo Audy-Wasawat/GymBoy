@@ -519,7 +519,7 @@ const th = {
   'shoe.split': 'ก่อนใช้แอป {before} กม. · ในแอป {inApp} กม.',
   'shoe.startKm': 'ระยะที่วิ่งมาแล้ว (กม.)',
   'shoe.editStart': 'แก้ระยะสะสมเดิม',
-  'shoe.startInvalid': 'กรอกระยะเป็นตัวเลขตั้งแต่ 0 ขึ้นไป ทศนิยมไม่เกิน 2 ตำแหน่ง',
+  'shoe.startInvalid': 'กรอกระยะเป็นตัวเลขตั้งแต่ 0 ถึง 100000 ทศนิยมไม่เกิน 2 ตำแหน่ง',
   'photo.take': 'ถ่ายรูป',
   'photo.choose': 'เลือกรูป',
   'photo.remove': 'ลบรูป',
@@ -527,6 +527,9 @@ const th = {
   'photo.working': 'กำลังลดขนาดรูป…',
   'food.photoOf': 'รูปอาหาร',
   'food.proteinInvalid': 'กรอกโปรตีนเป็นตัวเลข',
+  'food.libraryEmpty': 'ยังไม่มีอาหารในคลัง เพิ่มอาหารแรกได้เลย',
+  'food.noMatch': 'ไม่พบอาหารที่ค้นหา',
+  'error.tooLarge': 'ค่าสูงเกินไป ตรวจตัวเลขอีกครั้ง',
 } as const
 
 export type StringKey = keyof typeof th
@@ -1052,7 +1055,7 @@ const en: Record<StringKey, string> = {
   'shoe.split': 'Before the app {before} km · in the app {inApp} km',
   'shoe.startKm': 'Distance already run (km)',
   'shoe.editStart': 'Edit starting distance',
-  'shoe.startInvalid': 'Enter a distance of 0 or more, with at most 2 decimals.',
+  'shoe.startInvalid': 'Enter a distance from 0 to 100000, with at most 2 decimals.',
   'photo.take': 'Take photo',
   'photo.choose': 'Choose photo',
   'photo.remove': 'Remove photo',
@@ -1060,6 +1063,9 @@ const en: Record<StringKey, string> = {
   'photo.working': 'Shrinking the photo…',
   'food.photoOf': 'Food photo',
   'food.proteinInvalid': 'Enter protein as a number.',
+  'food.libraryEmpty': 'No foods in the library yet. Add your first one.',
+  'food.noMatch': 'No food matches',
+  'error.tooLarge': 'That value is too large. Check the number.',
 }
 
 export const strings = { th, en }

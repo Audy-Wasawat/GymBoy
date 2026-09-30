@@ -118,8 +118,49 @@ const FIELD_RULES: Record<string, { date?: string[]; numbers?: string[] }> = {
   shoes: { numbers: ['startKm'] }
 }
 
+/** More fields with a fixed type, checked when present: text, whole lists of text, and numbers that must exist. */
+const STRING_FIELDS: Record<string, string[]> = {
+  exercises: ['name'], sessionExercises: ['name'], programs: ['name'], programDays: ['name'], shoes: ['name'],
+  runTemplates: ['name'], foods: ['name'], foodEntries: ['name'], activities: ['sport']
+}
+const LIST_FIELDS: Record<string, string[]> = { exercises: ['primaryMuscles', 'secondaryMuscles'] }
+const EXTRA_NUMBERS: Record<string, string[]> = {
+  sessionExercises: ['sessionId', 'exerciseId', 'order'],
+  programExercises: ['dayId', 'exerciseId', 'order', 'targetSets', 'repMin', 'repMax', 'restSec'],
+  programDays: ['programId', 'order'],
+  runs: ['shoeId']
+}
+/** Numbers a row cannot do without: missing or null is refused, not just a wrong type. */
+const REQUIRED_NUMBERS: Record<string, string[]> = {
+  runs: ['distanceKm', 'durationSec'], foods: ['kcal', 'proteinG'], foodEntries: ['kcal', 'proteinG', 'portion'],
+  bodyEntries: ['weightKg'], activities: ['minutes']
+}
+
 /** Refuses a backup whose rows or values have the wrong type, before anything is written. */
 function validateBackupValues(obj: Record<string, unknown>) {
+  const num = (v: unknown) => typeof v === 'number' && Number.isFinite(v)
+  for (const [table, fields] of Object.entries(STRING_FIELDS)) {
+    for (const row of obj[table] as Record<string, unknown>[]) {
+      for (const f of fields) if (present(row[f]) && typeof row[f] !== 'string') throw new Error(`invalid ${table}.${f}`)
+    }
+  }
+  for (const [table, fields] of Object.entries(LIST_FIELDS)) {
+    for (const row of obj[table] as Record<string, unknown>[]) {
+      for (const f of fields) {
+        if (present(row[f]) && !(Array.isArray(row[f]) && (row[f] as unknown[]).every((x) => typeof x === 'string'))) throw new Error(`invalid ${table}.${f}`)
+      }
+    }
+  }
+  for (const [table, fields] of Object.entries(EXTRA_NUMBERS)) {
+    for (const row of obj[table] as Record<string, unknown>[]) {
+      for (const f of fields) if (present(row[f]) && !num(row[f])) throw new Error(`invalid ${table}.${f}`)
+    }
+  }
+  for (const [table, fields] of Object.entries(REQUIRED_NUMBERS)) {
+    for (const row of obj[table] as Record<string, unknown>[]) {
+      for (const f of fields) if (!num(row[f])) throw new Error(`invalid ${table}.${f}`)
+    }
+  }
   for (const key of REQUIRED_TABLES) {
     for (const row of obj[key] as unknown[]) if (!isRow(row)) throw new Error(`invalid row in ${key}`)
   }
@@ -134,6 +175,7 @@ function validateBackupValues(obj: Record<string, unknown>) {
     }
   }
   for (const s of obj.settings as Record<string, unknown>[]) {
+    if (present(s.goals) && !isRow(s.goals)) throw new Error('invalid settings.goals')
     if (present(s.language) && s.language !== 'th' && s.language !== 'en') throw new Error('invalid settings.language')
     if (present(s.weightUnit) && s.weightUnit !== 'kg' && s.weightUnit !== 'lb') throw new Error('invalid settings.weightUnit')
     if (present(s.defaultRestSec) && !(typeof s.defaultRestSec === 'number' && Number.isFinite(s.defaultRestSec))) throw new Error('invalid settings.defaultRestSec')

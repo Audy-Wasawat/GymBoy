@@ -4,7 +4,7 @@ import { MUSCLES } from '../lib/exercises'
 
 // Primary muscles are drawn dark and secondary lighter, matching the body model to come in phase 8.
 const PRIMARY = 'border-weights bg-weights text-white font-semibold'
-const SECONDARY = 'border-weights/40 bg-weights/15 text-weights'
+const SECONDARY = 'border-weights/40 bg-weights/15 text-ink'
 const NONE = 'border-line bg-surface text-muted'
 
 export function MuscleList({ primary, secondary }: { primary: Muscle[]; secondary: Muscle[] }) {
@@ -62,8 +62,11 @@ export function MusclePicker({ primary, secondary, onChange }: {
               key={m}
               onClick={() => cycle(m)}
               aria-label={`${t(`muscle.${m}`)}: ${state === 'primary' ? t('ex.primary') : state === 'secondary' ? t('ex.secondary') : '-'}`}
+              aria-pressed={state !== 'none'}
               className={`min-h-[44px] rounded-full border px-3.5 text-[15px] ${cls}`}
             >
+              {/* A mark as well as a colour, so the state is not carried by colour alone. */}
+              {state !== 'none' && <span aria-hidden className="mr-1">{state === 'primary' ? '●' : '◐'}</span>}
               {t(`muscle.${m}`)}
             </button>
           )

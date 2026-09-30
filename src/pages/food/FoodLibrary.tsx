@@ -31,11 +31,12 @@ export function FoodLibrary() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder={t('food.search')}
+                aria-label={t('food.search')}
         className="mb-4 w-full rounded-xl border border-line bg-surface px-4 py-3 text-[16px]"
       />
 
       {filtered.length === 0 && foods !== undefined ? (
-        <p className="px-1 text-[15px] text-muted">{t('lib.empty')}</p>
+        <p className="px-1 text-[15px] text-muted">{foods && foods.length === 0 ? t('food.libraryEmpty') : t('food.noMatch')}</p>
       ) : (
         <div className="rounded-xl border border-line bg-surface">
           {filtered.map((f) => (

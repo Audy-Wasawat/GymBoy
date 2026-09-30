@@ -54,21 +54,28 @@ interface InteractiveFigureProps {
 }
 
 function InteractiveFigure({ shapes, primary, secondary, onTap, dx }: InteractiveFigureProps) {
+  // Each region is drawn, then drawn again on top as an invisible shape with a wide stroke: the
+  // muscles are thin (calves are 3 units wide), so this widens the area that answers a tap.
+  const regions = Object.entries(shapes) as [Muscle, Shape[]][]
+  const hit = { fill: 'transparent', stroke: 'transparent', strokeWidth: 9, pointerEvents: 'all' as const, className: 'cursor-pointer' }
   const half = (
     <>
       <path d={SILHOUETTE} className="fill-muted/10" />
-      {(Object.entries(shapes) as [Muscle, Shape[]][]).map(([m, shps]) => {
-        const cls = fillClass(m, primary, secondary, true)
+      {regions.map(([m, shps]) => {
+        const cls = fillClass(m, primary, secondary, false)
         return shps.map((s, i) => {
           const key = `${m}${i}`
-          if ('d' in s) return <path key={key} d={s.d} className={cls} onClick={() => onTap(m)} />
+          if ('d' in s) return <path key={key} d={s.d} className={cls} />
           const [cx, cy, rx, ry, rot] = s.ellipse
-          return (
-            <ellipse key={key} cx={cx} cy={cy} rx={rx} ry={ry}
-              transform={`rotate(${rot} ${cx} ${cy})`} className={cls} onClick={() => onTap(m)} />
-          )
+          return <ellipse key={key} cx={cx} cy={cy} rx={rx} ry={ry} transform={`rotate(${rot} ${cx} ${cy})`} className={cls} />
         })
       })}
+      {regions.map(([m, shps]) => shps.map((s, i) => {
+        const key = `hit-${m}${i}`
+        if ('d' in s) return <path key={key} d={s.d} {...hit} onClick={() => onTap(m)} />
+        const [cx, cy, rx, ry, rot] = s.ellipse
+        return <ellipse key={key} cx={cx} cy={cy} rx={rx} ry={ry} transform={`rotate(${rot} ${cx} ${cy})`} {...hit} onClick={() => onTap(m)} />
+      }))}
     </>
   )
   return (
@@ -125,8 +132,8 @@ export function BodyModelPicker({ primary, secondary, onChange }: {
       <div className="mb-3 flex justify-center">
         <svg
           viewBox="0 0 100 200"
-          height={220}
-          width={110}
+          height={280}
+          width={140}
           aria-hidden="true"
         >
           <InteractiveFigure
@@ -138,8 +145,6 @@ export function BodyModelPicker({ primary, secondary, onChange }: {
           />
         </svg>
       </div>
-
-      <p className="mb-3 text-center text-[12px] text-muted">{t('ex.pickerHint')}</p>
 
       {/* chip fallback */}
       <MusclePicker primary={primary} secondary={secondary} onChange={onChange} />

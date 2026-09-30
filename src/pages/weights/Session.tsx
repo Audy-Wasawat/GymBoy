@@ -16,6 +16,7 @@ import type { SessionExercise, SetDraft, SetLog, WeightUnit, WorkoutSession } fr
 import { useSettings } from '../../db/useSettings'
 import { useT } from '../../i18n/useT'
 import { loadProgress, weightHint, type WeightHint } from '../../lib/progress'
+import { formatDate } from '../../lib/dates'
 import { sessionTitle } from '../../lib/sessionTitle'
 import { useWakeLock } from '../../lib/useWakeLock'
 import { FinishFlow } from './FinishFlow'
@@ -27,6 +28,7 @@ interface Block { se: SessionExercise; rows: Row[]; prev: SetLog[]; unit: Weight
 
 export function SessionPage() {
   const t = useT()
+  const { language } = useSettings()
   const navigate = useNavigate()
   useWakeLock()
   const session = useLiveQuery(async () => (await getOpenSession()) ?? null, [])
@@ -68,7 +70,7 @@ export function SessionPage() {
     <Page title={sessionTitle(session, t)} back="/weights">
       <p className="-mt-2 mb-4 text-[15px] text-muted">
         {/* A session without a day name is already titled by its body parts. */}
-        {[session.date, ...(session.dayName ? session.bodyParts.map((p) => t(`part.${p}`)) : [])].join(' · ')}
+        {[formatDate(session.date, language), ...(session.dayName ? session.bodyParts.map((p) => t(`part.${p}`)) : [])].join(' · ')}
       </p>
 
       {blocks?.map((b, i) => (

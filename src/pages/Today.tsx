@@ -124,7 +124,7 @@ export function Today() {
       <Section title={t('today.food')}>
         <div className="flex divide-x divide-line">
           <Stat label="kcal" value={data?.kcal ?? 0} goal={goals.kcal} unit="" />
-          <Stat label={t('today.protein')} value={data?.protein ?? 0} goal={goals.proteinG} unit="g" />
+          <Stat label={t('today.protein')} value={data?.protein ?? 0} goal={goals.proteinG} unit={t('food.gramUnit')} />
         </div>
       </Section>
 

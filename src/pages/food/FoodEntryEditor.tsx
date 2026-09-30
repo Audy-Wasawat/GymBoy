@@ -11,7 +11,7 @@ import { db } from '../../db/db'
 import type { Food } from '../../db/types'
 import { useT } from '../../i18n/useT'
 import { isPastOrToday, localDate } from '../../lib/dates'
-import { fieldsFromEntry, finalValues, sameFields, type EntryFields } from '../../lib/foodEntry'
+import { fieldsFromEntry, finalValues, sameFields, tooLarge, type EntryFields } from '../../lib/foodEntry'
 import { parseDecimal } from '../../lib/numbers'
 import { FOOD_PHOTO_MAX } from '../../lib/photos'
 
@@ -90,6 +90,7 @@ export function FoodEntryEditor() {
     if (parseDecimal(kcalStr) === undefined) { setError(t('food.kcalRequired')); return }
     if (proteinStr.trim() && parseDecimal(proteinStr) === undefined) { setError(t('food.proteinInvalid')); return }
     if (portionVal === undefined || portionVal <= 0) { setError(t('food.portionInvalid')); return }
+    if (tooLarge(fields)) { setError(t('error.tooLarge')); return }
     if (!isPastOrToday(date)) { setError(t('run.futureDate')); return }
     setSaving(true)
     try {
@@ -106,7 +107,7 @@ export function FoodEntryEditor() {
         proteinG: unchanged ? keep!.proteinG : finalProtein
       }
       if (isNew) {
-        await saveNewFoodEntry(entry, photo, saveToLib && !picked ? { name: name.trim(), kcal: baseKcal, proteinG: baseProtein } : undefined)
+        await saveNewFoodEntry(entry, photo, saveToLib && !picked ? { name: name.trim(), kcal: Math.round(baseKcal), proteinG: baseProtein } : undefined)
       } else {
         // photo may be undefined here: that removes it.
         await updateFoodEntry(Number(id), { ...entry, photo })
@@ -136,13 +137,15 @@ export function FoodEntryEditor() {
           <div className="mb-4 flex gap-2">
             <button
               onClick={() => setMode('pick')}
-              className={`flex-1 rounded-xl border py-2 text-[15px] font-semibold ${mode === 'pick' ? 'border-food bg-food text-white' : 'border-line bg-surface'}`}
+              aria-pressed={mode === 'pick'}
+              className={`min-h-[44px] flex-1 rounded-xl border py-2 text-[15px] font-semibold ${mode === 'pick' ? 'border-food bg-food text-white' : 'border-line bg-surface'}`}
             >
               {t('food.pickFromLibrary')}
             </button>
             <button
               onClick={() => setMode('manual')}
-              className={`flex-1 rounded-xl border py-2 text-[15px] font-semibold ${mode === 'manual' ? 'border-food bg-food text-white' : 'border-line bg-surface'}`}
+              aria-pressed={mode === 'manual'}
+              className={`min-h-[44px] flex-1 rounded-xl border py-2 text-[15px] font-semibold ${mode === 'manual' ? 'border-food bg-food text-white' : 'border-line bg-surface'}`}
             >
               {t('food.enterManually')}
             </button>
@@ -155,11 +158,12 @@ export function FoodEntryEditor() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={t('food.search')}
+                aria-label={t('food.search')}
                 className="mb-3 w-full rounded-xl border border-line bg-surface px-4 py-3 text-[16px]"
               />
               <div className="rounded-xl border border-line bg-surface">
                 {filtered.length === 0 && (
-                  <p className="p-4 text-[15px] text-muted">{t('lib.empty')}</p>
+                  <p className="p-4 text-[15px] text-muted">{foods && foods.length === 0 ? t('food.libraryEmpty') : t('food.noMatch')}</p>
                 )}
                 {filtered.map((f) => (
                   <button
@@ -170,7 +174,7 @@ export function FoodEntryEditor() {
                     <PhotoThumb blob={f.photo} alt={f.name} />
                     <span className="flex-1">
                       <span className="block text-[16px]">{f.name}</span>
-                      <span className="block text-[13px] text-muted">{f.kcal} kcal · {f.proteinG} g</span>
+                      <span className="block text-[13px] text-muted">{f.kcal} kcal · {f.proteinG} {t('food.gramUnit')}</span>
                     </span>
                     <ChevronRight size={18} className="text-muted" aria-hidden />
                   </button>
@@ -186,54 +190,54 @@ export function FoodEntryEditor() {
         <>
           <Section>
             <Row>
-              <label className="w-24 text-[15px] text-muted">{t('food.name')}</label>
-              <input
+              <label htmlFor="fe-1" className="flex min-h-[44px] w-24 items-center text-[15px] text-muted">{t('food.name')}</label>
+              <input id="fe-1"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 disabled={!!picked}
-                className="flex-1 bg-transparent text-[16px] outline-none disabled:text-muted"
+                className="min-h-[44px] flex-1 bg-transparent text-[16px] outline-none disabled:text-muted"
               />
             </Row>
             <Row>
-              <label className="w-24 text-[15px] text-muted">{t('food.kcalField')}</label>
-              <input
+              <label htmlFor="fe-2" className="flex min-h-[44px] w-24 items-center text-[15px] text-muted">{t('food.kcalField')}</label>
+              <input id="fe-2"
                 inputMode="decimal"
                 value={kcalStr}
                 onChange={(e) => setKcalStr(e.target.value)}
-                className="flex-1 bg-transparent text-[16px] outline-none"
+                className="min-h-[44px] flex-1 bg-transparent text-[16px] outline-none"
               />
             </Row>
             <Row>
-              <label className="w-24 text-[15px] text-muted">{t('food.proteinG')}</label>
-              <input
+              <label htmlFor="fe-3" className="flex min-h-[44px] w-24 items-center text-[15px] text-muted">{t('food.proteinG')}</label>
+              <input id="fe-3"
                 inputMode="decimal"
                 value={proteinStr}
                 onChange={(e) => setProteinStr(e.target.value)}
-                className="flex-1 bg-transparent text-[16px] outline-none"
+                className="min-h-[44px] flex-1 bg-transparent text-[16px] outline-none"
               />
             </Row>
             <Row>
-              <label className="w-24 text-[15px] text-muted">{t('food.portion')}</label>
-              <input
+              <label htmlFor="fe-4" className="flex min-h-[44px] w-24 items-center text-[15px] text-muted">{t('food.portion')}</label>
+              <input id="fe-4"
                 inputMode="decimal"
                 value={portionStr}
                 onChange={(e) => setPortionStr(e.target.value)}
-                className="flex-1 bg-transparent text-[16px] outline-none"
+                className="min-h-[44px] flex-1 bg-transparent text-[16px] outline-none"
               />
             </Row>
             {portion !== 1 && (
               <Row className="text-[14px] text-muted">
-                {t('food.adjustEntry')}: {finalKcal} kcal · {finalProtein} g
+                {t('food.adjustEntry')}: {finalKcal} kcal · {finalProtein} {t('food.gramUnit')}
               </Row>
             )}
             <Row>
-              <label className="w-24 text-[15px] text-muted">{t('food.date')}</label>
-              <input
+              <label htmlFor="fe-5" className="flex min-h-[44px] w-24 items-center text-[15px] text-muted">{t('food.date')}</label>
+              <input id="fe-5"
                 type="date"
                 value={date}
                 max={localDate()}
                 onChange={(e) => setDate(e.target.value)}
-                className="flex-1 bg-transparent text-[16px] outline-none"
+                className="min-h-[44px] flex-1 bg-transparent text-[16px] outline-none"
               />
             </Row>
           </Section>

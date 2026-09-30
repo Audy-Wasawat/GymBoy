@@ -9,6 +9,7 @@ export default {
         ink: 'rgb(var(--ink) / <alpha-value>)',
         muted: 'rgb(var(--muted) / <alpha-value>)',
         line: 'rgb(var(--line) / <alpha-value>)',
+        control: 'rgb(var(--control) / <alpha-value>)',
         weights: 'rgb(var(--plate-red) / <alpha-value>)',
         running: 'rgb(var(--plate-blue) / <alpha-value>)',
         other: 'rgb(var(--plate-yellow) / <alpha-value>)',

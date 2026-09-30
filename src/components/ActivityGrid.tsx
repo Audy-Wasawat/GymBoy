@@ -213,10 +213,14 @@ function DayPopup({ data, onClose }: { data: DaySummaryPopup; onClose: () => voi
 
   return (
     <div className="fixed inset-0 z-50 flex items-end" onClick={onClose}>
-      <div className="w-full rounded-t-2xl border-t border-line bg-bg p-6" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="w-full rounded-t-2xl border-t border-line bg-bg px-6 pt-6"
+        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="mb-4 flex items-center justify-between">
           <span className="text-[17px] font-semibold">{formatDate(data.date, lang)}</span>
-          <button onClick={onClose} className="text-muted text-[14px]">{t('common.close')}</button>
+          <button onClick={onClose} className="-mr-3 min-h-[44px] px-3 text-muted text-[14px]">{t('common.close')}</button>
         </div>
         {!data.hasWeights && !data.hasRun && !data.hasOther ? (
           <p className="text-[15px] text-muted">{t('grid.noLog')}</p>

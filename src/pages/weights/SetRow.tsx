@@ -108,49 +108,72 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
   const valueHint = se.timed ? t('set.sec') : t('set.reps')
   const weightHint = se.bodyweight || se.timed ? `+${unit}` : unit
 
-  return (
-    <div className={`grid items-center gap-1 rounded-lg py-1 ${rowGrid(se.leftRight)} ${saved ? 'bg-weights/10' : ''}`}>
-      <button
-        onClick={onLabel}
-        aria-label={`${t('set.rowMenu')} ${label}${pr ? ` · ${t('pr.badge')}` : ''}`}
-        className={`flex h-11 flex-col items-center justify-center rounded-md text-[15px] font-semibold leading-none ${rowType(row) === 'warmup' ? 'text-muted' : ''}`}
-      >
-        {label}
-        {pr && <span className="mt-0.5 rounded bg-weights px-1 text-[9px] font-bold leading-[14px] text-white">PR</span>}
-      </button>
-      <button
-        onClick={() => canCopy && change(copyFrom!)}
-        disabled={!canCopy}
-        aria-label={prev ? `${t('set.copyPrev')} ${setSummary(prev, se, unit)}` : canCopy ? t('set.copyAbove') : undefined}
-        aria-hidden={!prev && !canCopy}
-        className="flex h-11 min-w-0 items-center justify-center rounded-md text-[12px] leading-tight text-muted disabled:opacity-100"
-      >
-        {prev ? <span className="truncate">{setSummary(prev, se, unit)}</span> : canCopy ? <CopyPlus size={16} aria-hidden /> : '–'}
-      </button>
-      {input('weight', weightHint, t('set.weight'))}
-      {se.leftRight ? (
-        <>
+  const labelButton = (
+    <button
+      onClick={onLabel}
+      aria-label={`${t('set.rowMenu')} ${label}${pr ? ` · ${t('pr.badge')}` : ''}`}
+      className={`flex h-11 flex-col items-center justify-center rounded-md text-[15px] font-semibold leading-none ${rowType(row) === 'warmup' ? 'text-muted' : ''}`}
+    >
+      {label}
+      {pr && <span className="mt-0.5 rounded bg-weights px-1 text-[9px] font-bold leading-[14px] text-white">PR</span>}
+    </button>
+  )
+  const prevButton = (
+    <button
+      onClick={() => canCopy && change(copyFrom!)}
+      disabled={!canCopy}
+      aria-label={prev ? `${t('set.copyPrev')} ${setSummary(prev, se, unit)}` : canCopy ? t('set.copyAbove') : undefined}
+      aria-hidden={!prev && !canCopy}
+      className="flex h-11 min-w-0 items-center justify-center rounded-md text-[12px] leading-tight text-muted disabled:opacity-100"
+    >
+      {prev ? <span className="truncate">{setSummary(prev, se, unit)}</span> : canCopy ? <CopyPlus size={16} aria-hidden /> : '–'}
+    </button>
+  )
+  const failureButton = (
+    <button
+      onClick={toggleFailure}
+      aria-pressed={failure}
+      aria-label={t('set.failure')}
+      className={`flex h-11 items-center justify-center rounded-md text-[14px] ${failure ? 'bg-weights/15 font-semibold text-weights' : 'text-muted'}`}
+    >
+      F
+    </button>
+  )
+  const confirmButton = (
+    <button
+      onClick={confirm}
+      aria-label={saved ? t('set.saved') : t('set.save')}
+      className={`flex h-11 w-11 items-center justify-center rounded-lg ${saved ? 'bg-weights text-white' : 'border border-line text-muted'}`}
+    >
+      <Check size={20} aria-hidden />
+    </button>
+  )
+
+  // Left/right rows need three inputs, which do not fit beside the other four controls on a narrow
+  // phone (they came out 29 px wide at 320 px and clipped the numbers), so they use two lines.
+  if (se.leftRight) {
+    return (
+      <div className={`rounded-lg py-1 ${saved ? 'bg-weights/10' : ''}`}>
+        <div className="grid grid-cols-[32px_minmax(0,1fr)_36px_44px] items-center gap-1">
+          {labelButton}{prevButton}{failureButton}{confirmButton}
+        </div>
+        <div className="mt-1 grid grid-cols-3 gap-1">
+          {input('weight', weightHint, t('set.weight'))}
           {input('left', t('set.left'), `${valueHint} ${t('set.left')}`)}
           {input('right', t('set.right'), `${valueHint} ${t('set.right')}`)}
-        </>
-      ) : (
-        input('value', valueHint, valueHint)
-      )}
-      <button
-        onClick={toggleFailure}
-        aria-pressed={failure}
-        aria-label={t('set.failure')}
-        className={`flex h-11 items-center justify-center rounded-md text-[14px] ${failure ? 'bg-weights/15 font-semibold text-weights' : 'text-muted'}`}
-      >
-        F
-      </button>
-      <button
-        onClick={confirm}
-        aria-label={saved ? t('set.saved') : t('set.save')}
-        className={`flex h-11 w-11 items-center justify-center rounded-lg ${saved ? 'bg-weights text-white' : 'border border-line text-muted'}`}
-      >
-        <Check size={20} aria-hidden />
-      </button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className={`grid items-center gap-1 rounded-lg py-1 ${rowGrid(false)} ${saved ? 'bg-weights/10' : ''}`}>
+      {labelButton}
+      {prevButton}
+      {input('weight', weightHint, t('set.weight'))}
+      {input('value', valueHint, valueHint)}
+      {failureButton}
+      {confirmButton}
     </div>
   )
 }
@@ -158,6 +181,8 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
 /** Column titles above the set rows. */
 export function SetHeader({ se, unit }: { se: SessionExercise; unit: WeightUnit }) {
   const t = useT()
+  // Left/right rows are two lines with labelled inputs, so no shared column titles.
+  if (se.leftRight) return null
   return (
     <div className={`grid gap-1 pb-1 text-center text-[12px] text-muted ${rowGrid(se.leftRight)}`}>
       <span>{t('set.set')}</span>

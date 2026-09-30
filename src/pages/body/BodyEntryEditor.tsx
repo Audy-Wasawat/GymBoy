@@ -7,7 +7,8 @@ import { addBodyEntry, deleteBodyEntry, updateBodyEntry } from '../../db/body'
 import { db } from '../../db/db'
 import { useSettings } from '../../db/useSettings'
 import { useT } from '../../i18n/useT'
-import { isPastOrToday, localDate } from '../../lib/dates'
+import { formatDate, isPastOrToday, localDate } from '../../lib/dates'
+import { MAX_BODY_KG } from '../../lib/foodEntry'
 import { parseDecimal } from '../../lib/numbers'
 import { fromDisplayWeight, toDisplayWeight } from '../../lib/units'
 import { PhotoField } from '../../components/PhotoField'
@@ -18,7 +19,7 @@ export function BodyEntryEditor() {
   const nav = useNavigate()
   const { id } = useParams<{ id: string }>()
   const isNew = !id || id === 'new'
-  const { weightUnit } = useSettings()
+  const { weightUnit, language } = useSettings()
 
   const existing = useLiveQuery(
     async () => (!isNew && id ? (await db.bodyEntries.get(Number(id))) ?? null : null),
@@ -49,6 +50,7 @@ export function BodyEntryEditor() {
   async function handleSave() {
     const w = parseDecimal(weightStr)
     if (w === undefined || w <= 0) { setError(t('body.weightRequired')); return }
+    if (fromDisplayWeight(w, weightUnit) > MAX_BODY_KG) { setError(t('error.tooLarge')); return }
     if (!isPastOrToday(date)) { setError(t('body.futureDate')); return }
     setSaving(true)
     try {
@@ -77,22 +79,22 @@ export function BodyEntryEditor() {
     <Page title={isNew ? t('body.addTitle') : t('body.editTitle')} back="/more/body">
       <Section>
         <Row>
-          <label className="w-24 text-[15px] text-muted">{t('body.weight')} ({weightUnit})</label>
-          <input
+          <label htmlFor="be-1" className="flex min-h-[44px] w-24 items-center text-[15px] text-muted">{t('body.weight')} ({weightUnit})</label>
+          <input id="be-1"
             inputMode="decimal"
             value={weightStr}
             onChange={(e) => setWeightStr(e.target.value)}
-            className="flex-1 bg-transparent text-[16px] outline-none"
+            className="min-h-[44px] flex-1 bg-transparent text-[16px] outline-none"
           />
         </Row>
         <Row>
-          <label className="w-24 text-[15px] text-muted">{t('body.date')}</label>
-          <input
+          <label htmlFor="be-2" className="flex min-h-[44px] w-24 items-center text-[15px] text-muted">{t('body.date')}</label>
+          <input id="be-2"
             type="date"
             value={date}
             max={localDate()}
             onChange={(e) => setDate(e.target.value)}
-            className="flex-1 bg-transparent text-[16px] outline-none"
+            className="min-h-[44px] flex-1 bg-transparent text-[16px] outline-none"
           />
         </Row>
       </Section>
@@ -103,7 +105,7 @@ export function BodyEntryEditor() {
           onChange={setPhoto}
           maxSide={BODY_PHOTO_MAX}
           capture="user"
-          alt={`${t('body.photo')} ${date}`}
+          alt={`${t('body.photo')} ${formatDate(date, language)}`}
           allowRemove={false}
         />
       </Section>

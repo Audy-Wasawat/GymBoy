@@ -6,6 +6,7 @@ import { Sheet, SheetButton } from '../../components/Sheet'
 import { addFood, deleteFood, updateFood } from '../../db/food'
 import { db } from '../../db/db'
 import { useT } from '../../i18n/useT'
+import { tooLarge } from '../../lib/foodEntry'
 import { parseDecimal } from '../../lib/numbers'
 import { PhotoField } from '../../components/PhotoField'
 import { FOOD_PHOTO_MAX } from '../../lib/photos'
@@ -45,6 +46,7 @@ export function FoodLibraryEditor() {
     const kcal = parseDecimal(kcalStr)
     if (kcal === undefined) { setError(t('food.kcalRequired')); return }
     if (proteinStr.trim() && parseDecimal(proteinStr) === undefined) { setError(t('food.proteinInvalid')); return }
+    if (tooLarge({ kcal: kcalStr, protein: proteinStr, portion: '1' })) { setError(t('error.tooLarge')); return }
     setSaving(true)
     try {
       const food = {
@@ -78,29 +80,29 @@ export function FoodLibraryEditor() {
     <Page title={title} back="/food/library">
       <Section>
         <Row>
-          <label className="w-24 text-[15px] text-muted">{t('food.name')}</label>
-          <input
+          <label htmlFor="fl-1" className="flex min-h-[44px] w-24 items-center text-[15px] text-muted">{t('food.name')}</label>
+          <input id="fl-1"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="flex-1 bg-transparent text-[16px] outline-none"
+            className="min-h-[44px] flex-1 bg-transparent text-[16px] outline-none"
           />
         </Row>
         <Row>
-          <label className="w-24 text-[15px] text-muted">{t('food.kcalField')}</label>
-          <input
+          <label htmlFor="fl-2" className="flex min-h-[44px] w-24 items-center text-[15px] text-muted">{t('food.kcalField')}</label>
+          <input id="fl-2"
             inputMode="decimal"
             value={kcalStr}
             onChange={(e) => setKcalStr(e.target.value)}
-            className="flex-1 bg-transparent text-[16px] outline-none"
+            className="min-h-[44px] flex-1 bg-transparent text-[16px] outline-none"
           />
         </Row>
         <Row>
-          <label className="w-24 text-[15px] text-muted">{t('food.proteinG')}</label>
-          <input
+          <label htmlFor="fl-3" className="flex min-h-[44px] w-24 items-center text-[15px] text-muted">{t('food.proteinG')}</label>
+          <input id="fl-3"
             inputMode="decimal"
             value={proteinStr}
             onChange={(e) => setProteinStr(e.target.value)}
-            className="flex-1 bg-transparent text-[16px] outline-none"
+            className="min-h-[44px] flex-1 bg-transparent text-[16px] outline-none"
           />
         </Row>
       </Section>

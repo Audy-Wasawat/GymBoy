@@ -65,10 +65,12 @@ export function RestBar({ session }: { session: WorkoutSession }) {
   return (
     <div
       className="fixed inset-x-0 z-30 px-3"
-      style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 64px)' }}
+      style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 64px + var(--banner-h, 0px))' }}
       role="timer"
-      aria-live="polite"
+      aria-live="off"
     >
+      {/* The countdown changes every second, so it is not announced; only the end of the rest is. */}
+      <span className="sr-only" role="status">{done ? t('rest.done') : ''}</span>
       <div className={`mx-auto flex max-w-xl items-center gap-2 overflow-hidden rounded-xl border px-3 py-2 shadow-lg ${
         done ? 'animate-pulse border-weights bg-weights text-white' : 'border-line bg-surface'
       }`}>

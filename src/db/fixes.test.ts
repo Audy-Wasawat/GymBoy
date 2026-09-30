@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import seeds from '../data/exercises.json'
 import { db } from './db'
-import { createExercise } from './exercises'
+import { createExercise, findExerciseByName, tidyName } from './exercises'
 import { addFoodEntry } from './food'
 import { addExerciseToSession, emptyDraft, saveDraft, startSession } from './sessions'
 import { createBackup, parseBackup, restoreBackup } from '../lib/backup'
-import { fieldsFromEntry, finalValues, sameFields } from '../lib/foodEntry'
+import { fieldsFromEntry, finalValues, MAX_BODY_KG, sameFields, tooLarge } from '../lib/foodEntry'
 import { fromDisplayWeight, toDisplayWeight } from '../lib/units'
 import type { Exercise } from './types'
 import { resetDb } from '../test/resetDb'
@@ -127,5 +127,53 @@ describe('restoring a backup (values, photos, library)', () => {
     await db.sets.add({ sessionExerciseId: seId, setNumber: 0, type: 'working', exerciseId: ex.id!, date: '2026-09-29', weightKg: 10, reps: 5, toFailure: false })
     await restore(() => {})
     expect((await db.sessions.get(sid))?.bodyParts).toEqual(['back'])
+  })
+})
+
+describe('duplicate exercise names', () => {
+  it('ignore case, outer spaces and repeated inner spaces', async () => {
+    await createExercise({ name: 'Dumbbell Curl', equipment: 'dumbbell', primaryMuscles: ['biceps'], secondaryMuscles: [], leftRight: false, timed: false })
+    for (const typed of ['dumbbell   curl', '  DUMBBELL curl ', 'Dumbbell	Curl']) {
+      expect((await findExerciseByName(typed))?.name, typed).toBe('Dumbbell Curl')
+    }
+    expect(await findExerciseByName('Dumbbell Curls')).toBeUndefined()
+  })
+  it('stores a tidied name', async () => {
+    const ex = await createExercise({ name: '  My   New  Move ', equipment: 'other', primaryMuscles: [], secondaryMuscles: [], leftRight: false, timed: false })
+    expect(ex.name).toBe('My New Move')
+    expect(tidyName('a  b')).toBe('a b')
+  })
+})
+
+describe('numbers that are far too large', () => {
+  it('refuses absurd kcal, protein and portions but not real ones', () => {
+    expect(tooLarge({ kcal: '200', protein: '999999999', portion: '1' })).toBe(true)
+    expect(tooLarge({ kcal: '200', protein: '10', portion: '1000000' })).toBe(true)
+    expect(tooLarge({ kcal: '99999', protein: '10', portion: '1' })).toBe(true)
+    expect(tooLarge({ kcal: '850', protein: '60', portion: '1,5' })).toBe(false)
+    expect(tooLarge({ kcal: '', protein: '', portion: '1' })).toBe(false)
+    expect(MAX_BODY_KG).toBeGreaterThan(300)
+  })
+})
+
+describe('a backup with wrong-typed rows is refused', () => {
+  const parse = async (edit: (j: Record<string, any[]>) => void) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+    await createExercise({ name: 'X', equipment: 'other', primaryMuscles: ['abs'], secondaryMuscles: [], leftRight: false, timed: false })
+    await db.foodEntries.add({ date: '2026-09-29', time: 1, name: 'Rice', portion: 1, kcal: 200, proteinG: 4 })
+    await db.shoes.add({ name: 'Pair', retired: false })
+    const json = JSON.parse(await (await createBackup()).text())
+    edit(json)
+    return parseBackup(new File([JSON.stringify(json)], 'b.json'))
+  }
+  it('rejects text where a number goes, a list where text goes, and null where a number is required', async () => {
+    await expect(parse((j) => { j.exercises[0].name = 123 })).rejects.toThrow()
+    await expect(parse((j) => { j.exercises[0].primaryMuscles = 'biceps' })).rejects.toThrow()
+    await expect(parse((j) => { j.shoes[0].name = 5 })).rejects.toThrow()
+    await expect(parse((j) => { j.foodEntries[0].kcal = null })).rejects.toThrow()
+    await expect(parse((j) => { delete j.foodEntries[0].kcal })).rejects.toThrow()
+    await expect(parse((j) => { j.settings[0].goals = 'x' })).rejects.toThrow()
+  })
+  it('still accepts what the app writes', async () => {
+    await expect(parse(() => {})).resolves.toBeTruthy()
   })
 })

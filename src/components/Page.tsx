@@ -9,7 +9,7 @@ export function Page({ title, back, children }: { title: string; back?: string; 
     <main className="mx-auto max-w-xl px-4 pb-8" style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 16px)' }}>
       <header className="mb-4 flex items-center gap-1">
         {back && (
-          <Link to={back} className="-ml-2 flex h-10 w-10 items-center justify-center text-muted" aria-label={t('common.back')}>
+          <Link to={back} className="-ml-2 flex h-11 w-11 items-center justify-center text-muted" aria-label={t('common.back')}>
             <ChevronLeft size={24} aria-hidden />
           </Link>
         )}
