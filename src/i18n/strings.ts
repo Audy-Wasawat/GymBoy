@@ -526,6 +526,7 @@ const th = {
   'photo.failed': 'ประมวลผลรูปไม่สำเร็จ ลองรูปอื่น',
   'photo.working': 'กำลังลดขนาดรูป…',
   'food.photoOf': 'รูปอาหาร',
+  'food.proteinInvalid': 'กรอกโปรตีนเป็นตัวเลข',
 } as const
 
 export type StringKey = keyof typeof th
@@ -1058,6 +1059,7 @@ const en: Record<StringKey, string> = {
   'photo.failed': 'Could not process the photo. Try another one.',
   'photo.working': 'Shrinking the photo…',
   'food.photoOf': 'Food photo',
+  'food.proteinInvalid': 'Enter protein as a number.',
 }
 
 export const strings = { th, en }

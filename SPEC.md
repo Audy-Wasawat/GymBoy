@@ -128,7 +128,7 @@ Programs are reusable, editable templates; a session records what was actually d
 
 - 625 exercises across barbell, dumbbell, machine, cable, bodyweight and other equipment (kettlebell, bands, balls, rings), grouped by body part and named in English only. Bodyweight core moves such as hanging knee raise are included. Every muscle region has at least 10 exercises, and each main movement family (curl, press, row, raise, extension, pulldown/pull-up, squat, lunge, hinge, crunch/leg raise, calf raise, hip thrust) exists in at least three equipment types where it really exists.
 - The library is the 249 hand-picked exercises of the first release (never changed), then every other strength and powerlifting entry of free-exercise-db converted by rule, then extra exercises the source lacks (seed keys starting with "extra-"). Olympic lifts (for example power clean), assisted variants, foam rolling, stretching, cardio, plyometrics and strongman moves are left out. Seeding only adds missing entries and never overwrites a person's edits.
-- Each exercise carries primary muscles, secondary muscles, a left/right flag and a timed flag. Seeded timed exercises: plank, side plank (left/right), farmer's walk and plate pinch.
+- Each exercise carries primary muscles, secondary muscles, a left/right flag and a timed flag. Holds, carries and isometrics are flagged timed, for example plank, side plank (left/right), Copenhagen plank, farmer's walk and plate pinch.
 - v1 has no exercise photos or drawings. Exercise names and muscle data come from free-exercise-db (https://github.com/yuhonas/free-exercise-db, Unlicense / public domain); its images are not used. Its coarse muscle names are remapped to the detailed regions below. An empty `image` field is kept in the data for later.
 - The list shows a small front-and-back body model beside each exercise, and the detail screen a larger one, with the muscle names also shown as text chips.
 - Machine and cable variants are separate entries where the muscle emphasis differs; any entry can be duplicated and adjusted. The muscles of any seeded exercise can be re-marked on the body model if they feel wrong.
@@ -223,7 +223,7 @@ Photos are compressed on upload to JPEG (food photos to at most 480 px on the lo
 7. [done] Full backup, restore, browser-tab banner and AI export.
 8. [done] Body model: tap regions on the model to mark muscles primary or secondary (replaces the chip picker).
 
-Phase 2 draws the body model for display; picking muscles uses chips until phase 8 adds tapping on the model.
+All eight phases are built. Muscles are picked by tapping the body model, with the muscle chips kept as an accessible alternative.
 
 ## Out of scope for v1
 

@@ -8,6 +8,7 @@ import { db } from '../../db/db'
 import { useSettings } from '../../db/useSettings'
 import { useT } from '../../i18n/useT'
 import { isPastOrToday, localDate } from '../../lib/dates'
+import { parseDecimal } from '../../lib/numbers'
 import { fromDisplayWeight, toDisplayWeight } from '../../lib/units'
 import { PhotoField } from '../../components/PhotoField'
 import { BODY_PHOTO_MAX } from '../../lib/photos'
@@ -32,24 +33,28 @@ export function BodyEntryEditor() {
   const [deleteSheet, setDeleteSheet] = useState(false)
 
   const loaded = useRef(false)
+  // The weight as first shown; if it is unchanged on save, the stored kg stays as it is (converting the
+  // rounded lb value back would drift it, e.g. 72.5 kg -> 159.8 lb -> 72.484 kg).
+  const shownWeight = useRef('')
   useEffect(() => {
     if (!isNew && existing && !loaded.current) {
       loaded.current = true
-      setWeightStr(String(toDisplayWeight(existing.weightKg, weightUnit)))
+      shownWeight.current = String(toDisplayWeight(existing.weightKg, weightUnit))
+      setWeightStr(shownWeight.current)
       setDate(existing.date)
       setPhoto(existing.photo)
     }
   }, [isNew, existing, weightUnit])
 
   async function handleSave() {
-    const w = parseFloat(weightStr)
-    if (!weightStr || !isFinite(w) || w <= 0) { setError(t('body.weightRequired')); return }
+    const w = parseDecimal(weightStr)
+    if (w === undefined || w <= 0) { setError(t('body.weightRequired')); return }
     if (!isPastOrToday(date)) { setError(t('body.futureDate')); return }
     setSaving(true)
     try {
       const entry = {
         date,
-        weightKg: fromDisplayWeight(w, weightUnit),
+        weightKg: !isNew && existing && weightStr === shownWeight.current ? existing.weightKg : fromDisplayWeight(w, weightUnit),
         ...(photo ? { photo } : {})
       }
       if (isNew) { await addBodyEntry(entry) } else { await updateBodyEntry(Number(id), entry) }

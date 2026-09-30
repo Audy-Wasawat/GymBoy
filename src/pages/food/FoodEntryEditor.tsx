@@ -11,6 +11,8 @@ import { db } from '../../db/db'
 import type { Food } from '../../db/types'
 import { useT } from '../../i18n/useT'
 import { isPastOrToday, localDate } from '../../lib/dates'
+import { fieldsFromEntry, finalValues, sameFields, type EntryFields } from '../../lib/foodEntry'
+import { parseDecimal } from '../../lib/numbers'
 import { FOOD_PHOTO_MAX } from '../../lib/photos'
 
 type Mode = 'pick' | 'manual'
@@ -48,13 +50,17 @@ export function FoodEntryEditor() {
   const [deleteSheet, setDeleteSheet] = useState(false)
 
   const loaded = useRef(false)
+  // What the value fields showed when the entry was opened; if they still match on save, the stored numbers are kept as they are.
+  const loadedValues = useRef<EntryFields | null>(null)
   useEffect(() => {
     if (!isNew && existingEntry && !loaded.current) {
       loaded.current = true
       setName(existingEntry.name)
-      setKcalStr(String(existingEntry.kcal))
-      setProteinStr(String(existingEntry.proteinG))
-      setPortionStr(String(existingEntry.portion))
+      const f = fieldsFromEntry(existingEntry) // per-portion values: see fieldsFromEntry
+      loadedValues.current = f
+      setKcalStr(f.kcal)
+      setProteinStr(f.protein)
+      setPortionStr(f.portion)
       setDate(existingEntry.date)
       setPhoto(existingEntry.photo)
       setMode('manual')
@@ -75,32 +81,29 @@ export function FoodEntryEditor() {
     setMode('manual')
   }
 
-  const portionVal = parseFloat(portionStr)
-  const portion = isFinite(portionVal) && portionVal > 0 ? portionVal : 1
-  const baseKcalVal = parseFloat(kcalStr)
-  const baseKcal = isFinite(baseKcalVal) && baseKcalVal >= 0 ? baseKcalVal : 0
-  const baseProteinVal = parseFloat(proteinStr)
-  const baseProtein = isFinite(baseProteinVal) && baseProteinVal >= 0 ? baseProteinVal : 0
-  const finalKcal = Math.round(baseKcal * portion)
-  const finalProtein = Math.round(baseProtein * portion * 10) / 10
+  const portionVal = parseDecimal(portionStr)
+  const fields = { kcal: kcalStr, protein: proteinStr, portion: portionStr }
+  const { portion, baseKcal, baseProtein, kcal: finalKcal, proteinG: finalProtein } = finalValues(fields)
 
   async function handleSave() {
     if (!name.trim()) { setError(t('food.nameRequired')); return }
-    const kcalNum = parseFloat(kcalStr)
-    if (!kcalStr.trim() || !isFinite(kcalNum) || kcalNum < 0) { setError(t('food.kcalRequired')); return }
-    const portionNum = parseFloat(portionStr)
-    if (!portionStr.trim() || !isFinite(portionNum) || portionNum <= 0) { setError(t('food.portionInvalid')); return }
+    if (parseDecimal(kcalStr) === undefined) { setError(t('food.kcalRequired')); return }
+    if (proteinStr.trim() && parseDecimal(proteinStr) === undefined) { setError(t('food.proteinInvalid')); return }
+    if (portionVal === undefined || portionVal <= 0) { setError(t('food.portionInvalid')); return }
     if (!isPastOrToday(date)) { setError(t('run.futureDate')); return }
     setSaving(true)
     try {
+      // Editing keeps the entry's place in the day and its link to the library food.
+      const keep = !isNew && existingEntry ? existingEntry : undefined
+      const unchanged = !!keep && !!loadedValues.current && sameFields(fields, loadedValues.current)
       const entry = {
         date,
-        time: Date.now(),
-        foodId: picked?.id,
+        time: keep ? keep.time : Date.now(),
+        foodId: keep ? keep.foodId : picked?.id,
         name: name.trim(),
-        portion,
-        kcal: finalKcal,
-        proteinG: finalProtein
+        portion: unchanged ? keep!.portion : portion,
+        kcal: unchanged ? keep!.kcal : finalKcal,
+        proteinG: unchanged ? keep!.proteinG : finalProtein
       }
       if (isNew) {
         await saveNewFoodEntry(entry, photo, saveToLib && !picked ? { name: name.trim(), kcal: baseKcal, proteinG: baseProtein } : undefined)

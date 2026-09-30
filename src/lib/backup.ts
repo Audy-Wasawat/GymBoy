@@ -1,5 +1,6 @@
 import { db, ensureSettings } from '../db/db'
 import { seedExercises } from '../db/seed'
+import { recomputeAllBodyParts } from '../db/sessions'
 import { localDate, parseLocalDate } from './dates'
 import { paceSecPerKm as calcPace } from './running'
 
@@ -25,8 +26,10 @@ export function dataUrlToBlob(dataUrl: string): Blob {
 }
 
 /** A stored photo from a backup: a data URL becomes a Blob again; anything else (missing, or a Blob that JSON turned into {}) is dropped. */
-const photoFromBackup = (photo: unknown): Blob | undefined =>
-  typeof photo === 'string' && photo.startsWith('data:') ? dataUrlToBlob(photo) : undefined
+const photoFromBackup = (photo: unknown): Blob | undefined => {
+  if (typeof photo !== 'string' || !photo.startsWith('data:')) return undefined
+  try { return dataUrlToBlob(photo) } catch { return undefined } // damaged base64: lose that photo, not the whole restore
+}
 
 /** A row from a backup with its photo restored, or without the field when there is none. */
 function restorePhoto(row: Record<string, unknown>): Record<string, unknown> {
@@ -51,13 +54,13 @@ export async function createBackup(): Promise<Blob> {
     runs, runTemplates, shoes,
     activities, settings,
     foods, foodEntries, bodyEntries
-  ] = await Promise.all([
+  ] = await db.transaction('r', db.tables, () => Promise.all([
     db.exercises.toArray(), db.programs.toArray(), db.programDays.toArray(), db.programExercises.toArray(),
     db.sessions.toArray(), db.sessionExercises.toArray(), db.sets.toArray(), db.setDrafts.toArray(),
     db.runs.toArray(), db.runTemplates.toArray(), db.shoes.toArray(),
     db.activities.toArray(), db.settings.toArray(),
     db.foods.toArray(), db.foodEntries.toArray(), db.bodyEntries.toArray()
-  ])
+  ]))
 
   // Serialise photos to data URLs
   const foodsWithPhotos = await Promise.all(foods.map(async (f) => ({
@@ -96,6 +99,47 @@ const REQUIRED_TABLES = [
   'activities', 'foods', 'foodEntries', 'bodyEntries', 'settings'
 ]
 
+const isRow = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v)
+const present = (v: unknown) => v !== undefined && v !== null
+const DATE_TEXT = /^\d{4}-\d{2}-\d{2}$/
+
+/** Fields a row may hold, checked only when present: a date text, or numbers. A wrong type is refused. */
+const FIELD_RULES: Record<string, { date?: string[]; numbers?: string[] }> = {
+  sessions: { date: ['date'], numbers: ['startedAt', 'finishedAt', 'restEndsAt', 'restTotalSec'] },
+  sets: {
+    date: ['date'],
+    numbers: ['exerciseId', 'sessionExerciseId', 'setNumber', 'weightKg', 'reps', 'repsLeft', 'repsRight', 'durationSec', 'durationLeftSec', 'durationRightSec']
+  },
+  runs: { date: ['date'], numbers: ['distanceKm', 'durationSec', 'avgHr', 'maxHr'] },
+  activities: { date: ['date'], numbers: ['minutes', 'effort'] },
+  foodEntries: { date: ['date'], numbers: ['time', 'kcal', 'proteinG', 'portion'] },
+  bodyEntries: { date: ['date'], numbers: ['weightKg'] },
+  foods: { numbers: ['kcal', 'proteinG'] },
+  shoes: { numbers: ['startKm'] }
+}
+
+/** Refuses a backup whose rows or values have the wrong type, before anything is written. */
+function validateBackupValues(obj: Record<string, unknown>) {
+  for (const key of REQUIRED_TABLES) {
+    for (const row of obj[key] as unknown[]) if (!isRow(row)) throw new Error(`invalid row in ${key}`)
+  }
+  for (const [table, rule] of Object.entries(FIELD_RULES)) {
+    for (const row of obj[table] as Record<string, unknown>[]) {
+      for (const f of rule.date ?? []) {
+        if (present(row[f]) && !(typeof row[f] === 'string' && DATE_TEXT.test(row[f] as string))) throw new Error(`invalid ${table}.${f}`)
+      }
+      for (const f of rule.numbers ?? []) {
+        if (present(row[f]) && !(typeof row[f] === 'number' && Number.isFinite(row[f]))) throw new Error(`invalid ${table}.${f}`)
+      }
+    }
+  }
+  for (const s of obj.settings as Record<string, unknown>[]) {
+    if (present(s.language) && s.language !== 'th' && s.language !== 'en') throw new Error('invalid settings.language')
+    if (present(s.weightUnit) && s.weightUnit !== 'kg' && s.weightUnit !== 'lb') throw new Error('invalid settings.weightUnit')
+    if (present(s.defaultRestSec) && !(typeof s.defaultRestSec === 'number' && Number.isFinite(s.defaultRestSec))) throw new Error('invalid settings.defaultRestSec')
+  }
+}
+
 /** Parses a backup file and returns counts without committing anything. */
 export async function parseBackup(file: File): Promise<{ counts: BackupCounts; data: Record<string, unknown[]> }> {
   const text = await file.text()
@@ -105,6 +149,7 @@ export async function parseBackup(file: File): Promise<{ counts: BackupCounts; d
   for (const key of REQUIRED_TABLES) {
     if (!Array.isArray(obj[key])) throw new Error(`invalid format: missing ${key}`)
   }
+  validateBackupValues(obj)
   const counts: BackupCounts = {
     sessions: (obj.sessions as unknown[]).length,
     runs: (obj.runs as unknown[]).length,
@@ -160,9 +205,9 @@ export async function restoreBackup(data: Record<string, unknown[]>): Promise<vo
     ])
   })
 
-  // Re-seed exercises if none were in the backup
-  const count = await db.exercises.count()
-  if (count === 0) await seedExercises()
+  // An older backup may hold a smaller library (or none): add what is missing now, not at the next launch.
+  await seedExercises()
+  await recomputeAllBodyParts()
   await ensureSettings()
 }
 
@@ -256,7 +301,8 @@ export async function createAIExport(opts: AIExportOptions): Promise<Blob> {
   }
 
   if (categories.has('food')) {
-    const entries = await db.foodEntries.where('date').between(from, to, true, true).toArray()
+    const entries = (await db.foodEntries.where('date').between(from, to, true, true).toArray())
+      .sort((a, b) => a.time - b.time || a.id! - b.id!)
     const settings = await db.settings.get('app')
     const byDay = new Map<string, { entries: typeof entries; kcal: number; proteinG: number }>()
     for (const e of entries) {

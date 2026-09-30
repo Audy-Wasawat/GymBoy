@@ -85,7 +85,7 @@ export function PickerBody({ onPick, onClose }: { onPick: (ex: Exercise) => void
       </div>
       <ul className="mx-auto w-full max-w-xl flex-1 overflow-y-auto px-4" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)' }}>
         {showCreate && (
-          <li className="border-b border-line">
+          <li className="sticky top-0 z-10 border-b border-line bg-bg">
             <button onClick={() => setCreating(true)} className="flex min-h-[56px] w-full items-center gap-3 py-2 text-left text-weights">
               <Plus size={20} aria-hidden />
               <span className="min-w-0 flex-1">

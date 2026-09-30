@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { BodyModelPicker } from '../../components/BodyModelPicker'
 import { Sheet, SheetButton } from '../../components/Sheet'
 import { findExerciseByName, type NewExercise } from '../../db/exercises'
@@ -33,16 +33,22 @@ export function ExerciseForm({ initialName = '', saveLabel, onSave, onUseExistin
   const values = (): NewExercise => ({
     name: name.trim(), equipment, bodyPart, primaryMuscles: primary, secondaryMuscles: secondary, leftRight, timed
   })
-  const create = async () => {
+  // A ref, not only state: two taps in the same moment both see the old state.
+  const working = useRef(false)
+  const run = async (job: () => Promise<void>) => {
+    if (working.current) return
+    working.current = true
     setBusy(true)
-    try { await onSave(values()) } finally { setBusy(false) }
+    try { await job() } finally { working.current = false; setBusy(false) }
   }
+  const create = () => run(async () => { await onSave(values()) })
   const save = async () => {
-    if (busy) return
     if (!name.trim()) { setError(true); return }
-    const existing = await findExerciseByName(name)
-    if (existing) setDuplicate(existing)
-    else await create()
+    await run(async () => {
+      const existing = await findExerciseByName(name)
+      if (existing) setDuplicate(existing)
+      else await onSave(values())
+    })
   }
 
   return (

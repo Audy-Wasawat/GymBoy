@@ -6,6 +6,7 @@ import { Sheet, SheetButton } from '../../components/Sheet'
 import { addFood, deleteFood, updateFood } from '../../db/food'
 import { db } from '../../db/db'
 import { useT } from '../../i18n/useT'
+import { parseDecimal } from '../../lib/numbers'
 import { PhotoField } from '../../components/PhotoField'
 import { FOOD_PHOTO_MAX } from '../../lib/photos'
 
@@ -41,13 +42,15 @@ export function FoodLibraryEditor() {
 
   async function handleSave() {
     if (!name.trim()) { setError(t('food.nameRequired')); return }
-    if (!kcalStr.trim() || isNaN(Number(kcalStr))) { setError(t('food.kcalRequired')); return }
+    const kcal = parseDecimal(kcalStr)
+    if (kcal === undefined) { setError(t('food.kcalRequired')); return }
+    if (proteinStr.trim() && parseDecimal(proteinStr) === undefined) { setError(t('food.proteinInvalid')); return }
     setSaving(true)
     try {
       const food = {
         name: name.trim(),
-        kcal: Math.round(parseFloat(kcalStr)),
-        proteinG: parseFloat(proteinStr) || 0
+        kcal: Math.round(kcal),
+        proteinG: parseDecimal(proteinStr) ?? 0
       }
       if (isNew) {
         await addFood({ ...food, ...(photo ? { photo } : {}) })

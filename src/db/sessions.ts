@@ -192,15 +192,17 @@ export async function setSessionLeftRight(seId: number, on: boolean): Promise<bo
 export async function saveDraft(draft: SetDraft, se: SessionExercise, unit: WeightUnit, date: string) {
   const values = readSetValues(draft, se, unit)
   if (!values) return false
-  await db.transaction('rw', [db.sessions, db.sessionExercises, db.sets, db.setDrafts, db.exercises], async () => {
+  return db.transaction('rw', [db.sessions, db.sessionExercises, db.sets, db.setDrafts, db.exercises], async () => {
+    // A second call for the same draft (double tap) finds it already gone and adds nothing.
+    if (!(await db.setDrafts.get(draft.id!))) return false
     await db.sets.add({
       ...values, sessionExerciseId: se.id!, setNumber: draft.order, type: draft.type,
       exerciseId: se.exerciseId, date, toFailure: draft.toFailure
     })
     await db.setDrafts.delete(draft.id!)
     await refreshBodyParts(se.sessionId)
+    return true
   })
-  return true
 }
 
 export async function deleteSet(set: SetLog, sessionId: number) {
