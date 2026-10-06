@@ -4,7 +4,13 @@ dev-dist
 .DS_Store
 *.local
 .env
+
+# Local notes and tool settings (kept on my machine only)
+.claude/
+CLAUDE.md
+SPEC.md
+DECISIONS.md
 PROGRESS.md
 AUTOPILOT.md
-.claude/launch.json
 NEXT_TASKS.md
+docs/banner-*.svg

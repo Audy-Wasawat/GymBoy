@@ -1,125 +1,77 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/banner-dark.svg">
-  <img alt="Gymboy: lifts, runs, sports and food in one pocket logbook" src="docs/banner-light.svg" width="100%">
-</picture>
+# Gymboy
 
-<p align="center">
-  <img alt="React 18" src="https://img.shields.io/badge/React-18-20232A?logo=react&logoColor=61DAFB">
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white">
-  <img alt="Vite" src="https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white">
-  <img alt="PWA" src="https://img.shields.io/badge/PWA-installable-5A0FC8?logo=pwa&logoColor=white">
-  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind-3-06B6D4?logo=tailwindcss&logoColor=white">
-  <img alt="Dexie" src="https://img.shields.io/badge/Dexie-IndexedDB-1C1D1F">
-  <img alt="Status" src="https://img.shields.io/badge/status-v1%20complete-2C8046">
-</p>
+My own workout log. I use it on my iPhone at the gym to write down every set, add my runs after
+the Apple Watch has tracked them, and keep a rough food diary. It's a PWA, so it installs to the
+home screen and works offline. Everything stays on the phone: no account, no server.
 
-<p align="center">
-  A personal training log that lives on your phone. Record every set at the gym, type in runs after
-  your watch has tracked them, and keep a simple food diary — all offline and without an account.
-</p>
-
-<p align="center">
-  สมุดบันทึกการออกกำลังกายบนมือถือ บันทึกเวท วิ่ง กีฬาอื่น และอาหาร ใช้งานออฟไลน์ ไม่ต้องสมัครบัญชี
-</p>
-
----
-
-## Screenshots
-
-| Today | More | Settings |
+| Today | Session | More |
 | :---: | :---: | :---: |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/today-dark.png"><img src="docs/screenshots/today-light.png" width="240" alt="Today screen"></picture> | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/more-dark.png"><img src="docs/screenshots/more-light.png" width="240" alt="More menu"></picture> | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/settings-dark.png"><img src="docs/screenshots/settings-light.png" width="240" alt="Settings screen"></picture> |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/today-dark.png"><img src="docs/screenshots/today-light.png" width="240" alt="Today"></picture> | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/session-dark.png"><img src="docs/screenshots/session-light.png" width="240" alt="Workout session"></picture> | <picture><source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/more-dark.png"><img src="docs/screenshots/more-light.png" width="240" alt="More"></picture> |
 
-Screenshots follow your GitHub theme, just like the app follows your phone's.
+## Features
 
-## What it does
+**Weights**
+- Programs with training days, or just start an empty session
+- Last time's numbers next to every set, warm-up and failure sets, left/right reps
+- Swipe a set to the left to delete it
+- Rest timer with a chime and a countdown in the last 3 seconds. It plays over your music without
+  stopping it, and if you've been away it shows how long you've gone over
+- PR badges, "try more weight" hints, and a history chart for each exercise
+- 625 exercises built in (search in English or Thai), and you can add your own
+- A body map that lights up the muscles you trained today
 
-Each part of the app wears the colour of a competition bumper plate.
+**Running**: log a run after the watch, pace worked out for you, interval plans vs what you
+actually ran, reusable templates, and shoe mileage.
 
-| | Area | Highlights |
-| :---: | --- | --- |
-| ![](https://img.shields.io/badge/-%20-C4302B) | **Weights** | Programs, last session's numbers beside every input, warm-up and failure sets, left/right reps, rest timer, PR badges, "try more weight" hints, exercise history charts |
-| ![](https://img.shields.io/badge/-%20-265AAC) | **Running** | Log runs after your watch, pace calculated automatically, interval plan vs actual per rep, reusable templates, shoe mileage tracker |
-| ![](https://img.shields.io/badge/-%20-C48A0A) | **Other sports** | Badminton or anything else, in minutes with effort rating, counted toward your weekly workout days |
-| ![](https://img.shields.io/badge/-%20-2C8046) | **Food** | Personal food library with kcal and protein, portion multiplier, optional photos, daily goals and totals |
+**Other sports**: badminton or anything else, in minutes. Counts toward workout days.
 
-Also: a library of 625 exercises with a forgiving search (English and Thai, any word order), the option to create your own exercise right from the picker, body weight tracking with progress photos, weekly and monthly summaries, an interactive body model that lights up the muscles you trained (tap regions to assign muscles to custom exercises), full backups, and JSON exports you can hand to an AI coach.
+**Food**: your own food list with kcal and protein, portion sizes, optional photos, daily goals.
 
-## Getting started
+**Also**: body weight with progress photos, weekly and monthly summaries, Thai/English, kg/lb,
+light/dark theme that follows the phone, full backup and restore, and a JSON export you can paste
+into an AI chat.
 
-You need [Node.js](https://nodejs.org) 18 or newer.
+## Running it
+
+Needs Node.js 18+.
 
 ```bash
-git clone https://github.com/Audy-Wasawat/GymBoy.git
-cd GymBoy
 npm install
 npm run dev
 ```
 
-`npm run dev` prints a **Network** address such as `http://192.168.1.20:5173`. Open it on your phone
-while it is on the same Wi-Fi to try the layout. Offline use and installing to the home screen need
-HTTPS, so try those on the deployed site.
+`npm run dev` also serves on your Wi-Fi, so you can open the Network address on your phone.
+Offline mode and Add to Home Screen only work over HTTPS, so try those on the deployed site.
 
-| Command | What it does |
+| Command | |
 | --- | --- |
-| `npm run dev` | Start the dev server on your local network |
-| `npm run build` | Type-check and build to `dist/` |
-| `npm run preview` | Serve the production build locally |
-| `npm test` | Run the unit test suite |
-| `npm run test:tz` | Run tests across four time zones (Bangkok, Shanghai, LA, Auckland) |
+| `npm run dev` | dev server on the local network |
+| `npm run build` | type-check and build to `dist/` |
+| `npm run preview` | serve the build |
+| `npm test` | unit tests |
+| `npm run test:tz` | tests in a few time zones |
 
-## Deploy and install on your phone
+## Deploy
 
-1. Import this repository on [Vercel](https://vercel.com/new) (or Netlify). It detects Vite; the build
-   command is `npm run build` and the output folder is `dist`.
-2. **iPhone:** open the https address in Safari, tap **Share**, then **Add to Home Screen**.
-3. **Android:** open it in Chrome and choose **Install app**.
-4. Always open Gymboy from its home screen icon. An installed app keeps its data; a browser tab can lose it.
+I deploy on Vercel. Import the repo and it picks up Vite on its own (build `npm run build`,
+output `dist`). Then on the iPhone: open the site in Safari → Share → Add to Home Screen, and
+always open it from that icon. A normal Safari tab can lose its data.
 
-## Your data
+## Data
 
-Everything is stored on your phone in IndexedDB. There is no server and no account. Weights are always
-stored in kilograms and shown in kg or lb, so switching units never changes your history.
+Data lives in the phone's IndexedDB. Weights are stored in kg and only converted for display, so
+switching to lb never changes old logs. Back up from **More → Backup** now and then. It's one
+JSON file you can save or share.
 
-Back up your data any time from **More → Backup**: the full backup is a JSON file you send through
-the share sheet. You can also export a filtered JSON for a date range and hand it to an AI coach.
+## Notes
 
-## Project structure
+- The iPhone doesn't let a web app make sound or vibrate while it's in the background, so the rest
+  chime only plays while Gymboy is open.
+- Exercise names and muscle data come from
+  [free-exercise-db](https://github.com/yuhonas/free-exercise-db) (public domain). `scripts/`
+  rebuilds `src/data/exercises.json` from it.
 
-```
-src/
-├── db/           Dexie schema (db.ts), types, and CRUD helpers per module
-├── i18n/         Thai and English strings (strings.ts) and useT hook
-├── lib/          units, dates (local YYYY-MM-DD, Monday weeks), backup, photos,
-│                 running helpers, summary math, numbers, progress
-├── components/   shared UI — TabBar, Page layout, Sheet, Segmented, BodyModel,
-│                 BodyModelPicker, ActivityGrid, BrowserBanner, and more
-└── pages/
-    ├── weights/  Programs, Session, Exercise library, History, SetRow, RestBar
-    ├── running/  Run log, Interval plans, Charts, Templates
-    ├── food/     Daily log, Food library
-    ├── body/     Weight log, Photo compare, Chart
-    ├── Today.tsx, Summary.tsx, Activities.tsx, Shoes.tsx
-    ├── Backup.tsx, Settings.tsx, More.tsx
-    └── …
-docs/             README banner and screenshots
-scripts/          Exercise data builder and timezone test runner
-```
+## Stack
 
-## Roadmap
-
-- [x] **Phase 1** Project setup, installable PWA, database, Thai/English, light/dark theme, Today and Settings
-- [x] **Phase 2** Exercise library, programs, set logging, rest timer
-- [x] **Phase 3** Exercise history, progress charts, PRs, weight-increase hints
-- [x] **Phase 4** Running log, intervals, templates, shoes
-- [x] **Phase 5** Food log, other sports, body weight
-- [x] **Phase 6** Today screen details, weekly and monthly summary, goals
-- [x] **Phase 7** Backup, restore and AI export
-- [x] **Phase 8** Interactive body model — tap regions to assign muscles to exercises
-
-## Built with
-
-[React](https://react.dev) · [TypeScript](https://www.typescriptlang.org) · [Vite](https://vitejs.dev) ·
-[vite-plugin-pwa](https://vite-pwa-org.netlify.app) · [Dexie](https://dexie.org) ·
-[Tailwind CSS](https://tailwindcss.com) · [Recharts](https://recharts.org) ·
-[Lucide icons](https://lucide.dev) · [IBM Plex Sans Thai](https://github.com/IBM/plex)
+React 18, TypeScript, Vite, vite-plugin-pwa, Dexie, Tailwind CSS, Recharts, Lucide icons,
+IBM Plex Sans Thai.
