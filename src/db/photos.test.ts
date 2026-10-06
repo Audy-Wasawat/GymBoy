@@ -38,7 +38,7 @@ describe('backup and restore with photos (F1)', () => {
   it('keeps the photo of a food entry, a library food and a body entry', async () => {
     const foodId = await addFood({ name: 'Rice', kcal: 200, proteinG: 4, photo: photo(1) })
     const entryId = await addFoodEntry({ ...entry(), foodId, photo: photo(2) })
-    const bodyId = await addBodyEntry({ date: '2026-09-29', weightKg: 70, photo: photo(3) })
+    const bodyId = await addBodyEntry({ date: '2026-09-29', weightKg: 70, photos: [{ blob: photo(3), pose: 'front' }, { blob: photo(4), pose: 'side' }] })
     const json = await roundTrip()
     // The file holds data URLs, never the {} that JSON.stringify makes of a Blob.
     expect(json.foodEntries).toEqual([expect.objectContaining({ photo: expect.stringMatching(/^data:image\/jpeg;base64,/) })])
@@ -48,7 +48,22 @@ describe('backup and restore with photos (F1)', () => {
     expect(e.photo).toBeInstanceOf(Blob)
     expect(await bytes(e.photo)).toEqual(await bytes(photo(2)))
     expect(await bytes((await db.foods.get(foodId))?.photo)).toEqual(await bytes(photo(1)))
-    expect(await bytes((await db.bodyEntries.get(bodyId))?.photo)).toEqual(await bytes(photo(3)))
+    const body = (await db.bodyEntries.get(bodyId))!
+    expect(body.photos?.map((p) => p.pose)).toEqual(['front', 'side'])
+    expect(await bytes(body.photos![0].blob)).toEqual(await bytes(photo(3)))
+    expect(await bytes(body.photos![1].blob)).toEqual(await bytes(photo(4)))
+  })
+
+  it('turns the single photo of an older backup into a front photo', async () => {
+    const id = await addBodyEntry({ date: '2026-09-29', weightKg: 70 })
+    const json = JSON.parse(await (await createBackup()).text())
+    json.schemaVersion = 2
+    json.bodyEntries[0].photo = await blobToDataUrl(photo(5))
+    await restoreBackup(json)
+    const e = (await db.bodyEntries.get(id))!
+    expect(e.photos?.map((p) => p.pose)).toEqual(['front'])
+    expect(await bytes(e.photos![0].blob)).toEqual(await bytes(photo(5)))
+    expect('photo' in e).toBe(false)
   })
 
   it('an entry without a photo stays without one', async () => {
@@ -126,7 +141,7 @@ describe('food photos and the library (F1)', () => {
 
   it('the AI export never carries photos', async () => {
     await addFoodEntry({ ...entry(), photo: photo(2) })
-    await addBodyEntry({ date: '2026-09-29', weightKg: 70, photo: photo(3) })
+    await addBodyEntry({ date: '2026-09-29', weightKg: 70, photos: [{ blob: photo(3), pose: 'back' }] })
     const text = await (await createAIExport({
       from: '2026-09-01', to: '2026-09-30', categories: new Set(['food', 'body'])
     })).text()

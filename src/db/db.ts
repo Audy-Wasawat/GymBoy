@@ -60,6 +60,13 @@ export class GymboyDB extends Dexie {
       })
       await tx.table('sessions').toCollection().modify((s) => { s.startedAt ??= 0 })
     })
+    // v3: a body entry holds several photos (front, side, back...) instead of one.
+    this.version(3).stores({}).upgrade(async (tx) => {
+      await tx.table('bodyEntries').toCollection().modify((e) => {
+        if (e.photo instanceof Blob) e.photos = [{ blob: e.photo, pose: 'front' }]
+        delete e.photo
+      })
+    })
   }
 }
 

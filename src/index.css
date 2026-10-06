@@ -59,6 +59,12 @@ button:not(:disabled):active, a:active { transform: scale(0.97); }
 input.border-line, select.border-line, textarea.border-line, button.border-line, label.border-line { border-color: rgb(var(--control) / 0.55); }
 input.bg-bg, textarea.bg-bg, select.bg-bg { background-color: rgb(var(--raised) / 0.6); }
 input:focus, textarea:focus, select:focus { outline: none; border-color: rgb(var(--plate-blue)); box-shadow: 0 0 0 3px rgb(var(--plate-blue) / 0.2); }
+/* iOS Safari gives date/time inputs a fixed native width that ignores w-full, so they spill out of
+   narrow grid cells and overlap the field beside them. Drop the native look and let them shrink. */
+input[type='date'], input[type='time'], input[type='datetime-local'] {
+  -webkit-appearance: none; appearance: none; display: block; min-width: 0; max-width: 100%;
+}
+input[type='date']::-webkit-date-and-time-value, input[type='time']::-webkit-date-and-time-value { text-align: left; margin: 0; }
 input::placeholder, textarea::placeholder { color: rgb(var(--muted)); opacity: 1; }
 /* In dark mode the plate colours are bright, so text on them is dark (white on them fails 4.5:1). */
 @media (prefers-color-scheme: dark) { .text-white { color: rgb(var(--bg)); } }

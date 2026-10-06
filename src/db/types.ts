@@ -118,7 +118,11 @@ export interface FoodEntry {
   photo?: Blob
 }
 
-export interface BodyEntry { id?: number; date: string; weightKg: number; photo?: Blob }
+/** Which way a progress photo faces, so later photos can be compared like with like. */
+export type BodyPose = 'front' | 'side' | 'back' | 'other'
+export interface BodyPhoto { blob: Blob; pose: BodyPose }
+/** Photos are optional and in the order they were added. (Before schema v3 an entry had one `photo` Blob.) */
+export interface BodyEntry { id?: number; date: string; weightKg: number; photos?: BodyPhoto[] }
 
 export interface Goals { kcal?: number; proteinG?: number; weeklyDays?: number }
 export interface Settings {

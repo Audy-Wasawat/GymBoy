@@ -17,7 +17,7 @@ home screen and works offline. Everything stays on the phone: no account, no ser
 - Rest timer with a chime and a countdown in the last 3 seconds. It plays over your music without
   stopping it, and if you've been away it shows how long you've gone over
 - PR badges, "try more weight" hints, and a history chart for each exercise
-- 625 exercises built in (search in English or Thai), and you can add your own
+- About 880 exercises built in, including stretches, plyometrics and cardio machines (search in English or Thai), and you can add your own
 - A body map that lights up the muscles you trained today
 
 **Running**: log a run after the watch, pace worked out for you, interval plans vs what you

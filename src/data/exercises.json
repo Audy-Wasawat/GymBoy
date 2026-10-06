@@ -3808,6 +3808,34 @@
   "bodyweight": true
  },
  {
+  "key": "90_90_Hamstring",
+  "name": "90/90 Hamstring",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "calves"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Adductor_Groin",
+  "name": "Adductor/Groin",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "adductors"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Advanced_Kettlebell_Windmill",
   "name": "Advanced Kettlebell Windmill",
   "equipment": "other",
@@ -3824,6 +3852,19 @@
   "leftRight": true,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "All_Fours_Quad_Stretch",
+  "name": "All Fours Quad Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
  },
  {
   "key": "Alternate_Heel_Touchers",
@@ -3852,6 +3893,24 @@
   "leftRight": true,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Alternate_Leg_Diagonal_Bound",
+  "name": "Alternate Leg Diagonal Bound",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "hamstrings"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": true
  },
  {
   "key": "Alternating_Cable_Shoulder_Press",
@@ -3955,6 +4014,32 @@
   "bodyweight": false
  },
  {
+  "key": "Ankle_Circles",
+  "name": "Ankle Circles",
+  "equipment": "bodyweight",
+  "bodyPart": "calves",
+  "primaryMuscles": [
+   "calves"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Ankle_On_The_Knee",
+  "name": "Ankle On The Knee",
+  "equipment": "bodyweight",
+  "bodyPart": "glutes",
+  "primaryMuscles": [
+   "glutes"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Anti-Gravity_Press",
   "name": "Anti-Gravity Press",
   "equipment": "barbell",
@@ -3974,6 +4059,22 @@
   "bodyweight": false
  },
  {
+  "key": "Arm_Circles",
+  "name": "Arm Circles",
+  "equipment": "bodyweight",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "traps"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Around_The_Worlds",
   "name": "Around The Worlds",
   "equipment": "dumbbell",
@@ -3984,6 +4085,71 @@
   ],
   "secondaryMuscles": [
    "delt_front"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Atlas_Stone_Trainer",
+  "name": "Atlas Stone Trainer",
+  "equipment": "other",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lower_back"
+  ],
+  "secondaryMuscles": [
+   "biceps",
+   "forearms",
+   "glutes",
+   "hamstrings",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Atlas_Stones",
+  "name": "Atlas Stones",
+  "equipment": "other",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lower_back"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "adductors",
+   "biceps",
+   "calves",
+   "forearms",
+   "glutes",
+   "hamstrings",
+   "mid_back",
+   "lats",
+   "quads",
+   "traps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Axle_Deadlift",
+  "name": "Axle Deadlift",
+  "equipment": "other",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lower_back",
+   "glutes",
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "forearms",
+   "mid_back",
+   "lats",
+   "quads",
+   "traps"
   ],
   "leftRight": false,
   "timed": false,
@@ -4002,6 +4168,39 @@
    "lats",
    "triceps"
   ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Backward_Drag",
+  "name": "Backward Drag",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "forearms",
+   "glutes",
+   "hamstrings",
+   "lower_back"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Backward_Medicine_Ball_Throw",
+  "name": "Backward Medicine Ball Throw",
+  "equipment": "other",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [],
   "leftRight": false,
   "timed": false,
   "bodyweight": false
@@ -4314,6 +4513,56 @@
   "bodyweight": false
  },
  {
+  "key": "Bear_Crawl_Sled_Drags",
+  "name": "Bear Crawl Sled Drags",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Behind_Head_Chest_Stretch",
+  "name": "Behind Head Chest Stretch",
+  "equipment": "other",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Bench_Jump",
+  "name": "Bench Jump",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
   "key": "Bench_Press_-_Powerlifting",
   "name": "Bench Press - Powerlifting",
   "equipment": "barbell",
@@ -4371,35 +4620,21 @@
   "bodyweight": false
  },
  {
-  "key": "Bent-Arm_Dumbbell_Pullover",
-  "name": "Bent-Arm Dumbbell Pullover",
-  "equipment": "dumbbell",
-  "bodyPart": "chest",
+  "key": "Bench_Sprint",
+  "name": "Bench Sprint",
+  "equipment": "other",
+  "bodyPart": "quads",
   "primaryMuscles": [
-   "chest_upper",
-   "chest_lower"
+   "quads"
   ],
   "secondaryMuscles": [
-   "lats",
-   "delt_front",
-   "triceps"
+   "calves",
+   "glutes",
+   "hamstrings"
   ],
   "leftRight": false,
   "timed": false,
   "bodyweight": false
- },
- {
-  "key": "Bent-Knee_Hip_Raise",
-  "name": "Bent-Knee Hip Raise",
-  "equipment": "bodyweight",
-  "bodyPart": "core",
-  "primaryMuscles": [
-   "abs"
-  ],
-  "secondaryMuscles": [],
-  "leftRight": false,
-  "timed": false,
-  "bodyweight": true
  },
  {
   "key": "Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench",
@@ -4502,6 +4737,71 @@
   ],
   "leftRight": false,
   "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Bent-Arm_Dumbbell_Pullover",
+  "name": "Bent-Arm Dumbbell Pullover",
+  "equipment": "dumbbell",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "lats",
+   "delt_front",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Bent-Knee_Hip_Raise",
+  "name": "Bent-Knee Hip Raise",
+  "equipment": "bodyweight",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Bicycling",
+  "name": "Bicycling",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": false
+ },
+ {
+  "key": "Bicycling_Stationary",
+  "name": "Bicycling, Stationary",
+  "equipment": "machine",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
   "bodyweight": false
  },
  {
@@ -4613,6 +4913,42 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": true
+ },
+ {
+  "key": "Box_Jump_Multiple_Response",
+  "name": "Box Jump (Multiple Response)",
+  "equipment": "other",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Box_Skip",
+  "name": "Box Skip",
+  "equipment": "other",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
  },
  {
   "key": "Box_Squat_with_Bands",
@@ -4794,19 +5130,6 @@
   "bodyweight": false
  },
  {
-  "key": "Calf-Machine_Shoulder_Shrug",
-  "name": "Calf-Machine Shoulder Shrug",
-  "equipment": "machine",
-  "bodyPart": "back",
-  "primaryMuscles": [
-   "traps"
-  ],
-  "secondaryMuscles": [],
-  "leftRight": false,
-  "timed": false,
-  "bodyweight": false
- },
- {
   "key": "Calf_Press",
   "name": "Calf Press",
   "equipment": "machine",
@@ -4833,6 +5156,64 @@
   "bodyweight": false
  },
  {
+  "key": "Calf_Stretch_Elbows_Against_Wall",
+  "name": "Calf Stretch Elbows Against Wall",
+  "equipment": "bodyweight",
+  "bodyPart": "calves",
+  "primaryMuscles": [
+   "calves"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Calf_Stretch_Hands_Against_Wall",
+  "name": "Calf Stretch Hands Against Wall",
+  "equipment": "bodyweight",
+  "bodyPart": "calves",
+  "primaryMuscles": [
+   "calves"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Calf-Machine_Shoulder_Shrug",
+  "name": "Calf-Machine Shoulder Shrug",
+  "equipment": "machine",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "traps"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Car_Deadlift",
+  "name": "Car Deadlift",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "forearms",
+   "glutes",
+   "hamstrings",
+   "lower_back",
+   "traps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
   "key": "Car_Drivers",
   "name": "Car Drivers",
   "equipment": "barbell",
@@ -4843,6 +5224,60 @@
   ],
   "secondaryMuscles": [
    "forearms"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Carioca_Quick_Step",
+  "name": "Carioca Quick Step",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "adductors"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "glutes",
+   "calves",
+   "hamstrings",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Cat_Stretch",
+  "name": "Cat Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lower_back"
+  ],
+  "secondaryMuscles": [
+   "mid_back",
+   "lats",
+   "traps"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Catch_and_Overhead_Throw",
+  "name": "Catch and Overhead Throw",
+  "equipment": "other",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "chest_upper",
+   "chest_lower",
+   "delt_rear"
   ],
   "leftRight": false,
   "timed": false,
@@ -4880,6 +5315,36 @@
   "bodyweight": false
  },
  {
+  "key": "Chair_Leg_Extended_Stretch",
+  "name": "Chair Leg Extended Stretch",
+  "equipment": "other",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "adductors"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Chair_Lower_Back_Stretch",
+  "name": "Chair Lower Back Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "lower_back"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Chair_Squat",
   "name": "Chair Squat",
   "equipment": "machine",
@@ -4891,6 +5356,177 @@
    "calves",
    "glutes",
    "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Chair_Upper_Body_Stretch",
+  "name": "Chair Upper Body Stretch",
+  "equipment": "other",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "biceps",
+   "chest_upper",
+   "chest_lower"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Chest_And_Front_Of_Shoulder_Stretch",
+  "name": "Chest And Front Of Shoulder Stretch",
+  "equipment": "other",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Chest_Push_from_3_point_stance",
+  "name": "Chest Push from 3 point stance",
+  "equipment": "other",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "delt_front",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Chest_Push_multiple_response",
+  "name": "Chest Push (multiple response)",
+  "equipment": "other",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "delt_front",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Chest_Push_single_response",
+  "name": "Chest Push (single response)",
+  "equipment": "other",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "delt_front",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Chest_Push_with_Run_Release",
+  "name": "Chest Push with Run Release",
+  "equipment": "other",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "delt_front",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Chest_Stretch_on_Stability_Ball",
+  "name": "Chest Stretch on Stability Ball",
+  "equipment": "other",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Childs_Pose",
+  "name": "Child's Pose",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lower_back"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "mid_back",
+   "lats"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Chin_To_Chest_Stretch",
+  "name": "Chin To Chest Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "traps"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Circus_Bell",
+  "name": "Circus Bell",
+  "equipment": "other",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "forearms",
+   "glutes",
+   "hamstrings",
+   "lower_back",
+   "traps",
+   "triceps"
   ],
   "leftRight": false,
   "timed": false,
@@ -5008,17 +5644,25 @@
   "bodyweight": true
  },
  {
-  "key": "Cross-Body_Crunch",
-  "name": "Cross-Body Crunch",
-  "equipment": "bodyweight",
-  "bodyPart": "core",
+  "key": "Conans_Wheel",
+  "name": "Conan's Wheel",
+  "equipment": "other",
+  "bodyPart": "quads",
   "primaryMuscles": [
-   "abs"
+   "quads"
   ],
-  "secondaryMuscles": [],
+  "secondaryMuscles": [
+   "abs",
+   "biceps",
+   "calves",
+   "forearms",
+   "lower_back",
+   "delt_front",
+   "traps"
+  ],
   "leftRight": false,
   "timed": false,
-  "bodyweight": true
+  "bodyweight": false
  },
  {
   "key": "Cross_Over_-_With_Bands",
@@ -5032,6 +5676,53 @@
   "secondaryMuscles": [
    "biceps",
    "delt_front"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Cross-Body_Crunch",
+  "name": "Cross-Body Crunch",
+  "equipment": "bodyweight",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Crossover_Reverse_Lunge",
+  "name": "Crossover Reverse Lunge",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lower_back"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "glutes",
+   "hamstrings",
+   "quads"
+  ],
+  "leftRight": true,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Crucifix",
+  "name": "Crucifix",
+  "equipment": "other",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "forearms"
   ],
   "leftRight": false,
   "timed": false,
@@ -5078,6 +5769,21 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Dancers_Stretch",
+  "name": "Dancer's Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lower_back"
+  ],
+  "secondaryMuscles": [
+   "glutes"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
  },
  {
   "key": "Deadlift_with_Bands",
@@ -5211,6 +5917,24 @@
   "bodyweight": false
  },
  {
+  "key": "Depth_Jump_Leap",
+  "name": "Depth Jump Leap",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
   "key": "Double_Kettlebell_Push_Press",
   "name": "Double Kettlebell Push Press",
   "equipment": "other",
@@ -5248,6 +5972,24 @@
   "bodyweight": false
  },
  {
+  "key": "Double_Leg_Butt_Kick",
+  "name": "Double Leg Butt Kick",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
   "key": "Downward_Facing_Balance",
   "name": "Downward Facing Balance",
   "equipment": "other",
@@ -5261,6 +6003,23 @@
   ],
   "leftRight": false,
   "timed": true,
+  "bodyweight": false
+ },
+ {
+  "key": "Drop_Push",
+  "name": "Drop Push",
+  "equipment": "other",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "delt_front",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
   "bodyweight": false
  },
  {
@@ -5427,6 +6186,23 @@
   "bodyweight": false
  },
  {
+  "key": "Dumbbell_Seated_Box_Jump",
+  "name": "Dumbbell Seated Box Jump",
+  "equipment": "dumbbell",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
   "key": "Dumbbell_Squat_To_A_Bench",
   "name": "Dumbbell Squat To A Bench",
   "equipment": "dumbbell",
@@ -5458,6 +6234,52 @@
   "bodyweight": false
  },
  {
+  "key": "Dynamic_Back_Stretch",
+  "name": "Dynamic Back Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Dynamic_Chest_Stretch",
+  "name": "Dynamic Chest Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "mid_back",
+   "lats"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Elbow_Circles",
+  "name": "Elbow Circles",
+  "equipment": "bodyweight",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "traps"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Elbow_to_Knee",
   "name": "Elbow to Knee",
   "equipment": "bodyweight",
@@ -5468,6 +6290,22 @@
   "secondaryMuscles": [],
   "leftRight": false,
   "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Elbows_Back",
+  "name": "Elbows Back",
+  "equipment": "bodyweight",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": true,
   "bodyweight": true
  },
  {
@@ -5500,6 +6338,23 @@
   ],
   "leftRight": false,
   "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Elliptical_Trainer",
+  "name": "Elliptical Trainer",
+  "equipment": "machine",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
   "bodyweight": false
  },
  {
@@ -5545,6 +6400,24 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Fast_Skipping",
+  "name": "Fast Skipping",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
  },
  {
   "key": "Finger_Curls",
@@ -5635,6 +6508,45 @@
   "bodyweight": true
  },
  {
+  "key": "Forward_Drag_with_Press",
+  "name": "Forward Drag with Press",
+  "equipment": "other",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings",
+   "quads",
+   "delt_front",
+   "delt_side",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Frog_Hops",
+  "name": "Frog Hops",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Frog_Sit-Ups",
   "name": "Frog Sit-Ups",
   "equipment": "bodyweight",
@@ -5665,6 +6577,42 @@
   "bodyweight": false
  },
  {
+  "key": "Front_Box_Jump",
+  "name": "Front Box Jump",
+  "equipment": "other",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Front_Cone_Hops_or_hurdle_hops",
+  "name": "Front Cone Hops (or hurdle hops)",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
   "key": "Front_Incline_Dumbbell_Raise",
   "name": "Front Incline Dumbbell Raise",
   "equipment": "dumbbell",
@@ -5676,6 +6624,19 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Front_Leg_Raises",
+  "name": "Front Leg Raises",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
  },
  {
   "key": "Front_Raise_And_Pullover",
@@ -5808,6 +6769,45 @@
   "bodyweight": true
  },
  {
+  "key": "Groin_and_Back_Stretch",
+  "name": "Groin and Back Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "adductors"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Groiners",
+  "name": "Groiners",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "adductors"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Hamstring_Stretch",
+  "name": "Hamstring Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Hanging_Bar_Good_Morning",
   "name": "Hanging Bar Good Morning",
   "equipment": "barbell",
@@ -5823,6 +6823,39 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Heavy_Bag_Thrust",
+  "name": "Heavy Bag Thrust",
+  "equipment": "other",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "delt_front",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Hip_Circles_prone",
+  "name": "Hip Circles (prone)",
+  "equipment": "bodyweight",
+  "bodyPart": "glutes",
+  "primaryMuscles": [
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "adductors"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
  },
  {
   "key": "Hip_Extension_with_Bands",
@@ -5869,6 +6902,54 @@
   "bodyweight": false
  },
  {
+  "key": "Hug_A_Ball",
+  "name": "Hug A Ball",
+  "equipment": "other",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lower_back"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Hug_Knees_To_Chest",
+  "name": "Hug Knees To Chest",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lower_back"
+  ],
+  "secondaryMuscles": [
+   "glutes"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Hurdle_Hops",
+  "name": "Hurdle Hops",
+  "equipment": "other",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
   "key": "Hyperextensions_With_No_Hyperextension_Bench",
   "name": "Hyperextensions With No Hyperextension Bench",
   "equipment": "bodyweight",
@@ -5882,6 +6963,19 @@
   ],
   "leftRight": false,
   "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Inchworm",
+  "name": "Inchworm",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
   "bodyweight": true
  },
  {
@@ -5976,6 +7070,22 @@
   "bodyweight": true
  },
  {
+  "key": "Incline_Push-Up_Depth_Jump",
+  "name": "Incline Push-Up Depth Jump",
+  "equipment": "other",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper"
+  ],
+  "secondaryMuscles": [
+   "delt_front",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
   "key": "Incline_Push-Up_Medium",
   "name": "Incline Push-Up Medium",
   "equipment": "bodyweight",
@@ -6024,6 +7134,32 @@
   ],
   "leftRight": false,
   "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Intermediate_Groin_Stretch",
+  "name": "Intermediate Groin Stretch",
+  "equipment": "other",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Intermediate_Hip_Flexor_and_Quad_Stretch",
+  "name": "Intermediate Hip Flexor and Quad Stretch",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
   "bodyweight": true
  },
  {
@@ -6078,6 +7214,36 @@
   "bodyweight": false
  },
  {
+  "key": "Iron_Crosses_stretch",
+  "name": "Iron Crosses (stretch)",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Isometric_Chest_Squeezes",
+  "name": "Isometric Chest Squeezes",
+  "equipment": "bodyweight",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "delt_front",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Isometric_Neck_Exercise_-_Front_And_Back",
   "name": "Isometric Neck Exercise - Front And Back",
   "equipment": "bodyweight",
@@ -6122,6 +7288,19 @@
   "bodyweight": true
  },
  {
+  "key": "IT_Band_and_Glute_Stretch",
+  "name": "IT Band and Glute Stretch",
+  "equipment": "other",
+  "bodyPart": "glutes",
+  "primaryMuscles": [
+   "glutes"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Janda_Sit-Up",
   "name": "Janda Sit-Up",
   "equipment": "bodyweight",
@@ -6147,6 +7326,47 @@
    "glutes",
    "hamstrings",
    "lower_back",
+   "traps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Jogging_Treadmill",
+  "name": "Jogging, Treadmill",
+  "equipment": "machine",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": false
+ },
+ {
+  "key": "Keg_Load",
+  "name": "Keg Load",
+  "equipment": "other",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lower_back"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "biceps",
+   "calves",
+   "forearms",
+   "glutes",
+   "hamstrings",
+   "mid_back",
+   "lats",
+   "quads",
+   "delt_front",
    "traps"
   ],
   "leftRight": false,
@@ -6424,6 +7644,71 @@
   "bodyweight": true
  },
  {
+  "key": "Knee_Across_The_Body",
+  "name": "Knee Across The Body",
+  "equipment": "bodyweight",
+  "bodyPart": "glutes",
+  "primaryMuscles": [
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "lower_back"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Knee_Circles",
+  "name": "Knee Circles",
+  "equipment": "bodyweight",
+  "bodyPart": "calves",
+  "primaryMuscles": [
+   "calves"
+  ],
+  "secondaryMuscles": [
+   "hamstrings",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Knee_Tuck_Jump",
+  "name": "Knee Tuck Jump",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Kneeling_Arm_Drill",
+  "name": "Kneeling Arm Drill",
+  "equipment": "bodyweight",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "abs"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
   "key": "Kneeling_Cable_Crunch_With_Alternating_Oblique_Twists",
   "name": "Kneeling Cable Crunch With Alternating Oblique Twists",
   "equipment": "cable",
@@ -6451,6 +7736,19 @@
   "bodyweight": false
  },
  {
+  "key": "Kneeling_Forearm_Stretch",
+  "name": "Kneeling Forearm Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "forearms",
+  "primaryMuscles": [
+   "forearms"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Kneeling_High_Pulley_Row",
   "name": "Kneeling High Pulley Row",
   "equipment": "cable",
@@ -6465,6 +7763,19 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Kneeling_Hip_Flexor",
+  "name": "Kneeling Hip Flexor",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
  },
  {
   "key": "Kneeling_Single-Arm_High_Pulley_Row",
@@ -6522,6 +7833,60 @@
   "bodyweight": false
  },
  {
+  "key": "Lateral_Bound",
+  "name": "Lateral Bound",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "adductors"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "calves",
+   "hamstrings",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Lateral_Box_Jump",
+  "name": "Lateral Box Jump",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "adductors"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "calves",
+   "hamstrings",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Lateral_Cone_Hops",
+  "name": "Lateral Cone Hops",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "adductors"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "calves",
+   "hamstrings",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
   "key": "Lateral_Raise_-_With_Bands",
   "name": "Lateral Raise - With Bands",
   "equipment": "other",
@@ -6550,6 +7915,19 @@
   "bodyweight": true
  },
  {
+  "key": "Leg_Pull-In",
+  "name": "Leg Pull-In",
+  "equipment": "bodyweight",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
   "key": "Leg-Over_Floor_Press",
   "name": "Leg-Over Floor Press",
   "equipment": "other",
@@ -6568,16 +7946,16 @@
   "bodyweight": false
  },
  {
-  "key": "Leg_Pull-In",
-  "name": "Leg Pull-In",
+  "key": "Leg-Up_Hamstring_Stretch",
+  "name": "Leg-Up Hamstring Stretch",
   "equipment": "bodyweight",
-  "bodyPart": "core",
+  "bodyPart": "hamstrings",
   "primaryMuscles": [
-   "abs"
+   "hamstrings"
   ],
   "secondaryMuscles": [],
   "leftRight": false,
-  "timed": false,
+  "timed": true,
   "bodyweight": true
  },
  {
@@ -6591,6 +7969,82 @@
   "secondaryMuscles": [
    "glutes",
    "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Linear_3-Part_Start_Technique",
+  "name": "Linear 3-Part Start Technique",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Linear_Acceleration_Wall_Drill",
+  "name": "Linear Acceleration Wall Drill",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Linear_Depth_Jump",
+  "name": "Linear Depth Jump",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Log_Lift",
+  "name": "Log Lift",
+  "equipment": "other",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "chest_upper",
+   "chest_lower",
+   "glutes",
+   "hamstrings",
+   "lower_back",
+   "mid_back",
+   "lats",
+   "quads",
+   "traps",
+   "triceps"
   ],
   "leftRight": false,
   "timed": false,
@@ -6611,6 +8065,19 @@
   ],
   "leftRight": false,
   "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Looking_At_Ceiling",
+  "name": "Looking At Ceiling",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
   "bodyweight": true
  },
  {
@@ -6644,6 +8111,19 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Lower_Back_Curl",
+  "name": "Lower Back Curl",
+  "equipment": "bodyweight",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
  },
  {
   "key": "Lunge_Pass_Through",
@@ -6680,6 +8160,19 @@
   "bodyweight": false
  },
  {
+  "key": "Lying_Bent_Leg_Groin",
+  "name": "Lying Bent Leg Groin",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "adductors"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Lying_Cable_Curl",
   "name": "Lying Cable Curl",
   "equipment": "cable",
@@ -6705,6 +8198,19 @@
    "biceps",
    "traps"
   ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Lying_Close-Grip_Bar_Curl_On_High_Pulley",
+  "name": "Lying Close-Grip Bar Curl On High Pulley",
+  "equipment": "cable",
+  "bodyPart": "biceps",
+  "primaryMuscles": [
+   "biceps"
+  ],
+  "secondaryMuscles": [],
   "leftRight": false,
   "timed": false,
   "bodyweight": false
@@ -6736,17 +8242,17 @@
   "bodyweight": false
  },
  {
-  "key": "Lying_Close-Grip_Bar_Curl_On_High_Pulley",
-  "name": "Lying Close-Grip Bar Curl On High Pulley",
-  "equipment": "cable",
-  "bodyPart": "biceps",
+  "key": "Lying_Crossover",
+  "name": "Lying Crossover",
+  "equipment": "bodyweight",
+  "bodyPart": "glutes",
   "primaryMuscles": [
-   "biceps"
+   "glutes"
   ],
   "secondaryMuscles": [],
   "leftRight": false,
-  "timed": false,
-  "bodyweight": false
+  "timed": true,
+  "bodyweight": true
  },
  {
   "key": "Lying_Face_Down_Plate_Neck_Resistance",
@@ -6775,6 +8281,34 @@
   "bodyweight": false
  },
  {
+  "key": "Lying_Glute",
+  "name": "Lying Glute",
+  "equipment": "bodyweight",
+  "bodyPart": "glutes",
+  "primaryMuscles": [
+   "glutes"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Lying_Hamstring",
+  "name": "Lying Hamstring",
+  "equipment": "other",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "calves"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Lying_High_Bench_Barbell_Curl",
   "name": "Lying High Bench Barbell Curl",
   "equipment": "barbell",
@@ -6799,6 +8333,19 @@
   "leftRight": true,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Lying_Prone_Quadriceps",
+  "name": "Lying Prone Quadriceps",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
  },
  {
   "key": "Lying_Rear_Delt_Raise",
@@ -6840,6 +8387,57 @@
   "bodyweight": false
  },
  {
+  "key": "Medicine_Ball_Chest_Pass",
+  "name": "Medicine Ball Chest Pass",
+  "equipment": "other",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "delt_front",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Medicine_Ball_Full_Twist",
+  "name": "Medicine Ball Full Twist",
+  "equipment": "other",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "obliques",
+   "abs"
+  ],
+  "secondaryMuscles": [
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Medicine_Ball_Scoop_Throw",
+  "name": "Medicine Ball Scoop Throw",
+  "equipment": "other",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "hamstrings",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
   "key": "Middle_Back_Shrug",
   "name": "Middle Back Shrug",
   "equipment": "dumbbell",
@@ -6852,6 +8450,23 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Middle_Back_Stretch",
+  "name": "Middle Back Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "mid_back",
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "lower_back"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
  },
  {
   "key": "Mixed_Grip_Chin",
@@ -6881,6 +8496,22 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Moving_Claw_Series",
+  "name": "Moving Claw Series",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
  },
  {
   "key": "Muscle_Up",
@@ -6971,6 +8602,45 @@
   "bodyweight": true
  },
  {
+  "key": "On_Your_Side_Quad_Stretch",
+  "name": "On Your Side Quad Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "On-Your-Back_Quad_Stretch",
+  "name": "On-Your-Back Quad Stretch",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "One_Arm_Against_Wall",
+  "name": "One Arm Against Wall",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": true,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "One_Arm_Chin-Up",
   "name": "One Arm Chin-Up",
   "equipment": "other",
@@ -6988,20 +8658,6 @@
   "bodyweight": true
  },
  {
-  "key": "One-Arm_Flat_Bench_Dumbbell_Flye",
-  "name": "One-Arm Flat Bench Dumbbell Flye",
-  "equipment": "dumbbell",
-  "bodyPart": "chest",
-  "primaryMuscles": [
-   "chest_upper",
-   "chest_lower"
-  ],
-  "secondaryMuscles": [],
-  "leftRight": true,
-  "timed": false,
-  "bodyweight": false
- },
- {
   "key": "One_Arm_Floor_Press",
   "name": "One Arm Floor Press",
   "equipment": "barbell",
@@ -7015,6 +8671,112 @@
    "delt_front",
    "delt_side"
   ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "One_Arm_Pronated_Dumbbell_Triceps_Extension",
+  "name": "One Arm Pronated Dumbbell Triceps Extension",
+  "equipment": "dumbbell",
+  "bodyPart": "triceps",
+  "primaryMuscles": [
+   "triceps"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "One_Arm_Supinated_Dumbbell_Triceps_Extension",
+  "name": "One Arm Supinated Dumbbell Triceps Extension",
+  "equipment": "dumbbell",
+  "bodyPart": "triceps",
+  "primaryMuscles": [
+   "triceps"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "One_Half_Locust",
+  "name": "One Half Locust",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "biceps",
+   "chest_upper",
+   "chest_lower"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "One_Handed_Hang",
+  "name": "One Handed Hang",
+  "equipment": "other",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "biceps"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "One_Knee_To_Chest",
+  "name": "One Knee To Chest",
+  "equipment": "bodyweight",
+  "bodyPart": "glutes",
+  "primaryMuscles": [
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "hamstrings",
+   "lower_back"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "One_Leg_Barbell_Squat",
+  "name": "One Leg Barbell Squat",
+  "equipment": "barbell",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "One-Arm_Flat_Bench_Dumbbell_Flye",
+  "name": "One-Arm Flat Bench Dumbbell Flye",
+  "equipment": "dumbbell",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [],
   "leftRight": true,
   "timed": false,
   "bodyweight": false
@@ -7169,19 +8931,6 @@
   "bodyweight": false
  },
  {
-  "key": "One_Arm_Pronated_Dumbbell_Triceps_Extension",
-  "name": "One Arm Pronated Dumbbell Triceps Extension",
-  "equipment": "dumbbell",
-  "bodyPart": "triceps",
-  "primaryMuscles": [
-   "triceps"
-  ],
-  "secondaryMuscles": [],
-  "leftRight": true,
-  "timed": false,
-  "bodyweight": false
- },
- {
   "key": "One-Arm_Side_Deadlift",
   "name": "One-Arm Side Deadlift",
   "equipment": "barbell",
@@ -7196,36 +8945,6 @@
    "hamstrings",
    "lower_back",
    "traps"
-  ],
-  "leftRight": true,
-  "timed": false,
-  "bodyweight": false
- },
- {
-  "key": "One_Arm_Supinated_Dumbbell_Triceps_Extension",
-  "name": "One Arm Supinated Dumbbell Triceps Extension",
-  "equipment": "dumbbell",
-  "bodyPart": "triceps",
-  "primaryMuscles": [
-   "triceps"
-  ],
-  "secondaryMuscles": [],
-  "leftRight": true,
-  "timed": false,
-  "bodyweight": false
- },
- {
-  "key": "One_Leg_Barbell_Squat",
-  "name": "One Leg Barbell Squat",
-  "equipment": "barbell",
-  "bodyPart": "quads",
-  "primaryMuscles": [
-   "quads"
-  ],
-  "secondaryMuscles": [
-   "calves",
-   "glutes",
-   "hamstrings"
   ],
   "leftRight": true,
   "timed": false,
@@ -7247,6 +8966,68 @@
   ],
   "leftRight": false,
   "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Overhead_Lat",
+  "name": "Overhead Lat",
+  "equipment": "other",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Overhead_Slam",
+  "name": "Overhead Slam",
+  "equipment": "other",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Overhead_Stretch",
+  "name": "Overhead Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [
+   "chest_upper",
+   "chest_lower",
+   "forearms",
+   "lats",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Overhead_Triceps",
+  "name": "Overhead Triceps",
+  "equipment": "bodyweight",
+  "bodyPart": "triceps",
+  "primaryMuscles": [
+   "triceps"
+  ],
+  "secondaryMuscles": [
+   "lats"
+  ],
+  "leftRight": false,
+  "timed": true,
   "bodyweight": true
  },
  {
@@ -7337,6 +9118,32 @@
   "bodyweight": true
  },
  {
+  "key": "Pelvic_Tilt_Into_Bridge",
+  "name": "Pelvic Tilt Into Bridge",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lower_back"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Peroneals_Stretch",
+  "name": "Peroneals Stretch",
+  "equipment": "other",
+  "bodyPart": "calves",
+  "primaryMuscles": [
+   "calves"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Physioball_Hip_Bridge",
   "name": "Physioball Hip Bridge",
   "equipment": "other",
@@ -7419,6 +9226,36 @@
   "bodyweight": true
  },
  {
+  "key": "Plyo_Push-up",
+  "name": "Plyo Push-up",
+  "equipment": "bodyweight",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "delt_front",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Posterior_Tibialis_Stretch",
+  "name": "Posterior Tibialis Stretch",
+  "equipment": "other",
+  "bodyPart": "calves",
+  "primaryMuscles": [
+   "calves"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Power_Partials",
   "name": "Power Partials",
   "equipment": "dumbbell",
@@ -7428,6 +9265,27 @@
    "delt_side"
   ],
   "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Power_Stairs",
+  "name": "Power Stairs",
+  "equipment": "other",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "adductors",
+   "calves",
+   "glutes",
+   "lower_back",
+   "quads",
+   "delt_front",
+   "traps"
+  ],
   "leftRight": false,
   "timed": false,
   "bodyweight": false
@@ -7467,8 +9325,28 @@
   "bodyweight": false
  },
  {
-  "key": "Pushups_Close_and_Wide_Hand_Positions",
-  "name": "Pushups (Close and Wide Hand Positions)",
+  "key": "Prowler_Sprint",
+  "name": "Prowler Sprint",
+  "equipment": "other",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "chest_upper",
+   "chest_lower",
+   "glutes",
+   "quads",
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": false
+ },
+ {
+  "key": "Push_Up_to_Side_Plank",
+  "name": "Push Up to Side Plank",
   "equipment": "bodyweight",
   "bodyPart": "chest",
   "primaryMuscles": [
@@ -7476,6 +9354,7 @@
    "chest_lower"
   ],
   "secondaryMuscles": [
+   "abs",
    "delt_front",
    "triceps"
   ],
@@ -7501,8 +9380,8 @@
   "bodyweight": true
  },
  {
-  "key": "Push_Up_to_Side_Plank",
-  "name": "Push Up to Side Plank",
+  "key": "Pushups_Close_and_Wide_Hand_Positions",
+  "name": "Pushups (Close and Wide Hand Positions)",
   "equipment": "bodyweight",
   "bodyPart": "chest",
   "primaryMuscles": [
@@ -7510,13 +9389,56 @@
    "chest_lower"
   ],
   "secondaryMuscles": [
-   "abs",
    "delt_front",
    "triceps"
   ],
   "leftRight": false,
   "timed": false,
   "bodyweight": true
+ },
+ {
+  "key": "Pyramid",
+  "name": "Pyramid",
+  "equipment": "other",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lower_back"
+  ],
+  "secondaryMuscles": [
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Quad_Stretch",
+  "name": "Quad Stretch",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Quick_Leap",
+  "name": "Quick Leap",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
  },
  {
   "key": "Rack_Pull_with_Bands",
@@ -7532,6 +9454,54 @@
    "forearms",
    "quads",
    "traps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Rear_Leg_Raises",
+  "name": "Rear Leg Raises",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Recumbent_Bike",
+  "name": "Recumbent Bike",
+  "equipment": "machine",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": false
+ },
+ {
+  "key": "Return_Push_from_Stance",
+  "name": "Return Push from Stance",
+  "equipment": "other",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "chest_upper",
+   "chest_lower",
+   "triceps"
   ],
   "leftRight": false,
   "timed": false,
@@ -7714,6 +9684,46 @@
   "bodyweight": false
  },
  {
+  "key": "Rickshaw_Carry",
+  "name": "Rickshaw Carry",
+  "equipment": "other",
+  "bodyPart": "forearms",
+  "primaryMuscles": [
+   "forearms"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "calves",
+   "glutes",
+   "hamstrings",
+   "lower_back",
+   "quads",
+   "traps"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": false
+ },
+ {
+  "key": "Rickshaw_Deadlift",
+  "name": "Rickshaw Deadlift",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "forearms",
+   "glutes",
+   "hamstrings",
+   "lower_back",
+   "traps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
   "key": "Ring_Dips",
   "name": "Ring Dips",
   "equipment": "other",
@@ -7724,6 +9734,22 @@
   "secondaryMuscles": [
    "chest_lower",
    "delt_front"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Rocket_Jump",
+  "name": "Rocket Jump",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "hamstrings"
   ],
   "leftRight": false,
   "timed": false,
@@ -7791,6 +9817,118 @@
   "bodyweight": false
  },
  {
+  "key": "Rope_Jumping",
+  "name": "Rope Jumping",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": false
+ },
+ {
+  "key": "Round_The_World_Shoulder_Stretch",
+  "name": "Round The World Shoulder Stretch",
+  "equipment": "other",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "biceps",
+   "chest_upper",
+   "chest_lower"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Rowing_Stationary",
+  "name": "Rowing, Stationary",
+  "equipment": "machine",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "biceps",
+   "calves",
+   "glutes",
+   "hamstrings",
+   "lower_back",
+   "mid_back",
+   "lats"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": false
+ },
+ {
+  "key": "Runners_Stretch",
+  "name": "Runner's Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "calves"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Running_Treadmill",
+  "name": "Running, Treadmill",
+  "equipment": "machine",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": false
+ },
+ {
+  "key": "Sandbag_Load",
+  "name": "Sandbag Load",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "biceps",
+   "calves",
+   "forearms",
+   "glutes",
+   "hamstrings",
+   "lower_back",
+   "mid_back",
+   "lats",
+   "delt_front",
+   "traps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
   "key": "Scapular_Pull-Up",
   "name": "Scapular Pull-Up",
   "equipment": "bodyweight",
@@ -7801,6 +9939,35 @@
   "secondaryMuscles": [
    "lats",
    "mid_back"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Scissor_Kick",
+  "name": "Scissor Kick",
+  "equipment": "bodyweight",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Scissors_Jump",
+  "name": "Scissors Jump",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "hamstrings"
   ],
   "leftRight": false,
   "timed": false,
@@ -7860,6 +10027,23 @@
   "bodyweight": false
  },
  {
+  "key": "Seated_Biceps",
+  "name": "Seated Biceps",
+  "equipment": "bodyweight",
+  "bodyPart": "biceps",
+  "primaryMuscles": [
+   "biceps"
+  ],
+  "secondaryMuscles": [
+   "chest_upper",
+   "chest_lower",
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Seated_Cable_Shoulder_Press",
   "name": "Seated Cable Shoulder Press",
   "equipment": "cable",
@@ -7874,6 +10058,22 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Seated_Calf_Stretch",
+  "name": "Seated Calf Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "calves",
+  "primaryMuscles": [
+   "calves"
+  ],
+  "secondaryMuscles": [
+   "hamstrings",
+   "lower_back"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
  },
  {
   "key": "Seated_Close-Grip_Concentration_Barbell_Curl",
@@ -7944,6 +10144,52 @@
   "bodyweight": true
  },
  {
+  "key": "Seated_Floor_Hamstring_Stretch",
+  "name": "Seated Floor Hamstring Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "calves"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Seated_Front_Deltoid",
+  "name": "Seated Front Deltoid",
+  "equipment": "bodyweight",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front"
+  ],
+  "secondaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Seated_Glute",
+  "name": "Seated Glute",
+  "equipment": "bodyweight",
+  "bodyPart": "glutes",
+  "primaryMuscles": [
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "adductors"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Seated_Good_Mornings",
   "name": "Seated Good Mornings",
   "equipment": "barbell",
@@ -7957,6 +10203,36 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Seated_Hamstring",
+  "name": "Seated Hamstring",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "calves"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Seated_Hamstring_and_Calf_Stretch",
+  "name": "Seated Hamstring and Calf Stretch",
+  "equipment": "other",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "calves"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
  },
  {
   "key": "Seated_Head_Harness_Neck_Resistance",
@@ -7996,6 +10272,19 @@
   "leftRight": true,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Seated_Overhead_Stretch",
+  "name": "Seated Overhead Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
  },
  {
   "key": "Seated_Triceps_Press",
@@ -8057,6 +10346,22 @@
   "bodyweight": false
  },
  {
+  "key": "Shoulder_Circles",
+  "name": "Shoulder Circles",
+  "equipment": "bodyweight",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "traps"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Shoulder_Press_-_With_Bands",
   "name": "Shoulder Press - With Bands",
   "equipment": "other",
@@ -8067,6 +10372,54 @@
   ],
   "secondaryMuscles": [
    "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Shoulder_Raise",
+  "name": "Shoulder Raise",
+  "equipment": "bodyweight",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "lats"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Shoulder_Stretch",
+  "name": "Shoulder Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Side_Hop-Sprint",
+  "name": "Side Hop-Sprint",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "hamstrings"
   ],
   "leftRight": false,
   "timed": false,
@@ -8102,6 +10455,82 @@
   "bodyweight": false
  },
  {
+  "key": "Side_Leg_Raises",
+  "name": "Side Leg Raises",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "adductors"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Side_Lying_Groin_Stretch",
+  "name": "Side Lying Groin Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "adductors"
+  ],
+  "secondaryMuscles": [
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Side_Neck_Stretch",
+  "name": "Side Neck Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "traps"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Side_Standing_Long_Jump",
+  "name": "Side Standing Long Jump",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Side_to_Side_Box_Shuffle",
+  "name": "Side to Side Box Shuffle",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
   "key": "Side_To_Side_Chins",
   "name": "Side To Side Chins",
   "equipment": "other",
@@ -8120,20 +10549,33 @@
   "bodyweight": true
  },
  {
-  "key": "Single-Arm_Push-Up",
-  "name": "Single-Arm Push-Up",
+  "key": "Side_Wrist_Pull",
+  "name": "Side Wrist Pull",
   "equipment": "bodyweight",
-  "bodyPart": "chest",
+  "bodyPart": "shoulders",
   "primaryMuscles": [
-   "chest_upper",
-   "chest_lower"
+   "delt_front",
+   "delt_side"
   ],
   "secondaryMuscles": [
-   "delt_front",
-   "triceps"
+   "forearms",
+   "lats"
   ],
-  "leftRight": true,
-  "timed": false,
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Side-Lying_Floor_Stretch",
+  "name": "Side-Lying Floor Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
   "bodyweight": true
  },
  {
@@ -8154,6 +10596,72 @@
   "bodyweight": false
  },
  {
+  "key": "Single_Leg_Butt_Kick",
+  "name": "Single Leg Butt Kick",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "hamstrings"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Single_Leg_Push-off",
+  "name": "Single Leg Push-off",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "hamstrings"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Single-Arm_Push-Up",
+  "name": "Single-Arm Push-Up",
+  "equipment": "bodyweight",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "delt_front",
+   "triceps"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Single-Cone_Sprint_Drill",
+  "name": "Single-Cone Sprint Drill",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
   "key": "Single-Leg_High_Box_Squat",
   "name": "Single-Leg High Box Squat",
   "equipment": "other",
@@ -8166,6 +10674,111 @@
    "hamstrings"
   ],
   "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Single-Leg_Hop_Progression",
+  "name": "Single-Leg Hop Progression",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "hamstrings"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Single-Leg_Lateral_Hop",
+  "name": "Single-Leg Lateral Hop",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "hamstrings"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Single-Leg_Stride_Jump",
+  "name": "Single-Leg Stride Jump",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "hamstrings"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Sit_Squats",
+  "name": "Sit Squats",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Skating",
+  "name": "Skating",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": false
+ },
+ {
+  "key": "Sled_Drag_-_Harness",
+  "name": "Sled Drag - Harness",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
   "timed": false,
   "bodyweight": false
  },
@@ -8202,6 +10815,26 @@
   "bodyweight": false
  },
  {
+  "key": "Sled_Push",
+  "name": "Sled Push",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "chest_upper",
+   "chest_lower",
+   "glutes",
+   "hamstrings",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
   "key": "Sled_Reverse_Flye",
   "name": "Sled Reverse Flye",
   "equipment": "other",
@@ -8225,6 +10858,25 @@
   ],
   "secondaryMuscles": [
    "biceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Sledgehammer_Swings",
+  "name": "Sledgehammer Swings",
+  "equipment": "other",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "forearms",
+   "lats",
+   "mid_back",
+   "delt_front"
   ],
   "leftRight": false,
   "timed": false,
@@ -8455,9 +11107,26 @@
   "bodyweight": true
  },
  {
-  "key": "Squats_-_With_Bands",
-  "name": "Squats - With Bands",
-  "equipment": "other",
+  "key": "Spinal_Stretch",
+  "name": "Spinal Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "mid_back",
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "lower_back",
+   "traps"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Split_Jump",
+  "name": "Split Jump",
+  "equipment": "bodyweight",
   "bodyPart": "quads",
   "primaryMuscles": [
    "quads"
@@ -8465,12 +11134,28 @@
   "secondaryMuscles": [
    "calves",
    "glutes",
-   "hamstrings",
-   "lower_back"
+   "hamstrings"
   ],
   "leftRight": false,
   "timed": false,
-  "bodyweight": false
+  "bodyweight": true
+ },
+ {
+  "key": "Split_Squats",
+  "name": "Split Squats",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "quads"
+  ],
+  "leftRight": true,
+  "timed": true,
+  "bodyweight": true
  },
  {
   "key": "Squat_with_Bands",
@@ -8526,6 +11211,41 @@
   ],
   "leftRight": false,
   "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Squats_-_With_Bands",
+  "name": "Squats - With Bands",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings",
+   "lower_back"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Stairmaster",
+  "name": "Stairmaster",
+  "equipment": "machine",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
   "bodyweight": false
  },
  {
@@ -8587,6 +11307,23 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Standing_Biceps_Stretch",
+  "name": "Standing Biceps Stretch",
+  "equipment": "other",
+  "bodyPart": "biceps",
+  "primaryMuscles": [
+   "biceps"
+  ],
+  "secondaryMuscles": [
+   "chest_upper",
+   "chest_lower",
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
  },
  {
   "key": "Standing_Bradford_Press",
@@ -8681,6 +11418,19 @@
   "bodyweight": false
  },
  {
+  "key": "Standing_Elevated_Quad_Stretch",
+  "name": "Standing Elevated Quad Stretch",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Standing_Front_Barbell_Raise_Over_Head",
   "name": "Standing Front Barbell Raise Over Head",
   "equipment": "barbell",
@@ -8694,6 +11444,62 @@
   "bodyweight": false
  },
  {
+  "key": "Standing_Gastrocnemius_Calf_Stretch",
+  "name": "Standing Gastrocnemius Calf Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "calves",
+  "primaryMuscles": [
+   "calves"
+  ],
+  "secondaryMuscles": [
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Standing_Hamstring_and_Calf_Stretch",
+  "name": "Standing Hamstring and Calf Stretch",
+  "equipment": "other",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Standing_Hip_Circles",
+  "name": "Standing Hip Circles",
+  "equipment": "bodyweight",
+  "bodyPart": "glutes",
+  "primaryMuscles": [
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "adductors"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Standing_Hip_Flexors",
+  "name": "Standing Hip Flexors",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Standing_Inner-Biceps_Curl",
   "name": "Standing Inner-Biceps Curl",
   "equipment": "dumbbell",
@@ -8705,6 +11511,36 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Standing_Lateral_Stretch",
+  "name": "Standing Lateral Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Standing_Long_Jump",
+  "name": "Standing Long Jump",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
  },
  {
   "key": "Standing_Low-Pulley_One-Arm_Triceps_Extension",
@@ -8784,6 +11620,21 @@
   "bodyweight": false
  },
  {
+  "key": "Standing_Pelvic_Tilt",
+  "name": "Standing Pelvic Tilt",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lower_back"
+  ],
+  "secondaryMuscles": [
+   "glutes"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Standing_Rope_Crunch",
   "name": "Standing Rope Crunch",
   "equipment": "cable",
@@ -8797,6 +11648,34 @@
   "bodyweight": false
  },
  {
+  "key": "Standing_Soleus_And_Achilles_Stretch",
+  "name": "Standing Soleus And Achilles Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "calves",
+  "primaryMuscles": [
+   "calves"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Standing_Toe_Touches",
+  "name": "Standing Toe Touches",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "calves"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Standing_Towel_Triceps_Extension",
   "name": "Standing Towel Triceps Extension",
   "equipment": "bodyweight",
@@ -8808,6 +11687,59 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": true
+ },
+ {
+  "key": "Standing_Two-Arm_Overhead_Throw",
+  "name": "Standing Two-Arm Overhead Throw",
+  "equipment": "other",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "chest_upper",
+   "chest_lower",
+   "lats"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Star_Jump",
+  "name": "Star Jump",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings",
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "Step_Mill",
+  "name": "Step Mill",
+  "equipment": "machine",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": false
  },
  {
   "key": "Step-up_with_Knee_Raise",
@@ -8842,6 +11774,19 @@
   "bodyweight": false
  },
  {
+  "key": "Stomach_Vacuum",
+  "name": "Stomach Vacuum",
+  "equipment": "bodyweight",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Straight_Bar_Bench_Mid_Rows",
   "name": "Straight Bar Bench Mid Rows",
   "equipment": "barbell",
@@ -8868,6 +11813,24 @@
   ],
   "secondaryMuscles": [
    "traps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Stride_Jump_Crossover",
+  "name": "Stride Jump Crossover",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves",
+   "hamstrings"
   ],
   "leftRight": false,
   "timed": false,
@@ -8912,6 +11875,61 @@
    "lats",
    "quads",
    "traps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Supine_Chest_Throw",
+  "name": "Supine Chest Throw",
+  "equipment": "other",
+  "bodyPart": "triceps",
+  "primaryMuscles": [
+   "triceps"
+  ],
+  "secondaryMuscles": [
+   "chest_upper",
+   "chest_lower",
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Supine_One-Arm_Overhead_Throw",
+  "name": "Supine One-Arm Overhead Throw",
+  "equipment": "other",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [
+   "chest_upper",
+   "chest_lower",
+   "lats",
+   "delt_front",
+   "delt_side"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Supine_Two-Arm_Overhead_Throw",
+  "name": "Supine Two-Arm Overhead Throw",
+  "equipment": "other",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [
+   "chest_upper",
+   "chest_lower",
+   "lats",
+   "delt_front",
+   "delt_side"
   ],
   "leftRight": false,
   "timed": false,
@@ -9019,6 +12037,105 @@
   "bodyweight": false
  },
  {
+  "key": "The_Straddle",
+  "name": "The Straddle",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "adductors",
+   "calves"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Tire_Flip",
+  "name": "Tire Flip",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "chest_upper",
+   "chest_lower",
+   "forearms",
+   "glutes",
+   "hamstrings",
+   "lower_back",
+   "delt_front",
+   "traps",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Toe_Touchers",
+  "name": "Toe Touchers",
+  "equipment": "bodyweight",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Torso_Rotation",
+  "name": "Torso Rotation",
+  "equipment": "other",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "obliques",
+   "abs"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Trail_Running_Walking",
+  "name": "Trail Running/Walking",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Tricep_Side_Stretch",
+  "name": "Tricep Side Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "triceps",
+  "primaryMuscles": [
+   "triceps"
+  ],
+  "secondaryMuscles": [
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Triceps_Overhead_Extension_with_Rope",
   "name": "Triceps Overhead Extension with Rope",
   "equipment": "cable",
@@ -9030,6 +12147,21 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "Triceps_Stretch",
+  "name": "Triceps Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "triceps",
+  "primaryMuscles": [
+   "triceps"
+  ],
+  "secondaryMuscles": [
+   "lats"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
  },
  {
   "key": "Tuck_Crunch",
@@ -9090,6 +12222,37 @@
   "bodyweight": false
  },
  {
+  "key": "Upper_Back_Stretch",
+  "name": "Upper Back Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "mid_back",
+   "lats"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Upper_Back-Leg_Grab",
+  "name": "Upper Back-Leg Grab",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "lower_back",
+   "mid_back",
+   "lats"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Upright_Row_-_With_Bands",
   "name": "Upright Row - With Bands",
   "equipment": "other",
@@ -9102,6 +12265,58 @@
   ],
   "leftRight": false,
   "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Upward_Stretch",
+  "name": "Upward Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "chest_upper",
+   "chest_lower",
+   "lats"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Vertical_Swing",
+  "name": "Vertical Swing",
+  "equipment": "dumbbell",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "quads",
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Walking_Treadmill",
+  "name": "Walking, Treadmill",
+  "equipment": "machine",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": true,
   "bodyweight": false
  },
  {
@@ -9230,6 +12445,24 @@
   "bodyweight": false
  },
  {
+  "key": "Wide_Stance_Barbell_Squat",
+  "name": "Wide Stance Barbell Squat",
+  "equipment": "barbell",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "hamstrings",
+   "lower_back"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
   "key": "Wide-Grip_Decline_Barbell_Bench_Press",
   "name": "Wide-Grip Decline Barbell Bench Press",
   "equipment": "barbell",
@@ -9310,24 +12543,6 @@
   "bodyweight": false
  },
  {
-  "key": "Wide_Stance_Barbell_Squat",
-  "name": "Wide Stance Barbell Squat",
-  "equipment": "barbell",
-  "bodyPart": "quads",
-  "primaryMuscles": [
-   "quads"
-  ],
-  "secondaryMuscles": [
-   "calves",
-   "glutes",
-   "hamstrings",
-   "lower_back"
-  ],
-  "leftRight": false,
-  "timed": false,
-  "bodyweight": false
- },
- {
   "key": "Wind_Sprints",
   "name": "Wind Sprints",
   "equipment": "bodyweight",
@@ -9341,6 +12556,52 @@
   "bodyweight": true
  },
  {
+  "key": "Windmills",
+  "name": "Windmills",
+  "equipment": "bodyweight",
+  "bodyPart": "glutes",
+  "primaryMuscles": [
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "hamstrings",
+   "lower_back"
+  ],
+  "leftRight": true,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Worlds_Greatest_Stretch",
+  "name": "World's Greatest Stretch",
+  "equipment": "bodyweight",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "calves",
+   "glutes",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "Wrist_Circles",
+  "name": "Wrist Circles",
+  "equipment": "bodyweight",
+  "bodyPart": "forearms",
+  "primaryMuscles": [
+   "forearms"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
   "key": "Wrist_Rotations_with_Straight_Bar",
   "name": "Wrist Rotations with Straight Bar",
   "equipment": "barbell",
@@ -9351,6 +12612,26 @@
   "secondaryMuscles": [],
   "leftRight": false,
   "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "Yoke_Walk",
+  "name": "Yoke Walk",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "abs",
+   "glutes",
+   "adductors",
+   "calves",
+   "hamstrings",
+   "lower_back"
+  ],
+  "leftRight": false,
+  "timed": true,
   "bodyweight": false
  },
  {
@@ -9719,5 +13000,811 @@
   "leftRight": false,
   "timed": false,
   "bodyweight": false
+ },
+ {
+  "key": "extra-pendlay-row",
+  "name": "Pendlay Row",
+  "equipment": "barbell",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "mid_back",
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "delt_rear",
+   "biceps",
+   "lower_back"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-seal-row",
+  "name": "Seal Row",
+  "equipment": "barbell",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "mid_back",
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "delt_rear",
+   "biceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-dumbbell-seal-row",
+  "name": "Dumbbell Seal Row",
+  "equipment": "dumbbell",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "mid_back",
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "delt_rear",
+   "biceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-meadows-row",
+  "name": "Meadows Row",
+  "equipment": "barbell",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lats",
+   "mid_back"
+  ],
+  "secondaryMuscles": [
+   "delt_rear",
+   "biceps",
+   "forearms"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-kroc-row",
+  "name": "Kroc Row",
+  "equipment": "dumbbell",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lats",
+   "mid_back"
+  ],
+  "secondaryMuscles": [
+   "biceps",
+   "forearms",
+   "traps"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-landmine-two-hand-row",
+  "name": "Landmine T-Bar Row (Two Hands)",
+  "equipment": "barbell",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "mid_back",
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "delt_rear",
+   "biceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-cable-pullover",
+  "name": "Cable Pullover",
+  "equipment": "cable",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "chest_lower"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-neutral-grip-lat-pulldown",
+  "name": "Neutral-Grip Lat Pulldown",
+  "equipment": "cable",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "biceps",
+   "mid_back"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-kneeling-single-arm-pulldown",
+  "name": "Kneeling Single-Arm Cable Pulldown",
+  "equipment": "cable",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "biceps"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-seated-cable-fly",
+  "name": "Seated Cable Fly",
+  "equipment": "cable",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-incline-smith-press",
+  "name": "Incline Smith Machine Bench Press",
+  "equipment": "machine",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper"
+  ],
+  "secondaryMuscles": [
+   "delt_front",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-landmine-press",
+  "name": "Landmine Press (Two Hands)",
+  "equipment": "barbell",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "delt_front"
+  ],
+  "secondaryMuscles": [
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-spoto-press",
+  "name": "Spoto Press",
+  "equipment": "barbell",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-larsen-press",
+  "name": "Larsen Press",
+  "equipment": "barbell",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-deficit-push-up",
+  "name": "Deficit Push-Up",
+  "equipment": "bodyweight",
+  "bodyPart": "chest",
+  "primaryMuscles": [
+   "chest_upper",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "extra-lu-raise",
+  "name": "Lu Raise",
+  "equipment": "dumbbell",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_side",
+   "delt_front"
+  ],
+  "secondaryMuscles": [
+   "traps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-y-raise",
+  "name": "Incline Dumbbell Y Raise",
+  "equipment": "dumbbell",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_side",
+   "traps"
+  ],
+  "secondaryMuscles": [
+   "delt_rear"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-cable-y-raise",
+  "name": "Cable Y Raise",
+  "equipment": "cable",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_side",
+   "traps"
+  ],
+  "secondaryMuscles": [
+   "delt_rear"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-z-press",
+  "name": "Z Press",
+  "equipment": "barbell",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "abs"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-push-press",
+  "name": "Push Press",
+  "equipment": "barbell",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "quads",
+   "glutes"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-dumbbell-push-press",
+  "name": "Dumbbell Push Press",
+  "equipment": "dumbbell",
+  "bodyPart": "shoulders",
+  "primaryMuscles": [
+   "delt_front",
+   "delt_side"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-bayesian-curl",
+  "name": "Bayesian Cable Curl",
+  "equipment": "cable",
+  "bodyPart": "biceps",
+  "primaryMuscles": [
+   "biceps"
+  ],
+  "secondaryMuscles": [
+   "forearms"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-barbell-reverse-curl",
+  "name": "Barbell Reverse Curl",
+  "equipment": "barbell",
+  "bodyPart": "forearms",
+  "primaryMuscles": [
+   "forearms",
+   "biceps"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-ez-bar-reverse-curl",
+  "name": "EZ-Bar Reverse Curl",
+  "equipment": "barbell",
+  "bodyPart": "forearms",
+  "primaryMuscles": [
+   "forearms",
+   "biceps"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-katana-extension",
+  "name": "Katana Triceps Extension",
+  "equipment": "cable",
+  "bodyPart": "triceps",
+  "primaryMuscles": [
+   "triceps"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-cable-triceps-kickback",
+  "name": "Cable Triceps Kickback",
+  "equipment": "cable",
+  "bodyPart": "triceps",
+  "primaryMuscles": [
+   "triceps"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-bulgarian-split-squat",
+  "name": "Bulgarian Split Squat",
+  "equipment": "dumbbell",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads",
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "adductors",
+   "hamstrings"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-barbell-bulgarian-split-squat",
+  "name": "Barbell Bulgarian Split Squat",
+  "equipment": "barbell",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads",
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "adductors",
+   "hamstrings"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-pendulum-squat",
+  "name": "Pendulum Squat",
+  "equipment": "machine",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-belt-squat",
+  "name": "Belt Squat",
+  "equipment": "machine",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads",
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "adductors"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-landmine-squat",
+  "name": "Landmine Squat",
+  "equipment": "barbell",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads",
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "abs"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-heel-elevated-goblet-squat",
+  "name": "Heel-Elevated Goblet Squat",
+  "equipment": "dumbbell",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "glutes"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-curtsy-lunge",
+  "name": "Curtsy Lunge",
+  "equipment": "dumbbell",
+  "bodyPart": "glutes",
+  "primaryMuscles": [
+   "glutes",
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "adductors"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-single-leg-leg-press",
+  "name": "Single-Leg Leg Press",
+  "equipment": "machine",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads",
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "hamstrings"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-kettlebell-swing",
+  "name": "Kettlebell Swing",
+  "equipment": "other",
+  "bodyPart": "glutes",
+  "primaryMuscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "lower_back",
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-b-stance-rdl",
+  "name": "B-Stance Romanian Deadlift",
+  "equipment": "dumbbell",
+  "bodyPart": "hamstrings",
+  "primaryMuscles": [
+   "hamstrings",
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "lower_back"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-45-degree-back-extension",
+  "name": "45° Back Extension",
+  "equipment": "other",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lower_back",
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "hamstrings"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "extra-tibialis-raise",
+  "name": "Tibialis Raise",
+  "equipment": "bodyweight",
+  "bodyPart": "calves",
+  "primaryMuscles": [
+   "calves"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "extra-bird-dog",
+  "name": "Bird Dog",
+  "equipment": "bodyweight",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs",
+   "lower_back"
+  ],
+  "secondaryMuscles": [
+   "glutes"
+  ],
+  "leftRight": true,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "extra-hollow-body-hold",
+  "name": "Hollow Body Hold",
+  "equipment": "bodyweight",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "extra-l-sit",
+  "name": "L-Sit Hold",
+  "equipment": "bodyweight",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "quads"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "extra-toes-to-bar",
+  "name": "Toes-to-Bar",
+  "equipment": "bodyweight",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [
+   "lats",
+   "forearms"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "extra-suitcase-carry",
+  "name": "Suitcase Carry",
+  "equipment": "dumbbell",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "obliques"
+  ],
+  "secondaryMuscles": [
+   "forearms",
+   "traps"
+  ],
+  "leftRight": true,
+  "timed": true,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-weighted-plank",
+  "name": "Weighted Plank",
+  "equipment": "other",
+  "bodyPart": "core",
+  "primaryMuscles": [
+   "abs"
+  ],
+  "secondaryMuscles": [
+   "obliques"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "extra-burpee",
+  "name": "Burpee",
+  "equipment": "bodyweight",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads",
+   "chest_lower"
+  ],
+  "secondaryMuscles": [
+   "delt_front",
+   "triceps",
+   "abs"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": true
+ },
+ {
+  "key": "extra-wall-ball",
+  "name": "Wall Ball",
+  "equipment": "other",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads",
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "delt_front",
+   "triceps"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-barbell-thruster",
+  "name": "Barbell Thruster",
+  "equipment": "barbell",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads",
+   "delt_front"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "triceps",
+   "delt_side"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-dumbbell-thruster",
+  "name": "Dumbbell Thruster",
+  "equipment": "dumbbell",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads",
+   "delt_front"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "triceps",
+   "delt_side"
+  ],
+  "leftRight": false,
+  "timed": false,
+  "bodyweight": false
+ },
+ {
+  "key": "extra-air-bike",
+  "name": "Air Bike",
+  "equipment": "machine",
+  "bodyPart": "quads",
+  "primaryMuscles": [
+   "quads"
+  ],
+  "secondaryMuscles": [
+   "hamstrings",
+   "delt_front"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
+ },
+ {
+  "key": "extra-ski-erg",
+  "name": "Ski Erg",
+  "equipment": "machine",
+  "bodyPart": "back",
+  "primaryMuscles": [
+   "lats",
+   "triceps"
+  ],
+  "secondaryMuscles": [
+   "abs"
+  ],
+  "leftRight": false,
+  "timed": true,
+  "bodyweight": true
  }
 ]

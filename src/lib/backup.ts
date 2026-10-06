@@ -4,7 +4,7 @@ import { recomputeAllBodyParts } from '../db/sessions'
 import { localDate, parseLocalDate } from './dates'
 import { paceSecPerKm as calcPace } from './running'
 
-const SCHEMA_VERSION = 2
+const SCHEMA_VERSION = 3
 const APP_VERSION = '0.1.0'
 const FORMAT = 'gymboy-backup'
 
@@ -38,6 +38,28 @@ function restorePhoto(row: Record<string, unknown>): Record<string, unknown> {
   return blob ? { ...rest, photo: blob } : rest
 }
 
+const POSES = ['front', 'side', 'back', 'other']
+
+/**
+ * A body entry from a backup with its photos restored. Schema v3 files hold `photos: [{ pose, photo }]`;
+ * older files hold one `photo`, which becomes a front photo. Damaged photos are dropped.
+ */
+function restoreBodyPhotos(row: Record<string, unknown>): Record<string, unknown> {
+  const { photo, photos, ...rest } = row
+  const list: { blob: Blob; pose: string }[] = []
+  if (Array.isArray(photos)) {
+    for (const p of photos) {
+      if (!isRow(p)) continue
+      const blob = photoFromBackup(p.photo)
+      if (blob) list.push({ blob, pose: POSES.includes(p.pose as string) ? (p.pose as string) : 'other' })
+    }
+  } else {
+    const blob = photoFromBackup(photo)
+    if (blob) list.push({ blob, pose: 'front' })
+  }
+  return list.length ? { ...rest, photos: list } : rest
+}
+
 export interface BackupCounts {
   sessions: number
   runs: number
@@ -67,7 +89,10 @@ export async function createBackup(): Promise<Blob> {
     ...f, photo: f.photo ? await blobToDataUrl(f.photo) : undefined
   })))
   const bodyWithPhotos = await Promise.all(bodyEntries.map(async (e) => ({
-    ...e, photo: e.photo ? await blobToDataUrl(e.photo) : undefined
+    ...e,
+    photos: e.photos?.length
+      ? await Promise.all(e.photos.map(async (p) => ({ pose: p.pose, photo: await blobToDataUrl(p.blob) })))
+      : undefined
   })))
   // Food entries keep their own photo; a Blob would be written as {} by JSON.stringify.
   const foodEntriesWithPhotos = await Promise.all(foodEntries.map(async (e) => ({
@@ -213,7 +238,7 @@ export async function restoreBackup(data: Record<string, unknown[]>): Promise<vo
   // Convert photo data URLs back to Blobs
   const foods = (data.foods as Array<Record<string, unknown>>).map(restorePhoto)
   const foodEntries = (data.foodEntries as Array<Record<string, unknown>>).map(restorePhoto)
-  const bodyEntries = (data.bodyEntries as Array<Record<string, unknown>>).map(restorePhoto)
+  const bodyEntries = (data.bodyEntries as Array<Record<string, unknown>>).map(restoreBodyPhotos)
 
   await db.transaction('rw', [
     db.exercises, db.programs, db.programDays, db.programExercises,

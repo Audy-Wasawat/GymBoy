@@ -11,8 +11,8 @@ import { formatDate, isPastOrToday, localDate } from '../../lib/dates'
 import { MAX_BODY_KG } from '../../lib/foodEntry'
 import { parseDecimal } from '../../lib/numbers'
 import { fromDisplayWeight, toDisplayWeight } from '../../lib/units'
-import { PhotoField } from '../../components/PhotoField'
-import { BODY_PHOTO_MAX } from '../../lib/photos'
+import { BodyPhotosField } from './BodyPhotosField'
+import type { BodyPhoto } from '../../db/types'
 
 export function BodyEntryEditor() {
   const t = useT()
@@ -28,7 +28,7 @@ export function BodyEntryEditor() {
 
   const [weightStr, setWeightStr] = useState('')
   const [date, setDate] = useState(localDate())
-  const [photo, setPhoto] = useState<Blob | undefined>()
+  const [photos, setPhotos] = useState<BodyPhoto[]>([])
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
   const [deleteSheet, setDeleteSheet] = useState(false)
@@ -43,7 +43,7 @@ export function BodyEntryEditor() {
       shownWeight.current = String(toDisplayWeight(existing.weightKg, weightUnit))
       setWeightStr(shownWeight.current)
       setDate(existing.date)
-      setPhoto(existing.photo)
+      setPhotos(existing.photos ?? [])
     }
   }, [isNew, existing, weightUnit])
 
@@ -57,7 +57,7 @@ export function BodyEntryEditor() {
       const entry = {
         date,
         weightKg: !isNew && existing && weightStr === shownWeight.current ? existing.weightKg : fromDisplayWeight(w, weightUnit),
-        ...(photo ? { photo } : {})
+        photos: photos.length ? photos : undefined
       }
       if (isNew) { await addBodyEntry(entry) } else { await updateBodyEntry(Number(id), entry) }
       nav(-1)
@@ -99,15 +99,8 @@ export function BodyEntryEditor() {
         </Row>
       </Section>
 
-      <Section title={t('body.photo')}>
-        <PhotoField
-          photo={photo}
-          onChange={setPhoto}
-          maxSide={BODY_PHOTO_MAX}
-          capture="user"
-          alt={`${t('body.photo')} ${formatDate(date, language)}`}
-          allowRemove={false}
-        />
+      <Section title={t('body.photos')}>
+        <BodyPhotosField photos={photos} onChange={setPhotos} alt={`${t('body.photo')} ${formatDate(date, language)}`} />
       </Section>
 
       {error && <p className="mb-3 text-[14px] text-weights">{error}</p>}

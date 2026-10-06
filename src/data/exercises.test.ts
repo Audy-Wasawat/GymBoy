@@ -15,9 +15,17 @@ const MUSCLES = new Set([
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
 
 describe('the exercise library data (C)', () => {
-  it('has roughly 600 to 650 exercises', () => {
-    expect(data.length).toBeGreaterThanOrEqual(600)
-    expect(data.length).toBeLessThanOrEqual(650)
+  it('has roughly 850 to 900 exercises', () => {
+    expect(data.length).toBeGreaterThanOrEqual(850)
+    expect(data.length).toBeLessThanOrEqual(900)
+  })
+
+  it('logs stretches and cardio as time, and stretches need no weight', () => {
+    const stretch = data.find((e) => e.name === 'Triceps Stretch')!
+    expect(stretch.timed).toBe(true)
+    expect(stretch.bodyweight).toBe(true)
+    expect(data.find((e) => e.name === 'Elliptical Trainer')!.timed).toBe(true)
+    expect(data.some((e) => /\bSMR\b/.test(e.name))).toBe(false)
   })
 
   it('keeps the first 249 hand-picked exercises exactly as released', () => {
@@ -45,7 +53,7 @@ describe('the exercise library data (C)', () => {
     }
   })
 
-  it('leaves out olympic lifts, assisted variants and foam rolling, and adds nothing from other categories', () => {
+  it('leaves out olympic lifts, assisted variants and foam rolling', () => {
     for (const e of data.slice(249)) {
       expect(e.name, e.name).not.toMatch(/\bpower clean\b|\bsnatch\b|\bjerk\b|assist/i)
     }

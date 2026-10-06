@@ -13,8 +13,11 @@ export const PART_OF_MUSCLE = {
   glutes: 'glutes', quads: 'quads', adductors: 'quads', hamstrings: 'hamstrings', calves: 'calves'
 }
 
-/** Only these source categories are used. Stretching, cardio, plyometrics, strongman and olympic lifts are not. */
-export const CATEGORIES = new Set(['strength', 'powerlifting'])
+/** Source categories that are used. Olympic weightlifting is left out (the owner removed those lifts). */
+export const CATEGORIES = new Set(['strength', 'powerlifting', 'plyometrics', 'strongman', 'cardio', 'stretching'])
+
+/** Stretches and cardio are logged as time; stretches never need a weight. */
+const TIMED_CATEGORIES = new Set(['stretching', 'cardio'])
 
 /**
  * Left out on purpose: olympic lifts (the owner removed Power Clean), assisted variants (assist weight
@@ -22,7 +25,7 @@ export const CATEGORIES = new Set(['strength', 'powerlifting'])
  */
 export function isExcluded(src) {
   const n = src.name
-  if (src.equipment === 'foam roll') return 'foam roll'
+  if (src.equipment === 'foam roll' || /-?\bSMR\b/.test(n)) return 'foam roll / self-massage'
   if (/(?<!squat )\bclean\b(?! grip)|\bsnatch\b|\bjerk\b/i.test(n)) return 'olympic lift'
   if (/assist/i.test(n)) return 'assisted'
   if (/manual/i.test(n)) return 'needs a partner'
@@ -124,8 +127,8 @@ export function autoExercise(src) {
     primaryMuscles: primary,
     secondaryMuscles: secondary,
     leftRight: isLeftRight(src.name, equipment),
-    timed: isTimed(src.name),
+    timed: TIMED_CATEGORIES.has(src.category) || isTimed(src.name),
     // Rings, bars and plates are listed as "other"; those moves still use the body's own weight, so weight is optional.
-    bodyweight: equipment === 'bodyweight' || (equipment === 'other' && isBodyweightMove(src.name))
+    bodyweight: equipment === 'bodyweight' || src.category === 'stretching' || (equipment === 'other' && isBodyweightMove(src.name))
   }
 }
