@@ -124,7 +124,8 @@ export interface BodyPhoto { blob: Blob; pose: BodyPose }
 /** Photos are optional and in the order they were added. (Before schema v3 an entry had one `photo` Blob.) */
 export interface BodyEntry { id?: number; date: string; weightKg: number; photos?: BodyPhoto[] }
 
-export interface Goals { kcal?: number; proteinG?: number; weeklyDays?: number }
+/** `kcal` is the daily floor (eat at least), `kcalMax` the ceiling (try not to go over); either may be unset. */
+export interface Goals { kcal?: number; kcalMax?: number; proteinG?: number; weeklyDays?: number }
 export interface Settings {
   id: 'app'
   language: Lang

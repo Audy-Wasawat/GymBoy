@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { Page, Row, Section } from '../components/Page'
 import { Volume2 } from 'lucide-react'
 import { Segmented } from '../components/Segmented'
-import { previewRestDone } from '../lib/sound'
+import { audioState, previewRestDone } from '../lib/sound'
+import { parseGoal } from '../lib/kcalGoal'
 import { Switch } from '../components/Switch'
 import { canVibrate } from '../lib/vibrate'
 import { updateSettings } from '../db/db'
@@ -18,6 +19,22 @@ export function SettingsPage() {
   const settings = useSettings()
   const [persist, setPersist] = useState<PersistState>()
   const [usedMB, setUsedMB] = useState<number>()
+  const [soundResult, setSoundResult] = useState('')
+  const [kcalError, setKcalError] = useState(false)
+
+  const testSound = async () => {
+    setSoundResult('')
+    const played = await previewRestDone()
+    setSoundResult(played ? t('settings.soundOk') : t('settings.soundFail').replace('{state}', audioState()))
+  }
+
+  /** Saves the calorie floor or ceiling; a ceiling at or below the floor is refused. */
+  const saveKcal = (field: 'kcal' | 'kcalMax', text: string) => {
+    const goals = { ...settings.goals, [field]: parseGoal(text) }
+    if (goals.kcal && goals.kcalMax && goals.kcalMax <= goals.kcal) { setKcalError(true); return }
+    setKcalError(false)
+    void updateSettings({ goals })
+  }
 
   useEffect(() => {
     checkPersistence().then(setPersist)
@@ -77,28 +94,44 @@ export function SettingsPage() {
             <span className="block">{t('settings.restSound')}</span>
             <span className="block text-[13px] text-muted">{t('settings.restSoundNote')}</span>
           </span>
-          <button onClick={previewRestDone} className="flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-full bg-weights/15 px-4 text-[15px] font-semibold text-weights">
+          <button onClick={testSound} className="flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-full bg-weights/15 px-4 text-[15px] font-semibold text-weights">
             <Volume2 size={18} aria-hidden />
             {t('settings.restSoundTest')}
           </button>
         </Row>
+        {soundResult && <Row className="text-[13px] text-muted"><span role="status">{soundResult}</span></Row>}
       </Section>
       <p className="-mt-3 mb-5 px-1 text-[13px] text-muted">{t('settings.weightUnitNote')}</p>
 
       <Section title={t('settings.goals')}>
-        <Row className="justify-between">
-          <label htmlFor="goalKcal" className="text-[15px]">{t('settings.goalKcal')}</label>
-          <input
-            id="goalKcal"
-            inputMode="numeric"
-            defaultValue={settings.goals.kcal ?? ''}
-            onBlur={(e) => {
-              const v = e.target.value ? Number(e.target.value) : undefined
-              updateSettings({ goals: { ...settings.goals, kcal: v } })
-            }}
-            className="w-24 rounded-lg border border-line bg-bg px-3 py-1 text-[16px] text-right"
-          />
-        </Row>
+        <div className="border-b border-line px-4 py-3">
+          <div className="mb-2 text-[15px]">{t('settings.goalKcal')}</div>
+          <div className="grid grid-cols-2 gap-3">
+            <label className="flex flex-col gap-1">
+              <span className="text-[12px] text-muted">{t('settings.kcalMin')}</span>
+              <input
+                id="goalKcal"
+                inputMode="numeric"
+                placeholder="–"
+                defaultValue={settings.goals.kcal ?? ''}
+                onBlur={(e) => saveKcal('kcal', e.target.value)}
+                className="min-h-[44px] w-full rounded-lg border border-line bg-bg px-3 text-[16px] text-right"
+              />
+            </label>
+            <label className="flex flex-col gap-1">
+              <span className="text-[12px] text-muted">{t('settings.kcalMax')}</span>
+              <input
+                id="goalKcalMax"
+                inputMode="numeric"
+                placeholder="–"
+                defaultValue={settings.goals.kcalMax ?? ''}
+                onBlur={(e) => saveKcal('kcalMax', e.target.value)}
+                className="min-h-[44px] w-full rounded-lg border border-line bg-bg px-3 text-[16px] text-right"
+              />
+            </label>
+          </div>
+          {kcalError && <p role="alert" className="mt-2 text-[13px] text-weights">{t('settings.kcalRangeError')}</p>}
+        </div>
         <Row className="justify-between">
           <label htmlFor="goalProtein" className="text-[15px]">{t('settings.goalProtein')}</label>
           <input

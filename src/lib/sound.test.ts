@@ -21,7 +21,6 @@ afterEach(() => { vi.unstubAllGlobals(); vi.resetModules(); FakeCtx.made = [] })
 
 async function load() {
   vi.stubGlobal('window', { AudioContext: FakeCtx })
-  vi.stubGlobal('navigator', { audioSession: { type: 'auto' } })
   return import('./sound')
 }
 
@@ -44,10 +43,31 @@ describe('rest timer sound', () => {
     expect(FakeCtx.made).toHaveLength(1)
   })
 
-  it('asks for a mixable session so music keeps playing', async () => {
+  it('does not throw away a context that is still starting, even with several taps', async () => {
     const { unlockAudio } = await load()
     unlockAudio()
-    expect((navigator as unknown as { audioSession: { type: string } }).audioSession.type).toBe('transient')
+    FakeCtx.made[0].state = 'suspended' // iOS: a new context starts suspended until resume() lands
+    unlockAudio() // touchend
+    unlockAudio() // click on the same tap
+    expect(FakeCtx.made).toHaveLength(1)
+    expect(FakeCtx.made[0].close).not.toHaveBeenCalled()
+  })
+
+  it('replaces a context that stays stopped after a resume', async () => {
+    vi.useFakeTimers()
+    const { unlockAudio } = await load()
+    unlockAudio()
+    FakeCtx.made[0].state = 'suspended'
+    unlockAudio() // asks for resume
+    vi.advanceTimersByTime(1000)
+    unlockAudio() // still suspended a second later
+    expect(FakeCtx.made).toHaveLength(2)
+    vi.useRealTimers()
+  })
+
+  it('the settings test plays once the context runs', async () => {
+    const { previewRestDone } = await load()
+    expect(await previewRestDone()).toBe(true)
   })
 
   it('stays silent, without throwing, when the context cannot run', async () => {

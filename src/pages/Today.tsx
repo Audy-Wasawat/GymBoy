@@ -12,6 +12,7 @@ import { useT } from '../i18n/useT'
 import { localDate, startOfWeek } from '../lib/dates'
 import { sessionTitle } from '../lib/sessionTitle'
 import { round } from '../lib/units'
+import { kcalStatus } from '../lib/kcalGoal'
 
 function useTodayData() {
   return useLiveQuery(async () => {
@@ -71,6 +72,37 @@ function Meter({ label, value, goal, unit, tone }: { label: string; value: numbe
           <div className={`h-full rounded-full ${tone}`} style={{ width: `${pct}%` }} />
         </div>
       ) : null}
+    </div>
+  )
+}
+
+/** Calories against a floor and/or ceiling: the bar fills toward the ceiling (or the floor), with a tick at the floor. */
+function KcalMeter({ value, min, max }: { value: number; min?: number; max?: number }) {
+  const t = useT()
+  const status = kcalStatus(value, min, max)
+  const scale = max ?? min
+  const pct = scale ? Math.min(100, (value / scale) * 100) : 0
+  const tone = status.state === 'over' ? 'bg-weights' : 'bg-food'
+  const note =
+    status.state === 'below' ? t('kcal.toMin').replace('{n}', String(status.toMin))
+    : status.state === 'in' ? (status.room !== undefined ? t('kcal.room').replace('{n}', String(status.room)) : t('kcal.inRange'))
+    : status.state === 'over' ? t('kcal.over').replace('{n}', String(status.over))
+    : ''
+  const goalText = min && max ? `${min}–${max}` : min ? `≥ ${min}` : max ? `≤ ${max}` : ''
+  return (
+    <div className="flex-1 px-4 py-3.5">
+      <div className="text-[13px] text-muted">kcal</div>
+      <div className="mt-1 flex items-baseline gap-1">
+        <span className={`stat-num ${status.state === 'over' ? 'text-weights' : ''}`}>{round(value, 1)}</span>
+        {goalText && <span className="text-[13px] text-muted">/ {goalText}</span>}
+      </div>
+      {scale ? (
+        <div className="relative mt-2.5 h-1.5 rounded-full bg-raised" aria-hidden>
+          <div className={`h-full rounded-full ${tone}`} style={{ width: `${pct}%` }} />
+          {min && max ? <span className="absolute -top-0.5 h-2.5 w-0.5 rounded bg-ink/50" style={{ left: `${(min / max) * 100}%` }} /> : null}
+        </div>
+      ) : null}
+      {note && <div className={`mt-1.5 text-[12px] ${status.state === 'over' ? 'font-semibold text-weights' : status.state === 'in' ? 'text-food' : 'text-muted'}`}>{note}</div>}
     </div>
   )
 }
@@ -172,7 +204,7 @@ export function Today() {
 
       <Section title={t('today.food')}>
         <div className="flex divide-x divide-line">
-          <Meter label="kcal" value={data?.kcal ?? 0} goal={goals.kcal} unit="" tone="bg-food" />
+          <KcalMeter value={data?.kcal ?? 0} min={goals.kcal} max={goals.kcalMax} />
           <Meter label={t('today.protein')} value={data?.protein ?? 0} goal={goals.proteinG} unit={t('food.gramUnit')} tone="bg-food" />
         </div>
       </Section>

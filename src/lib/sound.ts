@@ -1,42 +1,30 @@
 // Rest-timer sounds.
 //
-// iOS only lets a page make sound after a user gesture. It also moves a page's AudioContext to the
-// "interrupted" (or "suspended") state whenever the app goes to the background, a call comes in, or
-// another app takes the audio, and it often refuses to resume that context without a new gesture.
-// The old code made one context for the app's whole life and only resumed it from "suspended", so
-// after the first trip out of the app every later alarm was silent.
+// iOS only lets a page make sound after a user gesture, and it stops the page's AudioContext
+// ("suspended" or the Safari-only "interrupted") whenever the app goes to the background, a call
+// comes in, or another app takes the audio. One shared context is kept and re-armed on taps:
 //
-// Now:
-// - every tap anywhere (and the tap that saves a set) checks the context and, if it is not running,
-//   resumes it or throws it away and makes a fresh one inside that tap, which iOS always allows;
-// - coming back to the app tries to resume straight away;
-// - an alarm that finds the context stopped tries once to resume it before giving up.
+// - a stopped context gets resume() inside a tap, which iOS allows;
+// - a resume() is never stacked on one that is still pending, and a context is never thrown away
+//   while it is still starting (doing that on every tap is what kept the test sound silent);
+// - only a context that stays stopped after a resume, or reports "interrupted", is replaced, and
+//   the replacement is made inside a tap;
+// - coming back to the app tries to resume straight away.
 // Sound still only plays while the app is open: a web app cannot sound from the background.
 
 type Ctx = AudioContext
 
 let ctx: Ctx | undefined
+/** When the last resume() was asked for; a context still stopped well after it is replaced. */
+let resumedAt = 0
+const RESUME_GRACE_MS = 800
 
 function Ctor(): typeof AudioContext | undefined {
   if (typeof window === 'undefined') return undefined
   return window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
 }
 
-/**
- * Asks Safari (iOS 17+) for a short, mixable sound: music from another app keeps playing and only
- * ducks under the chime instead of being stopped. Ignored where the Audio Session API is missing.
- */
-function mixWithOtherAudio() {
-  try {
-    const session = (navigator as unknown as { audioSession?: { type: string } }).audioSession
-    if (session && session.type !== 'transient') session.type = 'transient'
-  } catch {
-    // ignore
-  }
-}
-
 function fresh(): Ctx | undefined {
-  mixWithOtherAudio()
   const C = Ctor()
   if (!C) return undefined
   try {
@@ -45,12 +33,13 @@ function fresh(): Ctx | undefined {
     // ignore
   }
   ctx = new C()
+  resumedAt = 0
   return ctx
 }
 
-function current(): Ctx | undefined {
-  if (!ctx || ctx.state === 'closed') return fresh()
-  return ctx
+function resume(c: Ctx) {
+  resumedAt = Date.now()
+  void c.resume().catch(() => {})
 }
 
 /** A one-sample silent buffer completes the unlock on older iOS versions. */
@@ -61,21 +50,24 @@ function tick(c: Ctx) {
   src.start(0)
 }
 
-/**
- * Makes sure sound can play. Call it inside a tap. A context that is not running (iOS stopped it
- * when the app went to the background, and often keeps it stuck as "interrupted") is replaced with a
- * new one; a context made inside a tap starts running.
- */
+/** Makes sure sound can play. Call it inside a tap; calling it on every tap is cheap and safe. */
 export function unlockAudio() {
   try {
-    let c = current()
-    if (!c) return
-    if (c.state !== 'running') {
-      void c.resume().catch(() => {})
+    let c = ctx
+    const state = c?.state as string | undefined
+    if (!c || state === 'closed' || state === 'interrupted') {
       c = fresh()
       if (!c) return
-      if (c.state === 'suspended') void c.resume().catch(() => {})
+    } else if (state === 'running') {
+      return
+    } else if (resumedAt && Date.now() - resumedAt > RESUME_GRACE_MS) {
+      // Asked to resume earlier and still stopped: iOS will not wake this one, start over.
+      c = fresh()
+      if (!c) return
+    } else if (resumedAt) {
+      return // a resume is still on its way
     }
+    if (c.state !== 'running') resume(c)
     tick(c)
   } catch {
     // Sound is a nicety; never let it break logging.
@@ -95,22 +87,26 @@ export function installAudioKeeper() {
   document.addEventListener('touchend', onGesture, { passive: true, capture: true })
   document.addEventListener('click', onGesture, { capture: true })
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && ctx && ctx.state !== 'running') void ctx.resume().catch(() => {})
+    if (document.visibilityState === 'visible' && ctx && ctx.state !== 'running') resume(ctx)
   })
 }
 
-async function ready(): Promise<Ctx | undefined> {
+/** The context once it runs, waiting up to `ms` for a pending resume; undefined if it never does. */
+async function ready(ms = 400): Promise<Ctx | undefined> {
   const c = ctx
   if (!c || c.state === 'closed') return undefined
   if (c.state !== 'running') {
     try {
-      await Promise.race([c.resume(), new Promise((r) => setTimeout(r, 250))])
+      await Promise.race([c.resume(), new Promise((r) => setTimeout(r, ms))])
     } catch {
       // ignore
     }
   }
   return c.state === 'running' ? c : undefined
 }
+
+/** What the sound system is doing, for the settings screen ("running", "suspended", "unsupported"…). */
+export const audioState = () => (Ctor() ? (ctx?.state as string | undefined) ?? 'none' : 'unsupported')
 
 /** A soft bell: a sine partial stack with a quick attack and a long decay. */
 function bell(c: Ctx, at: number, freq: number, gain: number, length = 1.1) {
@@ -141,7 +137,7 @@ export async function playRestDone() {
     const t0 = c.currentTime + 0.02
     const notes = [880, 1108.73, 1318.51] // A5, C#6, E6
     for (let r = 0; r < 2; r++) {
-      notes.forEach((f, i) => bell(c, t0 + r * 0.95 + i * 0.16, f, 0.32, i === 2 ? 1.2 : 0.7))
+      notes.forEach((f, i) => bell(c, t0 + r * 0.95 + i * 0.16, f, 0.3, i === 2 ? 1.2 : 0.7))
     }
     return true
   } catch {
@@ -160,8 +156,13 @@ export async function playCountdownTick(last = false) {
   }
 }
 
-/** Plays the chime now (from a tap in settings) so the volume can be checked. */
-export function previewRestDone() {
+/**
+ * Plays the chime now, from a tap in settings, so the volume can be checked. Resolves to whether it
+ * played. It waits up to a second for iOS to start the audio.
+ */
+export async function previewRestDone(): Promise<boolean> {
   unlockAudio()
-  setTimeout(() => void playRestDone(), 60)
+  const c = await ready(1000)
+  if (!c) return false
+  return playRestDone()
 }

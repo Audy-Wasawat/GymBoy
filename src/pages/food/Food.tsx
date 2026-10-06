@@ -1,3 +1,4 @@
+import { kcalStatus } from '../../lib/kcalGoal'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -29,6 +30,12 @@ export function Food() {
   const entries = useLiveQuery(() => listFoodEntries(date), [date], [])
 
   const kcal = totalKcal(entries)
+  const kcalState = kcalStatus(kcal, goals.kcal, goals.kcalMax)
+  const kcalNote =
+    kcalState.state === 'below' ? t('kcal.toMin').replace('{n}', String(kcalState.toMin))
+    : kcalState.state === 'in' ? (kcalState.room !== undefined ? t('kcal.room').replace('{n}', String(kcalState.room)) : t('kcal.inRange'))
+    : kcalState.state === 'over' ? t('kcal.over').replace('{n}', String(kcalState.over))
+    : ''
   const protein = totalProtein(entries)
   const isToday = date === today
 
@@ -69,10 +76,10 @@ export function Food() {
       {/* totals */}
       <div className="mb-5 grid grid-cols-2 gap-3">
         <div className="rounded-xl border border-line bg-surface p-4">
-          <div className="text-[22px] font-semibold text-food">{kcal}</div>
+          <div className={`text-[22px] font-semibold ${kcalState.state === 'over' ? 'text-weights' : 'text-food'}`}>{kcal}</div>
           <div className="text-[13px] text-muted">
             {t('food.kcalUnit')}
-            {goals.kcal ? ` · ${t('food.remaining')} ${Math.max(0, goals.kcal - kcal)}` : ''}
+            {kcalNote ? ` · ${kcalNote}` : ''}
           </div>
         </div>
         <div className="rounded-xl border border-line bg-surface p-4">
