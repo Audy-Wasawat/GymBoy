@@ -78,11 +78,11 @@ export function SessionPage() {
       ))}
       {blocks && blocks.length === 0 && <p className="mb-4 px-1 text-[15px] text-muted">{t('session.noExercises')}</p>}
 
-      <button onClick={() => setSheet('add')} className="mb-4 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl border border-line bg-surface text-[16px] font-semibold text-weights">
+      <button onClick={() => setSheet('add')} className="mb-4 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-weights/40 text-[16px] font-bold text-weights">
         <Plus size={20} aria-hidden />
         {t('day.addExercise')}
       </button>
-      <button onClick={() => setFinishing(true)} className="mb-3 min-h-[56px] w-full rounded-xl bg-weights text-[17px] font-semibold text-white">
+      <button onClick={() => setFinishing(true)} className="mb-3 min-h-[60px] w-full rounded-2xl bg-weights text-[17px] font-bold text-white">
         {t('session.finish')}
       </button>
       <button onClick={() => setSheet('cancel')} className="mb-28 min-h-[48px] w-full text-[15px] text-muted">
@@ -150,10 +150,10 @@ function ExerciseBlock({ block, session, ses, index }: {
   }
 
   return (
-    <section className="mb-4 rounded-xl border border-line bg-surface p-3">
+    <section className="mb-4 rounded-2xl border border-line bg-surface p-3">
       <div className="mb-1 flex items-start gap-2">
         <div className="min-w-0 flex-1">
-          <h2 className="text-[17px] font-semibold leading-snug">{se.name}</h2>
+          <h2 className="flex items-center gap-2 text-[18px] font-bold leading-snug"><span className="flex h-6 min-w-6 shrink-0 items-center justify-center rounded-md bg-weights/15 px-1.5 text-[12px] font-bold text-weights">{index + 1}</span><span className="min-w-0">{se.name}</span></h2>
           <p className="text-[13px] text-muted">{[target, rest].filter(Boolean).join(' · ')}</p>
           {hint && <HintNote hint={hint} unit={weightUnit} />}
         </div>
@@ -171,13 +171,15 @@ function ExerciseBlock({ block, session, ses, index }: {
           unit={weightUnit} date={session.date}
           onLabel={() => setRowMenu(r)}
           onSaved={onSaved}
+          onDelete={() => void (r.kind === 'set' ? deleteSet(r.set, session.id!) : db.setDrafts.delete(r.draft.id!))}
         />
       ))}
 
       <div className="mt-2 flex gap-2">
-        <button onClick={() => addRow('working')} className="min-h-[44px] flex-1 rounded-lg border border-line text-[15px]">{t('set.addSet')}</button>
-        <button onClick={() => addRow('warmup')} className="min-h-[44px] flex-1 rounded-lg border border-line text-[15px] text-muted">{t('set.addWarmup')}</button>
+        <button onClick={() => addRow('working')} className="min-h-[44px] flex-1 rounded-xl bg-weights/15 text-[15px] font-semibold text-weights">{t('set.addSet')}</button>
+        <button onClick={() => addRow('warmup')} className="min-h-[44px] flex-1 rounded-xl bg-raised text-[15px] font-medium text-muted">{t('set.addWarmup')}</button>
       </div>
+      {rows.some((r) => r.kind === 'draft') && <p className="mt-1.5 text-center text-[12px] text-muted">{t('set.swipeHint')}</p>}
       <textarea
         value={note}
         onChange={(e) => { setNote(e.target.value); void db.sessionExercises.update(se.id!, { note: e.target.value }) }}

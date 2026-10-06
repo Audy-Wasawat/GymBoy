@@ -126,6 +126,7 @@ const th = {
   'set.copyAbove': 'คัดลอกเซ็ตด้านบน',
   'set.addSet': '+ เซ็ต',
   'set.addWarmup': '+ วอร์มอัพ',
+  'set.swipeHint': 'ปัดแถวไปทางซ้ายเพื่อลบ หรือแตะเลขเซ็ตเพื่อดูตัวเลือก',
   'set.makeWarmup': 'เปลี่ยนเป็นวอร์มอัพ',
   'set.makeWorking': 'เปลี่ยนเป็นเซ็ตทำงาน',
   'set.delete': 'ลบแถวนี้',
@@ -133,6 +134,7 @@ const th = {
   'rest.title': 'พัก',
   'rest.done': 'ครบเวลาพัก',
   'rest.skip': 'ข้าม',
+  'rest.over': 'เกินเวลาพักแล้ว',
   'finish.draftsTitle': 'ยังมีแถวที่ไม่ได้บันทึก',
   'finish.draftsBody': 'มี {n} แถวที่กรอกแล้วแต่ยังไม่ได้กด ✓',
   'finish.incomplete': '{n} แถวข้อมูลไม่ครบ จะบันทึกไม่ได้และถูกทิ้ง',
@@ -531,6 +533,9 @@ const th = {
   'food.noMatch': 'ไม่พบอาหารที่ค้นหา',
   'error.tooLarge': 'ค่าสูงเกินไป ตรวจตัวเลขอีกครั้ง',
   'settings.restVibrate': 'สั่นเมื่อครบเวลาพัก',
+  'settings.restSound': 'เสียงเมื่อครบเวลาพัก',
+  'settings.restSoundNote': 'ดังตอนเปิดแอปอยู่ เล่นซ้อนเพลงได้โดยไม่หยุดเพลง ถ้าไม่ได้ยินให้ปิดโหมดเงียบหรือเพิ่มเสียง',
+  'settings.restSoundTest': 'ลองฟัง',
   'settings.restVibrateNote': 'ทำงานตอนเปิดแอปอยู่ ใช้ได้บนเครื่องที่รองรับ (เช่น Android) iPhone ไม่รองรับการสั่นจากเว็บ',
 } as const
 
@@ -664,6 +669,7 @@ const en: Record<StringKey, string> = {
   'set.copyAbove': 'Copy set above',
   'set.addSet': '+ Set',
   'set.addWarmup': '+ Warm-up',
+  'set.swipeHint': 'Swipe a row left to delete it, or tap the set number for options',
   'set.makeWarmup': 'Make warm-up',
   'set.makeWorking': 'Make working set',
   'set.delete': 'Delete row',
@@ -671,6 +677,7 @@ const en: Record<StringKey, string> = {
   'rest.title': 'Rest',
   'rest.done': 'Rest over',
   'rest.skip': 'Skip',
+  'rest.over': 'Over your rest time',
   'finish.draftsTitle': 'Some rows are not saved',
   'finish.draftsBody': '{n} rows are filled in but not saved with ✓.',
   'finish.incomplete': '{n} rows are incomplete and will be dropped.',
@@ -1069,6 +1076,9 @@ const en: Record<StringKey, string> = {
   'food.noMatch': 'No food matches',
   'error.tooLarge': 'That value is too large. Check the number.',
   'settings.restVibrate': 'Vibrate when rest is over',
+  'settings.restSound': 'Sound when rest is over',
+  'settings.restSoundNote': 'Plays while the app is open, over your music without stopping it. If you hear nothing, turn off silent mode or turn the volume up.',
+  'settings.restSoundTest': 'Test',
   'settings.restVibrateNote': 'Works while the app is open, on phones that allow it (for example Android). iPhone does not allow vibration from a web app.',
 }
 

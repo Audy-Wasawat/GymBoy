@@ -14,12 +14,13 @@ function SheetBody({ onClose, title, children }: { onClose: () => void; title?: 
   useDialog(ref, onClose)
   return (
     <div ref={ref} className="fixed inset-0 z-50 flex items-end justify-center outline-none" role="dialog" aria-modal="true" aria-label={title}>
-      <div className="absolute inset-0 bg-ink/40" onClick={onClose} aria-hidden />
+      <div className="absolute inset-0 animate-fade-in bg-black/50 backdrop-blur-[2px]" onClick={onClose} aria-hidden />
       <div
-        className="relative max-h-[85vh] w-full max-w-xl overflow-y-auto rounded-t-2xl bg-surface px-4 pt-4"
+        className="relative max-h-[85vh] w-full max-w-xl animate-sheet-in overflow-y-auto rounded-t-[28px] border-t border-line bg-surface px-4 pt-2"
         style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)' }}
       >
-        {title && <h2 className="mb-3 text-[17px] font-semibold">{title}</h2>}
+        <div className="mx-auto mb-3 h-1.5 w-10 rounded-full bg-muted/40" aria-hidden />
+        {title && <h2 className="mb-3 text-[19px] font-bold">{title}</h2>}
         {children}
       </div>
     </div>
@@ -32,8 +33,8 @@ export function SheetButton({ onClick, children, tone = 'plain' }: {
 }) {
   const cls =
     tone === 'primary' ? 'bg-weights text-white font-semibold'
-    : tone === 'danger' ? 'border border-line text-weights font-semibold'
-    : 'border border-line'
+    : tone === 'danger' ? 'bg-weights/10 text-weights font-semibold'
+    : 'bg-raised'
   return (
     <button onClick={onClick} className={`mb-2 flex min-h-[52px] w-full items-center justify-center rounded-xl px-4 text-[16px] ${cls}`}>
       {children}

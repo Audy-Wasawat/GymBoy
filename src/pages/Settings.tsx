@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Page, Row, Section } from '../components/Page'
+import { Volume2 } from 'lucide-react'
 import { Segmented } from '../components/Segmented'
+import { previewRestDone } from '../lib/sound'
 import { Switch } from '../components/Switch'
 import { canVibrate } from '../lib/vibrate'
 import { updateSettings } from '../db/db'
@@ -69,6 +71,16 @@ export function SettingsPage() {
               <option key={s} value={s}>{s} {t('settings.seconds')}</option>
             ))}
           </select>
+        </Row>
+        <Row className="justify-between">
+          <span className="flex-1">
+            <span className="block">{t('settings.restSound')}</span>
+            <span className="block text-[13px] text-muted">{t('settings.restSoundNote')}</span>
+          </span>
+          <button onClick={previewRestDone} className="flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-full bg-weights/15 px-4 text-[15px] font-semibold text-weights">
+            <Volume2 size={18} aria-hidden />
+            {t('settings.restSoundTest')}
+          </button>
         </Row>
       </Section>
       <p className="-mt-3 mb-5 px-1 text-[13px] text-muted">{t('settings.weightUnitNote')}</p>

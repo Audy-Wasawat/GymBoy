@@ -6,14 +6,18 @@ import { useT } from '../i18n/useT'
 export function Page({ title, back, children }: { title: string; back?: string; children: ReactNode }) {
   const t = useT()
   return (
-    <main className="mx-auto max-w-xl px-4 pb-8" style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 16px)' }}>
-      <header className="mb-4 flex items-center gap-1">
+    <main className="mx-auto max-w-xl px-4 pb-8" style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 14px)' }}>
+      <header className="mb-4 flex items-center gap-2">
         {back && (
-          <Link to={back} className="-ml-2 flex h-11 w-11 items-center justify-center text-muted" aria-label={t('common.back')}>
-            <ChevronLeft size={24} aria-hidden />
+          <Link
+            to={back}
+            className="-ml-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-ink"
+            aria-label={t('common.back')}
+          >
+            <ChevronLeft size={22} aria-hidden />
           </Link>
         )}
-        <h1 className="text-[28px] font-semibold leading-tight">{title}</h1>
+        <h1 className={`${back ? 'text-[24px]' : 'text-[32px]'} min-w-0 font-bold leading-tight tracking-tight`}>{title}</h1>
       </header>
       {children}
     </main>
@@ -23,8 +27,8 @@ export function Page({ title, back, children }: { title: string; back?: string; 
 export function Section({ title, children }: { title?: string; children: ReactNode }) {
   return (
     <section className="mb-5">
-      {title && <h2 className="mb-2 text-[15px] font-semibold text-muted">{title}</h2>}
-      <div className="rounded-xl border border-line bg-surface">{children}</div>
+      {title && <h2 className="eyebrow mb-2 px-1">{title}</h2>}
+      <div className="overflow-hidden rounded-2xl border border-line bg-surface">{children}</div>
     </section>
   )
 }

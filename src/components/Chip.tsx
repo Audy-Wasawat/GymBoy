@@ -7,7 +7,7 @@ export function Chip({ selected, onClick, children }: { selected: boolean; onCli
       aria-pressed={selected}
       onClick={onClick}
       className={`min-h-[44px] shrink-0 whitespace-nowrap rounded-full border px-4 text-[15px] ${
-        selected ? 'border-weights bg-weights font-semibold text-white' : 'border-line bg-surface'
+        selected ? 'border-weights bg-weights font-semibold text-white' : 'border-line bg-surface text-muted'
       }`}
     >
       {children}

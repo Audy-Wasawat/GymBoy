@@ -164,3 +164,12 @@ One line per choice made where SPEC.md and AUTOPILOT.md were silent, with the re
 
 ## Suggestions
 - (none yet)
+
+## Round 3 (2026-10-06): look, rest sound, deleting rows
+
+- **Sporty theme (owner chose "Sporty, dark").** Near-black floor with raised graphite cards at night, white cards by day; plate colours are brighter. New token `--raised` (`bg-raised`) for chips, secondary buttons and input fills. Radii are larger (`lg` 12 px, `xl` 18 px, `2xl` 22 px) and IBM Plex Sans Thai 700 is bundled for titles and numbers. Solid plate buttons get a light gradient and a coloured glow from one CSS rule. The tab bar floats as a blurred pill; sheets have a grab handle and slide in. Theme still follows the iPhone setting.
+- **Today** now opens with a week card (workout days, km, Monday-to-Sunday strip) and meter bars for kcal/protein goals.
+- **Rest sound bug.** iOS moves the page's AudioContext to "interrupted"/"suspended" when the app goes to the background, and the old code only resumed "suspended", once, so after the first trip out of the app every alarm was silent. `installAudioKeeper()` (main.tsx) re-checks on every tap and on return to the app; a context that is not running is replaced inside the tap. `navigator.audioSession.type = 'transient'` (iOS 17+) lets the chime play over music without stopping it. The chime is a two-pass rising bell, with soft ticks in the last 3 s, and repeats at +20 s and +40 s while the finished bar is still up. When the rest has run out the bar counts up how far over the rest you are. Settings has a "Test" button.
+- **Not possible as a PWA (told the owner):** sound or Dynamic Island while the app is in the background. The Shortcuts → iPhone Clock timer workaround was offered; the owner chose in-app sound only.
+- **Deleting rows.** Any set row (draft or saved, warm-up or working) can be swiped left to show a delete button, in the live session and in history editing (history still asks before deleting a saved set). The set-number button keeps its menu and now looks tappable; a hint under the add buttons says so.
+- **Body model** redrawn with curved outlines, a six-pack, three quad heads, two hamstring and calf heads, and a centre groove. Shapes live in `src/components/bodyShapes.ts`, shared by `BodyModel` and `BodyModelPicker`.

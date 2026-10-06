@@ -29,8 +29,8 @@ export function Weights() {
   return (
     <Page title={t('weights.title')}>
       {open ? (
-        <Link to="/weights/session" className="mb-5 flex min-h-[72px] items-center gap-3 rounded-xl bg-weights px-4 py-3 text-white">
-          <Play size={22} aria-hidden />
+        <Link to="/weights/session" className="mb-5 flex min-h-[84px] items-center gap-3 rounded-2xl bg-weights px-4 py-3 text-white">
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/20"><Play size={22} fill="currentColor" aria-hidden /></span>
           <span className="flex-1">
             <span className="block text-[17px] font-semibold">{t('session.resume')}</span>
             <span className="block text-[14px] opacity-90">{sessionTitle(open, t)} · {open.date}</span>
@@ -41,7 +41,7 @@ export function Weights() {
         open === null && days !== undefined && (
           <div className="mb-5 flex flex-col gap-2">
             {days.length > 0 && (
-              <button onClick={() => setChoosing(true)} className="flex min-h-[64px] w-full items-center justify-center gap-2 rounded-xl bg-weights text-[17px] font-semibold text-white">
+              <button onClick={() => setChoosing(true)} className="flex min-h-[72px] w-full items-center justify-center gap-2 rounded-2xl bg-weights text-[17px] font-semibold text-white">
                 <Play size={20} aria-hidden />
                 {t('session.startFromProgram')}
               </button>
@@ -50,7 +50,7 @@ export function Weights() {
             <button
               onClick={() => start()}
               className={`flex w-full items-center justify-center gap-2 rounded-xl text-[17px] font-semibold ${
-                days.length > 0 ? 'min-h-[52px] border border-line bg-surface text-weights' : 'min-h-[64px] bg-weights text-white'
+                days.length > 0 ? 'min-h-[56px] border border-line bg-surface text-weights' : 'min-h-[72px] bg-weights text-white'
               }`}
             >
               <Play size={20} aria-hidden />
@@ -62,25 +62,25 @@ export function Weights() {
 
       <Section>
         <Link to="/weights/programs" className="flex min-h-[60px] items-center gap-3 border-b border-line px-4 py-2">
-          <ListChecks size={22} className="text-weights" aria-hidden />
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-weights/15 text-weights"><ListChecks size={20} aria-hidden /></span>
           <span className="flex-1">
-            <span className="block text-[16px]">{t('program.title')}</span>
+            <span className="block text-[16px] font-semibold">{t('program.title')}</span>
             <span className="block text-[13px] text-muted">{program ? program.name : t('program.noneActive')}</span>
           </span>
           <ChevronRight size={18} className="text-muted" aria-hidden />
         </Link>
         <Link to="/weights/history" className="flex min-h-[60px] items-center gap-3 border-b border-line px-4 py-2">
-          <HistoryIcon size={22} className="text-weights" aria-hidden />
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-weights/15 text-weights"><HistoryIcon size={20} aria-hidden /></span>
           <span className="flex-1">
-            <span className="block text-[16px]">{t('history.title')}</span>
+            <span className="block text-[16px] font-semibold">{t('history.title')}</span>
             <span className="block text-[13px] text-muted">{t('history.note')}</span>
           </span>
           <ChevronRight size={18} className="text-muted" aria-hidden />
         </Link>
         <Link to="/weights/exercises" className="flex min-h-[60px] items-center gap-3 px-4 py-2">
-          <Library size={22} className="text-weights" aria-hidden />
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-weights/15 text-weights"><Library size={20} aria-hidden /></span>
           <span className="flex-1">
-            <span className="block text-[16px]">{t('weights.library')}</span>
+            <span className="block text-[16px] font-semibold">{t('weights.library')}</span>
             <span className="block text-[13px] text-muted">{t('weights.libraryNote')}</span>
           </span>
           <ChevronRight size={18} className="text-muted" aria-hidden />

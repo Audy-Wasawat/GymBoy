@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { Dumbbell, Footprints, Plus, UtensilsCrossed } from 'lucide-react'
+import type { ReactNode } from 'react'
+import { Dumbbell, Footprints, Plus, Trophy, UtensilsCrossed } from 'lucide-react'
 import { BodyModel } from '../components/BodyModel'
 import { Page, Section } from '../components/Page'
 import { db } from '../db/db'
@@ -31,6 +32,8 @@ function useTodayData() {
       kcal: food.reduce((s, f) => s + f.kcal, 0),
       protein: food.reduce((s, f) => s + f.proteinG, 0),
       weekDays: activeDays.size,
+      activeDays: [...activeDays],
+      weekStart,
       weekKm: weekRuns.reduce((s, r) => s + r.distanceKm, 0)
     }
   }, [])
@@ -54,14 +57,48 @@ function useTodayMuscles() {
   }, [])
 }
 
-function Stat({ label, value, goal, unit }: { label: string; value: number; goal?: number; unit: string }) {
+function Meter({ label, value, goal, unit, tone }: { label: string; value: number; goal?: number; unit: string; tone: string }) {
+  const pct = goal ? Math.min(100, (value / goal) * 100) : 0
   return (
-    <div className="flex-1 px-4 py-3">
+    <div className="flex-1 px-4 py-3.5">
       <div className="text-[13px] text-muted">{label}</div>
-      <div className="text-[26px] font-semibold leading-tight">
-        {round(value, 1)}
-        <span className="text-[15px] font-normal text-muted">{goal ? ` / ${goal}` : ''} {unit}</span>
+      <div className="mt-1 flex items-baseline gap-1">
+        <span className="stat-num">{round(value, 1)}</span>
+        <span className="text-[14px] text-muted">{goal ? `/ ${goal}` : ''} {unit}</span>
       </div>
+      {goal ? (
+        <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-raised" aria-hidden>
+          <div className={`h-full rounded-full ${tone}`} style={{ width: `${pct}%` }} />
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+/** Monday-to-Sunday strip; a filled dot is a day with any workout, run or activity. */
+function WeekStrip({ weekStart, active, language }: { weekStart: string; active: string[]; language: string }) {
+  const today = localDate()
+  const [y, m, d] = weekStart.split('-').map(Number)
+  const days = Array.from({ length: 7 }, (_, i) => new Date(y, m - 1, d + i))
+  return (
+    <div className="mt-4 grid grid-cols-7 gap-1.5" aria-hidden>
+      {days.map((day) => {
+        const key = localDate(day)
+        const on = active.includes(key)
+        const isToday = key === today
+        return (
+          <div key={key} className="flex flex-col items-center gap-1.5">
+            <span className={`text-[11px] ${isToday ? 'font-bold text-ink' : 'text-muted'}`}>
+              {day.toLocaleDateString(language === 'th' ? 'th-TH' : 'en-GB', { weekday: 'narrow' })}
+            </span>
+            <span className={`flex h-8 w-8 items-center justify-center rounded-full text-[12px] font-semibold ${
+              on ? 'bg-weights text-white' : isToday ? 'border-2 border-weights/60 text-ink' : 'bg-raised text-muted'
+            }`}>
+              {day.getDate()}
+            </span>
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -80,11 +117,32 @@ export function Today() {
     <Page title={t('today.title')}>
       <p className="-mt-3 mb-5 text-[15px] text-muted">{dateLabel}</p>
 
-      <div className="mb-5 grid grid-cols-3 gap-2">
+      <div className="mb-5 grid grid-cols-3 gap-2.5">
         <QuickAction to="/weights" icon={Dumbbell} label={t('today.startWeights')} tone="bg-weights" />
         <QuickAction to="/running/new" icon={Footprints} label={t('today.logRun')} tone="bg-running" />
         <QuickAction to={`/food/add?date=${localDate()}`} icon={UtensilsCrossed} label={t('today.addFood')} tone="bg-food" />
       </div>
+
+      <section className="mb-5 overflow-hidden rounded-2xl border border-line bg-surface p-4">
+        <h2 className="eyebrow">{t('today.week')}</h2>
+        <div className="mt-2 flex items-end gap-6">
+          <div>
+            <div className="flex items-baseline gap-1">
+              <span className="text-[40px] font-bold leading-none tracking-tight">{data?.weekDays ?? 0}</span>
+              {goals.weeklyDays ? <span className="text-[17px] font-semibold text-muted">/ {goals.weeklyDays}</span> : null}
+            </div>
+            <div className="mt-1 text-[13px] text-muted">{t('today.workoutDays')}</div>
+          </div>
+          <div>
+            <div className="flex items-baseline gap-1">
+              <span className="text-[40px] font-bold leading-none tracking-tight text-running">{round(data?.weekKm ?? 0, 1)}</span>
+              <span className="text-[17px] font-semibold text-muted">km</span>
+            </div>
+            <div className="mt-1 text-[13px] text-muted">{t('today.runDistance')}</div>
+          </div>
+        </div>
+        {data && <WeekStrip weekStart={data.weekStart} active={data.activeDays} language={language} />}
+      </section>
 
       <Section title={t('today.done')}>
         {nothing ? (
@@ -92,22 +150,13 @@ export function Today() {
         ) : (
           <ul>
             {data?.sessions.map((s) => (
-              <li key={`s${s.id}`} className="border-b border-line px-4 py-3 last:border-b-0">
-                <span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-weights" aria-hidden />
-                {sessionTitle(s, t)}
-              </li>
+              <DoneRow key={`s${s.id}`} icon={Dumbbell} tone="bg-weights/15 text-weights">{sessionTitle(s, t)}</DoneRow>
             ))}
             {data?.runs.map((r) => (
-              <li key={`r${r.id}`} className="border-b border-line px-4 py-3 last:border-b-0">
-                <span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-running" aria-hidden />
-                {round(r.distanceKm, 2)} km
-              </li>
+              <DoneRow key={`r${r.id}`} icon={Footprints} tone="bg-running/15 text-running">{round(r.distanceKm, 2)} km</DoneRow>
             ))}
             {data?.activities.map((a) => (
-              <li key={`a${a.id}`} className="border-b border-line px-4 py-3 last:border-b-0">
-                <span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-other" aria-hidden />
-                {a.sport}, {a.minutes} {t('today.minutes')}
-              </li>
+              <DoneRow key={`a${a.id}`} icon={Trophy} tone="bg-other/15 text-other">{a.sport}, {a.minutes} {t('today.minutes')}</DoneRow>
             ))}
           </ul>
         )}
@@ -115,26 +164,30 @@ export function Today() {
 
       {muscles && muscles.primary.length + muscles.secondary.length > 0 && (
         <Section title={t('today.muscles')}>
-          <div className="flex justify-center p-4">
-            <BodyModel primary={muscles.primary} secondary={muscles.secondary} height={220} />
+          <div className="flex justify-center px-4 py-5">
+            <BodyModel primary={muscles.primary} secondary={muscles.secondary} height={250} />
           </div>
         </Section>
       )}
 
       <Section title={t('today.food')}>
         <div className="flex divide-x divide-line">
-          <Stat label="kcal" value={data?.kcal ?? 0} goal={goals.kcal} unit="" />
-          <Stat label={t('today.protein')} value={data?.protein ?? 0} goal={goals.proteinG} unit={t('food.gramUnit')} />
-        </div>
-      </Section>
-
-      <Section title={t('today.week')}>
-        <div className="flex divide-x divide-line">
-          <Stat label={t('today.workoutDays')} value={data?.weekDays ?? 0} goal={goals.weeklyDays} unit="" />
-          <Stat label={t('today.runDistance')} value={data?.weekKm ?? 0} unit="km" />
+          <Meter label="kcal" value={data?.kcal ?? 0} goal={goals.kcal} unit="" tone="bg-food" />
+          <Meter label={t('today.protein')} value={data?.protein ?? 0} goal={goals.proteinG} unit={t('food.gramUnit')} tone="bg-food" />
         </div>
       </Section>
     </Page>
+  )
+}
+
+function DoneRow({ icon: Icon, tone, children }: { icon: typeof Plus; tone: string; children: ReactNode }) {
+  return (
+    <li className="flex min-h-[56px] items-center gap-3 border-b border-line px-4 py-2.5 last:border-b-0">
+      <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${tone}`}>
+        <Icon size={18} aria-hidden />
+      </span>
+      <span className="min-w-0 flex-1 text-[16px] font-medium">{children}</span>
+    </li>
   )
 }
 
@@ -142,11 +195,12 @@ function QuickAction({ to, icon: Icon, label, tone }: {
   to: string; icon: typeof Plus; label: string; tone: string
 }) {
   return (
-    <Link to={to} className="flex min-h-[84px] flex-col items-start justify-between rounded-xl border border-line bg-surface p-3">
-      <span className={`flex h-8 w-8 items-center justify-center rounded-full ${tone} text-white`}>
-        <Icon size={17} aria-hidden />
+    <Link to={to} className={`relative flex min-h-[96px] flex-col items-start justify-between overflow-hidden rounded-2xl p-3 text-white ${tone}`}>
+      <span className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15" aria-hidden />
+      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20">
+        <Icon size={18} strokeWidth={2.3} aria-hidden />
       </span>
-      <span className="text-[14px] font-semibold leading-tight">{label}</span>
+      <span className="text-[14px] font-bold leading-tight">{label}</span>
     </Link>
   )
 }

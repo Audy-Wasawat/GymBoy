@@ -1,40 +1,46 @@
 @import '@fontsource/ibm-plex-sans-thai/400.css';
 @import '@fontsource/ibm-plex-sans-thai/500.css';
 @import '@fontsource/ibm-plex-sans-thai/600.css';
+@import '@fontsource/ibm-plex-sans-thai/700.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Concrete floor by day, graphite and chalk by night. Accents are competition plate colours,
-   one per category: weights red, running blue, other sports yellow, food green. */
+/* Sporty theme. Night: near-black with raised graphite cards and vivid plate colours. Day: cool
+   off-white with white cards. Accents stay one per category: weights red, running blue, other sports
+   yellow, food green. */
 :root {
-  --bg: 233 232 228;
-  --surface: 248 247 244;
-  --ink: 28 29 31;
-  --muted: 100 101 106;
-  --line: 211 210 205;
+  --bg: 241 241 245;
+  --surface: 255 255 255;
+  --raised: 233 234 239;
+  --ink: 14 15 18;
+  --muted: 96 99 108;
+  --line: 224 225 231;
   /* Borders of controls that must be seen (3:1): the switch track. --line stays soft for dividers. */
-  --control: 140 141 146;
-  --plate-red: 196 48 43;
-  --plate-blue: 38 90 172;
-  --plate-yellow: 196 138 10;
-  --plate-green: 44 128 70;
+  --control: 146 148 157;
+  --plate-red: 218 44 36;
+  --plate-blue: 26 98 218;
+  --plate-yellow: 204 140 0;
+  --plate-green: 18 138 74;
+  --glow: 0.28;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: 22 23 26;
-    --surface: 33 34 38;
-    --ink: 236 235 230;
-    --muted: 154 154 160;
-    --line: 51 52 58;
-    --plate-red: 236 92 84;
-    --control: 110 111 118;
-    --plate-blue: 96 146 230;
-    --plate-yellow: 236 184 58;
-    --plate-green: 84 186 114;
+    --bg: 9 10 13;
+    --surface: 21 23 28;
+    --raised: 31 34 41;
+    --ink: 244 245 248;
+    --muted: 148 152 164;
+    --line: 39 42 50;
+    --control: 98 102 114;
+    --plate-red: 255 82 64;
+    --plate-blue: 82 152 255;
+    --plate-yellow: 255 196 54;
+    --plate-green: 52 211 125;
+    --glow: 0.42;
     color-scheme: dark;
   }
 }
@@ -46,10 +52,45 @@ body {
   overscroll-behavior-y: none;
   font-feature-settings: 'tnum';
 }
+h1, h2, h3 { letter-spacing: -0.01em; }
 button, a, input, select { touch-action: manipulation; }
-input.border-line, select.border-line, textarea.border-line, button.border-line, label.border-line { border-color: rgb(var(--control)); }
+button, a { transition: transform 120ms ease, opacity 120ms ease, background-color 160ms ease; }
+button:not(:disabled):active, a:active { transform: scale(0.97); }
+input.border-line, select.border-line, textarea.border-line, button.border-line, label.border-line { border-color: rgb(var(--control) / 0.55); }
+input.bg-bg, textarea.bg-bg, select.bg-bg { background-color: rgb(var(--raised) / 0.6); }
+input:focus, textarea:focus, select:focus { outline: none; border-color: rgb(var(--plate-blue)); box-shadow: 0 0 0 3px rgb(var(--plate-blue) / 0.2); }
 input::placeholder, textarea::placeholder { color: rgb(var(--muted)); opacity: 1; }
 /* In dark mode the plate colours are bright, so text on them is dark (white on them fails 4.5:1). */
 @media (prefers-color-scheme: dark) { .text-white { color: rgb(var(--bg)); } }
 :focus-visible { outline: 2px solid rgb(var(--plate-blue)); outline-offset: 2px; }
+
+/* Solid plate buttons get a soft gradient and a coloured glow. */
+.bg-weights.text-white, .bg-running.text-white, .bg-food.text-white, .bg-other.text-white {
+  background-image: linear-gradient(135deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0) 55%);
+}
+button.bg-weights, a.bg-weights { box-shadow: 0 10px 24px -12px rgb(var(--plate-red) / var(--glow)); }
+button.bg-running, a.bg-running { box-shadow: 0 10px 24px -12px rgb(var(--plate-blue) / var(--glow)); }
+button.bg-food, a.bg-food { box-shadow: 0 10px 24px -12px rgb(var(--plate-green) / var(--glow)); }
+
+/* Cards: a hairline border and, at night, a faint top highlight that lifts them off the floor. */
+.bg-surface.border-line { border-color: rgb(var(--line)); }
+@media (prefers-color-scheme: dark) {
+  .bg-surface.border-line { box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.04); }
+}
+
+@layer components {
+  .card { @apply rounded-2xl border border-line bg-surface; }
+  .eyebrow { @apply text-[12px] font-semibold uppercase tracking-[0.08em] text-muted; }
+  .stat-num { @apply text-[30px] font-bold leading-none tracking-tight; }
+}
+
+@keyframes pop-in { from { transform: translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes sheet-in { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ring-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgb(var(--plate-red) / 0.55); } 50% { box-shadow: 0 0 0 10px rgb(var(--plate-red) / 0); } }
+.animate-pop-in { animation: pop-in 220ms cubic-bezier(.2,.8,.2,1) both; }
+.animate-sheet-in { animation: sheet-in 260ms cubic-bezier(.2,.8,.2,1) both; }
+.animate-fade-in { animation: fade-in 200ms ease both; }
+.animate-ring-pulse { animation: ring-pulse 1.4s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

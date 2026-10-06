@@ -8,6 +8,7 @@ import { parseDecimal } from '../../lib/numbers'
 import { setSummary } from '../../lib/setFormat'
 import { unlockAudio } from '../../lib/sound'
 import { fromDisplayWeight, toDisplayWeight } from '../../lib/units'
+import { SwipeRow } from '../../components/SwipeRow'
 
 /**
  * A row is a saved set, a draft stored in the database (live sessions), or a new row kept only on
@@ -24,7 +25,7 @@ export const rowGrid = (lr: boolean) =>
   lr ? 'grid-cols-[28px_48px_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_32px_44px]'
     : 'grid-cols-[32px_56px_minmax(0,1fr)_minmax(0,1fr)_36px_44px]'
 
-export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, onSaved, onSaveNew, onNewChange }: {
+export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, onSaved, onSaveNew, onNewChange, onDelete }: {
   se: SessionExercise; row: Row; label: string; prev?: SetLog; above?: Text; unit: WeightUnit; date: string
   /** This saved set beat every earlier working set of the exercise. */
   pr?: boolean
@@ -33,6 +34,8 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
   onSaveNew?: (row: SetDraft) => Promise<boolean>
   /** Keeps the parent's copy of a 'new' row in step with what is typed. */
   onNewChange?: (patch: Partial<SetDraft>) => void
+  /** Swiping the row left reveals a delete button that calls this. */
+  onDelete?: () => void
 }) {
   const t = useT()
   const [text, setText] = useState<Text>(() => {
@@ -100,8 +103,8 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
       enterKeyHint="done"
       placeholder={placeholder}
       aria-label={label}
-      className={`min-h-[44px] w-full min-w-0 rounded-lg border bg-bg px-1 text-center text-[16px] ${
-        error ? 'border-weights' : 'border-line'
+      className={`min-h-[44px] w-full min-w-0 rounded-lg border px-1 text-center text-[16px] font-semibold ${
+        error ? 'border-weights bg-bg' : saved ? 'border-transparent bg-transparent' : 'border-line bg-bg'
       }`}
     />
   )
@@ -112,7 +115,9 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
     <button
       onClick={onLabel}
       aria-label={`${t('set.rowMenu')} ${label}${pr ? ` · ${t('pr.badge')}` : ''}`}
-      className={`flex h-11 flex-col items-center justify-center rounded-md text-[15px] font-semibold leading-none ${rowType(row) === 'warmup' ? 'text-muted' : ''}`}
+      className={`flex h-11 flex-col items-center justify-center rounded-lg text-[15px] font-bold leading-none ${
+        rowType(row) === 'warmup' ? 'bg-other/15 text-other' : saved ? 'text-weights' : 'bg-raised'
+      }`}
     >
       {label}
       {pr && <span className="mt-0.5 rounded bg-weights px-1 text-[9px] font-bold leading-[14px] text-white">PR</span>}
@@ -134,7 +139,7 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
       onClick={toggleFailure}
       aria-pressed={failure}
       aria-label={t('set.failure')}
-      className={`flex h-11 items-center justify-center rounded-md text-[14px] ${failure ? 'bg-weights/15 font-semibold text-weights' : 'text-muted'}`}
+      className={`flex h-11 items-center justify-center rounded-lg text-[14px] font-semibold ${failure ? 'bg-weights/15 text-weights' : 'text-muted/70'}`}
     >
       F
     </button>
@@ -143,16 +148,19 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
     <button
       onClick={confirm}
       aria-label={saved ? t('set.saved') : t('set.save')}
-      className={`flex h-11 w-11 items-center justify-center rounded-lg ${saved ? 'bg-weights text-white' : 'border border-line text-muted'}`}
+      className={`flex h-11 w-11 items-center justify-center rounded-xl ${saved ? 'bg-weights text-white' : 'bg-raised text-muted'}`}
     >
-      <Check size={20} aria-hidden />
+      <Check size={20} strokeWidth={saved ? 3 : 2.2} aria-hidden />
     </button>
   )
 
   // Left/right rows need three inputs, which do not fit beside the other four controls on a narrow
   // phone (they came out 29 px wide at 320 px and clipped the numbers), so they use two lines.
+  const swipe = (body: JSX.Element) =>
+    onDelete ? <SwipeRow onDelete={onDelete} label={saved ? t('set.deleteSaved') : t('set.delete')}>{body}</SwipeRow> : body
+
   if (se.leftRight) {
-    return (
+    return swipe(
       <div className={`rounded-lg py-1 ${saved ? 'bg-weights/10' : ''}`}>
         <div className="grid grid-cols-[32px_minmax(0,1fr)_36px_44px] items-center gap-1">
           {labelButton}{prevButton}{failureButton}{confirmButton}
@@ -166,7 +174,7 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
     )
   }
 
-  return (
+  return swipe(
     <div className={`grid items-center gap-1 rounded-lg py-1 ${rowGrid(false)} ${saved ? 'bg-weights/10' : ''}`}>
       {labelButton}
       {prevButton}

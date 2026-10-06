@@ -229,12 +229,13 @@ function HistoryBlock({ se, exercise, sets, prIds, unit, date, sessionId, exerci
           pr={r.kind === 'set' && prIds.has(r.set.id!)}
           onLabel={() => setRowMenu(r)}
           onSaveNew={saveNew}
+          onDelete={() => (r.kind === 'set' ? setConfirmSet(r.set) : setNewRows((list) => list.filter((d) => d.id !== r.draft.id)))}
           onNewChange={(patch) => r.kind === 'new' && setNewRows((list) => list.map((d) => (d.id === r.draft.id ? { ...d, ...patch } : d)))}
         />
       ))}
       <div className="mt-2 flex gap-2">
-        <button onClick={() => addRow('working')} className="min-h-[44px] flex-1 rounded-lg border border-line text-[15px]">{t('set.addSet')}</button>
-        <button onClick={() => addRow('warmup')} className="min-h-[44px] flex-1 rounded-lg border border-line text-[15px] text-muted">{t('set.addWarmup')}</button>
+        <button onClick={() => addRow('working')} className="min-h-[44px] flex-1 rounded-xl bg-weights/15 text-[15px] font-semibold text-weights">{t('set.addSet')}</button>
+        <button onClick={() => addRow('warmup')} className="min-h-[44px] flex-1 rounded-xl bg-raised text-[15px] font-medium text-muted">{t('set.addWarmup')}</button>
       </div>
       {!isPending && (
         <textarea
