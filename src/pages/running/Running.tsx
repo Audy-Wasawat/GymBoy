@@ -65,7 +65,7 @@ export function Running() {
                   <span className="flex-1">
                     <span className="block text-[16px]">
                       {round(r.distanceKm, 2)} km
-                      <span className="text-muted"> · {t(TYPE_KEY[r.type])}</span>
+                      {r.type && <span className="text-muted"> · {t(TYPE_KEY[r.type])}</span>}
                     </span>
                     <span className="block text-[13px] text-muted">
                       {formatDate(r.date, language)}

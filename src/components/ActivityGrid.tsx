@@ -6,9 +6,9 @@ import { useSettings } from '../db/useSettings'
 import { useT } from '../i18n/useT'
 import { formatDate, localDate, parseLocalDate, startOfWeek } from '../lib/dates'
 import type { StringKey } from '../i18n/strings'
-import { gridCellLabel } from '../lib/gridLabel'
+import { gridPartsLabel, type GridPart } from '../lib/gridLabel'
 
-type Filter = 'all' | 'weights' | 'running'
+type Filter = 'all' | 'weights' | 'running' | 'other'
 type DayColor = 'weights' | 'running' | 'both' | 'other' | 'none' | 'blank'
 
 interface DayData {
@@ -21,23 +21,22 @@ interface DayData {
 
 const DAY_KEYS: StringKey[] = ['grid.mon', 'grid.tue', 'grid.wed', 'grid.thu', 'grid.fri', 'grid.sat', 'grid.sun']
 
-function dayColor(d: DayData, filter: Filter): DayColor {
-  if (d.color === 'blank') return 'blank'
-  if (filter === 'weights') return d.hasWeights ? 'weights' : 'none'
-  if (filter === 'running') return d.hasRun ? 'running' : 'none'
-  return d.color
+/** The coloured stripes of a cell, in a fixed order: red weights, blue running, yellow other sports. */
+function dayParts(d: DayData, filter: Filter): GridPart[] {
+  if (filter === 'weights') return d.hasWeights ? ['weights'] : []
+  if (filter === 'running') return d.hasRun ? ['running'] : []
+  if (filter === 'other') return d.hasOther ? ['other'] : []
+  const parts: GridPart[] = []
+  if (d.hasWeights) parts.push('weights')
+  if (d.hasRun) parts.push('running')
+  if (d.hasOther) parts.push('other')
+  return parts
 }
 
-function cellBg(color: DayColor): string {
-  switch (color) {
-    case 'weights': return 'bg-weights'
-    case 'running': return 'bg-running'
-    case 'other': return 'bg-other'
-    case 'none': return 'bg-line'
-    case 'blank': return ''
-    case 'both': return '' // handled specially
-  }
-}
+const FILTER_BG: Record<Filter, string> = { all: 'bg-weights', weights: 'bg-weights', running: 'bg-running', other: 'bg-other' }
+const FILTER_KEY: Record<Filter, StringKey> = { all: 'grid.all', weights: 'grid.weights', running: 'grid.running', other: 'grid.other' }
+
+const PART_BG: Record<GridPart, string> = { weights: 'bg-weights', running: 'bg-running', other: 'bg-other' }
 
 interface DaySummaryPopup {
   date: string
@@ -130,62 +129,54 @@ export function ActivityGrid() {
   return (
     <div>
       {/* filter buttons */}
-      <div className="mb-3 flex gap-2">
-        {(['all', 'weights', 'running'] as Filter[]).map((f) => (
+      <div className="mb-3 flex flex-wrap gap-2">
+        {(['all', 'weights', 'running', 'other'] as Filter[]).map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`min-h-[44px] rounded-lg px-4 text-[14px] font-semibold ${filter === f ? (f === 'running' ? 'bg-running text-white' : 'bg-weights text-white') : 'border border-line bg-surface'}`}
+            className={`min-h-[44px] whitespace-nowrap rounded-lg px-4 text-[14px] font-semibold ${filter === f ? `${FILTER_BG[f]} text-white` : 'border border-line bg-surface'}`}
           >
-            {f === 'all' ? t('grid.all') : f === 'weights' ? t('grid.weights') : t('grid.running')}
+            {t(FILTER_KEY[f])}
           </button>
         ))}
       </div>
 
-      {/* day-of-week row labels */}
+      {/* weekday labels down the left (one row per weekday), weeks scroll sideways as columns */}
       <div className="flex">
-        <div className="w-11 shrink-0" />
-        <div className="flex overflow-hidden">
+        <div className="w-8 shrink-0" aria-hidden>
           {DAY_KEYS.map((k) => (
-            <div key={k} className="w-11 text-center text-[10px] text-muted">{t(k)}</div>
+            <div key={k} className="flex h-11 items-center text-[11px] text-muted">{t(k)}</div>
           ))}
         </div>
-      </div>
+        <div className="min-w-0 flex-1 overflow-x-auto pb-2">
+          <div className="flex" style={{ width: `${weeks.length * 44}px` }}>
+            {weeks.map((monday) => (
+              <div key={monday} className="flex flex-col">
+                {[0, 1, 2, 3, 4, 5, 6].map((i) => {
+                  const d = parseLocalDate(monday)
+                  d.setDate(d.getDate() + i)
+                  const dateStr = localDate(d)
+                  const data = days.get(dateStr)
+                  if (!data) return <div key={i} className="h-11 w-11" />
+                  if (data.color === 'blank') return <div key={i} className="h-11 w-11" />
+                  const parts = dayParts(data, filter)
 
-      {/* grid — scrolls horizontally (weeks = columns, days of week = rows) */}
-      <div className="overflow-x-auto pb-2">
-        <div className="flex" style={{ width: `${weeks.length * 44}px` }}>
-          {weeks.map((monday) => (
-            <div key={monday} className="flex flex-col">
-              {[0, 1, 2, 3, 4, 5, 6].map((i) => {
-                const d = parseLocalDate(monday)
-                d.setDate(d.getDate() + i)
-                const dateStr = localDate(d)
-                const data = days.get(dateStr)
-                if (!data) return <div key={i} className="h-11 w-11" />
-                const col = dayColor(data, filter)
-                if (col === 'blank') return <div key={i} className="h-11 w-11" />
-
-                return (
-                  <button
-                    key={i}
-                    onClick={() => setPopup(data)}
-                    aria-label={gridCellLabel(dateStr, col, language, t)}
-                    className="flex h-11 w-11 items-center justify-center"
-                  >
-                    <span className={`block h-7 w-7 overflow-hidden rounded-sm ${col === 'both' ? '' : cellBg(col)}`}>
-                      {col === 'both' && (
-                        <span className="flex h-full w-full">
-                          <span className="flex-1 bg-weights" />
-                          <span className="flex-1 bg-running" />
-                        </span>
-                      )}
-                    </span>
-                  </button>
-                )
-              })}
-            </div>
-          ))}
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => setPopup(data)}
+                      aria-label={gridPartsLabel(dateStr, parts, language, t)}
+                      className="flex h-11 w-11 items-center justify-center"
+                    >
+                      <span className={`flex h-7 w-7 overflow-hidden rounded-sm ${parts.length ? '' : 'bg-line'}`}>
+                        {parts.map((p) => <span key={p} className={`flex-1 ${PART_BG[p]}`} />)}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

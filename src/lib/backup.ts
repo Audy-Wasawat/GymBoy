@@ -4,7 +4,7 @@ import { recomputeAllBodyParts } from '../db/sessions'
 import { localDate, parseLocalDate } from './dates'
 import { paceSecPerKm as calcPace } from './running'
 
-const SCHEMA_VERSION = 3
+const SCHEMA_VERSION = 4
 const APP_VERSION = '0.1.0'
 const FORMAT = 'gymboy-backup'
 
@@ -136,7 +136,7 @@ const FIELD_RULES: Record<string, { date?: string[]; numbers?: string[] }> = {
     numbers: ['exerciseId', 'sessionExerciseId', 'setNumber', 'weightKg', 'reps', 'repsLeft', 'repsRight', 'durationSec', 'durationLeftSec', 'durationRightSec']
   },
   runs: { date: ['date'], numbers: ['distanceKm', 'durationSec', 'avgHr', 'maxHr'] },
-  activities: { date: ['date'], numbers: ['minutes', 'effort'] },
+  activities: { date: ['date'], numbers: ['minutes', 'durationSec', 'effort'] },
   foodEntries: { date: ['date'], numbers: ['time', 'kcal', 'proteinG', 'portion'] },
   bodyEntries: { date: ['date'], numbers: ['weightKg'] },
   foods: { numbers: ['kcal', 'proteinG'] },
@@ -235,6 +235,11 @@ export async function restoreBackup(data: Record<string, unknown[]>): Promise<vo
     schemaVersion < 2 ? { ...e, name: (e.nameEn ?? e.nameTh ?? '') as string, timed: false } : e
   )
 
+  // Before schema v4 activity effort was 1-5; it is 1-10 now.
+  const activities = (data.activities as Array<Record<string, unknown>>).map((a) =>
+    schemaVersion < 4 && typeof a.effort === 'number' ? { ...a, effort: Math.min(10, Math.max(1, Math.round(a.effort * 2))) } : a
+  )
+
   // Convert photo data URLs back to Blobs
   const foods = (data.foods as Array<Record<string, unknown>>).map(restorePhoto)
   const foodEntries = (data.foodEntries as Array<Record<string, unknown>>).map(restorePhoto)
@@ -264,7 +269,7 @@ export async function restoreBackup(data: Record<string, unknown[]>): Promise<vo
       db.runs.bulkAdd(data.runs as never[]),
       db.runTemplates.bulkAdd(data.runTemplates as never[]),
       db.shoes.bulkAdd(data.shoes as never[]),
-      db.activities.bulkAdd(data.activities as never[]),
+      db.activities.bulkAdd(activities as never[]),
       db.foods.bulkAdd(foods as never[]),
       db.foodEntries.bulkAdd(foodEntries as never[]),
       db.bodyEntries.bulkAdd(bodyEntries as never[]),

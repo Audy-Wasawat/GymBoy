@@ -11,6 +11,7 @@ import { useT } from '../../i18n/useT'
 import { formatDate } from '../../lib/dates'
 import { toDisplayWeight } from '../../lib/units'
 import { usePhotoUrl } from '../../components/usePhotoUrl'
+import { PhotoViewer } from '../../components/PhotoViewer'
 
 const BodyChartView = lazy(() => import('./BodyChartView'))
 
@@ -38,6 +39,7 @@ export function Body() {
   const [compareMode, setCompareMode] = useState(false)
   const [selected, setSelected] = useState<number[]>([])
   const [showChart, setShowChart] = useState(false)
+  const [viewing, setViewing] = useState<BodyEntry | null>(null)
 
   const withPhotos = entries?.filter(hasPhotos) ?? []
 
@@ -102,27 +104,49 @@ export function Body() {
         <p className="px-1 py-4 text-[15px] text-muted">{t('body.empty')}</p>
       ) : (
         <Section>
-          {entries?.map((e) => (
-            <button
-              key={e.id}
-              onClick={() => {
-                if (compareMode) { if (hasPhotos(e)) toggleSelect(e.id!) }
-                else nav(`/more/body/${e.id}`)
-              }}
-              className={`flex w-full min-h-[56px] items-center gap-3 border-b border-line px-4 py-2 last:border-b-0 text-left ${compareMode ? (hasPhotos(e) ? (selected.includes(e.id!) ? 'bg-weights/10' : '') : 'opacity-30') : ''}`}
-            >
-              <PhotoThumb blob={e.photos?.[0]?.blob} count={e.photos?.length ?? 0} label={`${t('body.photo')} ${formatDate(e.date, language)}`} />
-              <span className="flex-1">
-                <span className="block text-[16px]">{toDisplayWeight(e.weightKg, weightUnit)} {weightUnit}</span>
-                <span className="block text-[13px] text-muted">{formatDate(e.date, language)}</span>
-              </span>
-              {compareMode && hasPhotos(e) && (
-                <span className={`h-6 w-6 rounded-full border-2 flex-shrink-0 ${selected.includes(e.id!) ? 'border-weights bg-weights' : 'border-muted'}`} />
-              )}
-            </button>
-          ))}
+          {entries?.map((e) => {
+            const pick = () => {
+              if (compareMode) { if (hasPhotos(e)) toggleSelect(e.id!) }
+              else nav(`/more/body/${e.id}`)
+            }
+            return (
+              <div
+                key={e.id}
+                className={`flex w-full min-h-[56px] items-center gap-3 border-b border-line px-4 py-2 last:border-b-0 ${compareMode ? (hasPhotos(e) ? (selected.includes(e.id!) ? 'bg-weights/10' : '') : 'opacity-30') : ''}`}
+              >
+                {hasPhotos(e) && (
+                  <button
+                    type="button"
+                    onClick={() => (compareMode ? pick() : setViewing(e))}
+                    aria-label={`${t('photo.view')} ${formatDate(e.date, language)}`}
+                    className="-my-1 flex min-h-[44px] shrink-0 items-center"
+                  >
+                    <PhotoThumb blob={e.photos?.[0]?.blob} count={e.photos?.length ?? 0} label="" />
+                  </button>
+                )}
+                <button type="button" onClick={pick} className="flex min-h-[44px] min-w-0 flex-1 items-center gap-3 text-left">
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[16px]">{toDisplayWeight(e.weightKg, weightUnit)} {weightUnit}</span>
+                    <span className="block text-[13px] text-muted">{formatDate(e.date, language)}</span>
+                  </span>
+                  {compareMode && hasPhotos(e) && (
+                    <span className={`h-6 w-6 rounded-full border-2 flex-shrink-0 ${selected.includes(e.id!) ? 'border-weights bg-weights' : 'border-muted'}`} />
+                  )}
+                </button>
+              </div>
+            )
+          })}
         </Section>
       )}
+
+      {viewing?.photos?.length ? (
+        <PhotoViewer
+          popup
+          photos={viewing.photos.map((p) => ({ blob: p.blob, caption: t(`pose.${p.pose}`) }))}
+          title={`${formatDate(viewing.date, language)} · ${toDisplayWeight(viewing.weightKg, weightUnit)} ${weightUnit}`}
+          onClose={() => setViewing(null)}
+        />
+      ) : null}
     </Page>
   )
 }
@@ -144,6 +168,16 @@ function CompareView({ entries, weightUnit, language }: { entries: BodyEntry[]; 
   // Older day on the left.
   const [a, b] = [...entries].sort((x, y) => x.date.localeCompare(y.date))
   const { pairs, matched } = comparePairs(a, b)
+  const [viewing, setViewing] = useState<{ pair: number; side: 0 | 1 } | null>(null)
+  // Viewer pages: every compared photo in reading order (pair by pair, older then newer).
+  const viewerPhotos = pairs.flatMap((p) => [
+    p.a ? { blob: p.a, caption: `${formatDate(a.date, language)}${p.pose ? ` · ${t(`pose.${p.pose}`)}` : ''}` } : null,
+    p.b ? { blob: p.b, caption: `${formatDate(b.date, language)}${p.pose ? ` · ${t(`pose.${p.pose}`)}` : ''}` } : null
+  ]).filter((x): x is { blob: Blob; caption: string } => x !== null)
+  const startIndex = (pair: number, side: 0 | 1) => {
+    const blob = side === 0 ? pairs[pair].a : pairs[pair].b
+    return Math.max(0, viewerPhotos.findIndex((v) => v.blob === blob))
+  }
   return (
     <div className="mb-4 overflow-hidden rounded-2xl border border-line bg-surface">
       <div className="grid grid-cols-2 border-b border-line">
@@ -159,16 +193,24 @@ function CompareView({ entries, weightUnit, language }: { entries: BodyEntry[]; 
         <div key={i} className="p-2">
           {p.pose && <div className="eyebrow mb-1.5 px-1">{t(`pose.${p.pose}`)}</div>}
           <div className="grid grid-cols-2 gap-2">
-            <CompareImg blob={p.a} alt={`${t('body.photo')} ${formatDate(a.date, language)}`} />
-            <CompareImg blob={p.b} alt={`${t('body.photo')} ${formatDate(b.date, language)}`} />
+            <CompareImg blob={p.a} alt={`${t('body.photo')} ${formatDate(a.date, language)}`} onView={() => setViewing({ pair: i, side: 0 })} />
+            <CompareImg blob={p.b} alt={`${t('body.photo')} ${formatDate(b.date, language)}`} onView={() => setViewing({ pair: i, side: 1 })} />
           </div>
         </div>
       ))}
+      {viewing && viewerPhotos.length > 0 && (
+        <PhotoViewer photos={viewerPhotos} start={startIndex(viewing.pair, viewing.side)} onClose={() => setViewing(null)} />
+      )}
     </div>
   )
 }
 
-function CompareImg({ blob, alt }: { blob?: Blob; alt: string }) {
+function CompareImg({ blob, alt, onView }: { blob?: Blob; alt: string; onView: () => void }) {
   const url = usePhotoUrl(blob)
-  return url ? <img src={url} alt={alt} className="aspect-[3/4] w-full rounded-xl object-cover" /> : <div className="aspect-[3/4] rounded-xl bg-raised" />
+  if (!url) return <div className="aspect-[3/4] rounded-xl bg-raised" />
+  return (
+    <button type="button" onClick={onView} aria-label={`${alt}`} className="block w-full">
+      <img src={url} alt="" className="aspect-[3/4] w-full rounded-xl object-cover" />
+    </button>
+  )
 }

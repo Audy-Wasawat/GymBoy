@@ -95,7 +95,8 @@ export interface IntervalPlan { reps: number; distanceM?: number; durationSec?: 
  */
 export interface IntervalRepResult { rep: number; durationSec?: number; distanceM?: number; paceSecPerKm?: number }
 export interface RunLog {
-  id?: number; date: string; type: RunType; distanceKm: number; durationSec: number
+  /** Optional: a run that fits no type (for example a city run with stops for photos) has none. */
+  id?: number; date: string; type?: RunType; distanceKm: number; durationSec: number
   shoeId?: number; note?: string; plan?: IntervalPlan; repResults?: IntervalRepResult[]
   /** Optional whole beats per minute, 30-250. */
   avgHr?: number; maxHr?: number
@@ -108,7 +109,11 @@ export interface Shoe {
   startKm?: number
 }
 
-export interface Activity { id?: number; date: string; sport: string; minutes: number; effort?: number; note?: string }
+/**
+ * `minutes` is the whole-minute duration (kept for older data and backups); `durationSec`, when present,
+ * is the exact time typed as h:m:s and wins for display. `effort` is 1-10 (schema v4; 1-5 before, doubled on upgrade).
+ */
+export interface Activity { id?: number; date: string; sport: string; minutes: number; durationSec?: number; effort?: number; note?: string }
 
 export interface Food { id?: number; name: string; kcal: number; proteinG: number; photo?: Blob }
 export interface FoodEntry {

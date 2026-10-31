@@ -64,6 +64,7 @@ export function Summary() {
       foodByDay.set(e.date, d)
     }
     const foodDays = foodByDay.size
+    const totalKcal = foodEntries.reduce((s, e) => s + e.kcal, 0)
     const avgKcal = foodDays ? Array.from(foodByDay.values()).reduce((s, v) => s + v.kcal, 0) / foodDays : undefined
     const avgProtein = foodDays ? Array.from(foodByDay.values()).reduce((s, v) => s + v.protein, 0) / foodDays : undefined
 
@@ -75,7 +76,7 @@ export function Summary() {
     const weekActivities = await db.activities.where('date').aboveOrEqual(weekStart).toArray()
     const weekDays = new Set([...weekSessions, ...weekRuns, ...weekActivities].map((x) => x.date)).size
 
-    return { workoutDays, monthKm, weekKm, avgKcal, avgProtein, foodDays, weekDays }
+    return { workoutDays, monthKm, weekKm, avgKcal, avgProtein, foodDays, weekDays, totalKcal }
   }, [from, to, year, month])
 
   function nav(delta: number) {
@@ -132,6 +133,18 @@ export function Summary() {
               </div>
             )}
           </Section>
+
+          {data.foodDays > 0 && (
+            <Section title={t('sum.totalKcal')}>
+              <div className="px-4 py-3">
+                <div className="flex flex-wrap items-baseline gap-x-1.5">
+                  <span className="text-[28px] font-semibold text-food">{Math.round(data.totalKcal).toLocaleString()}</span>
+                  <span className="text-[15px] text-muted">kcal</span>
+                </div>
+                <div className="text-[13px] text-muted">{t('sum.foodDaysCount').replace('{n}', String(data.foodDays))}</div>
+              </div>
+            </Section>
+          )}
 
           {data.avgKcal !== undefined && (
             <Section title={t('sum.avgKcal')}>

@@ -67,6 +67,12 @@ export class GymboyDB extends Dexie {
         delete e.photo
       })
     })
+    // v4: activity effort moves from a 1-5 to a 1-10 scale.
+    this.version(4).stores({}).upgrade(async (tx) => {
+      await tx.table('activities').toCollection().modify((a) => {
+        if (typeof a.effort === 'number') a.effort = Math.min(10, Math.max(1, Math.round(a.effort * 2)))
+      })
+    })
   }
 }
 

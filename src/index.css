@@ -23,6 +23,8 @@
   --plate-blue: 26 98 218;
   --plate-yellow: 204 140 0;
   --plate-green: 18 138 74;
+  /* Only for the effort scale (green, yellow, orange, red): the step between yellow and red. */
+  --effort-orange: 232 96 18;
   --glow: 0.28;
   color-scheme: light;
 }
@@ -40,6 +42,7 @@
     --plate-blue: 82 152 255;
     --plate-yellow: 255 196 54;
     --plate-green: 52 211 125;
+    --effort-orange: 255 136 48;
     --glow: 0.42;
     color-scheme: dark;
   }

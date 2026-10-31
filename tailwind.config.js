@@ -14,7 +14,8 @@ export default {
         weights: 'rgb(var(--plate-red) / <alpha-value>)',
         running: 'rgb(var(--plate-blue) / <alpha-value>)',
         other: 'rgb(var(--plate-yellow) / <alpha-value>)',
-        food: 'rgb(var(--plate-green) / <alpha-value>)'
+        food: 'rgb(var(--plate-green) / <alpha-value>)',
+        'effort-hard': 'rgb(var(--effort-orange) / <alpha-value>)'
       },
       borderRadius: {
         lg: '0.75rem',

@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Trash2 } from 'lucide-react'
 import { Page } from '../../components/Page'
 import { Field, TextInput } from '../../components/Field'
+import { DurationBoxes, hmsToSec, secToHms } from '../../components/DurationBoxes'
 import { Segmented } from '../../components/Segmented'
 import { Sheet, SheetButton, NameSheet } from '../../components/Sheet'
 import { db } from '../../db/db'
@@ -21,14 +22,6 @@ const TYPE_OPTS: { value: RunType; key: StringKey }[] = [
   { value: 'tempo', key: 'run.typeTempo' }, { value: 'interval', key: 'run.typeInterval' }
 ]
 
-const hmsToSec = (h: string, m: string, s: string) =>
-  (parseCount(h) ?? 0) * 3600 + (parseCount(m) ?? 0) * 60 + (parseCount(s) ?? 0)
-
-const secToHms = (sec: number) => ({
-  h: sec >= 3600 ? String(Math.floor(sec / 3600)) : '',
-  m: String(Math.floor((sec % 3600) / 60)),
-  s: String(sec % 60)
-})
 
 export function RunEditor() {
   const t = useT()
@@ -38,8 +31,11 @@ export function RunEditor() {
   const shoes = useLiveQuery(() => db.shoes.toArray(), [])
   const templates = useLiveQuery(listTemplates, [])
 
-  const [date, setDate] = useState(localDate())
-  const [type, setType] = useState<RunType>('easy')
+  // A new run may come with ?date= (from a past day on the Today screen); a future or broken one is ignored.
+  const [params] = useSearchParams()
+  const askedDate = params.get('date')
+  const [date, setDate] = useState(askedDate && isPastOrToday(askedDate) ? askedDate : localDate())
+  const [type, setType] = useState<RunType | undefined>(undefined)
   const [distance, setDistance] = useState('')
   const [h, setH] = useState('')
   const [m, setM] = useState('')
@@ -186,7 +182,7 @@ export function RunEditor() {
   }
 
   const saveTemplate = async (name: string) => {
-    if (plan && plan.reps > 0) await addTemplate({ name, type, plan })
+    if (type && plan && plan.reps > 0) await addTemplate({ name, type, plan })
     setSavingTemplate(false)
   }
 
@@ -217,18 +213,18 @@ export function RunEditor() {
         </div>
 
         <Field label={t('run.type')}>
-          <Segmented value={type} onChange={setType} label={t('run.type')} options={TYPE_OPTS.map((o) => ({ value: o.value, label: t(o.key) }))} />
+          <Segmented
+            value={type ?? 'none'}
+            onChange={(v) => setType(v === 'none' ? undefined : (v as RunType))}
+            label={t('run.type')}
+            wrap
+            options={[{ value: 'none', label: t('run.typeNone') }, ...TYPE_OPTS.map((o) => ({ value: o.value, label: t(o.key) }))]}
+          />
         </Field>
 
         <div>
           <span className="text-[13px] text-muted">{t('run.duration')}</span>
-          <div className="mt-1 flex items-end gap-2">
-            <DurationBox value={h} onChange={setH} label={t('run.hours')} />
-            <span className="pb-3 text-muted">:</span>
-            <DurationBox value={m} onChange={setM} label={t('run.minutes')} />
-            <span className="pb-3 text-muted">:</span>
-            <DurationBox value={s} onChange={setS} label={t('run.seconds')} />
-          </div>
+          <DurationBoxes h={h} m={m} s={s} onH={setH} onM={setM} onS={setS} />
           {overallPace && (
             <p className="mt-1 text-[13px] text-muted">{t('run.pace')}: {formatPace(overallPace)} {t('run.paceUnit')}</p>
           )}
@@ -406,21 +402,5 @@ export function RunEditor() {
         <SheetButton onClick={() => setConfirmDelete(false)}>{t('common.cancel')}</SheetButton>
       </Sheet>
     </Page>
-  )
-}
-
-function DurationBox({ value, onChange, label }: { value: string; onChange: (v: string) => void; label: string }) {
-  return (
-    <label className="flex flex-1 flex-col items-center gap-1">
-      <input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        inputMode="numeric"
-        placeholder="0"
-        aria-label={label}
-        className="min-h-[48px] w-full rounded-lg border border-line bg-bg px-2 text-center text-[16px]"
-      />
-      <span className="text-[12px] text-muted">{label}</span>
-    </label>
   )
 }

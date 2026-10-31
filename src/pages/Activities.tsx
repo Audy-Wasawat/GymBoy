@@ -4,11 +4,14 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { ChevronRight, Plus } from 'lucide-react'
 import { Page, Row, Section } from '../components/Page'
 import { Sheet, SheetButton } from '../components/Sheet'
-import { addActivity, deleteActivity, listActivities, listSportSuggestions, updateActivity } from '../db/activities'
+import { activitySec, addActivity, deleteActivity, listActivities, listSportSuggestions, updateActivity } from '../db/activities'
 import { db } from '../db/db'
 import { useSettings } from '../db/useSettings'
 import { useT } from '../i18n/useT'
 import { formatDate, isPastOrToday, localDate } from '../lib/dates'
+import { DurationBoxes, formatHms, hmsToSec, secToHms } from '../components/DurationBoxes'
+import { EFFORT_MAX, EffortMeter, EffortPicker } from '../components/EffortBars'
+
 
 export function Activities() {
   const t = useT()
@@ -36,15 +39,18 @@ export function Activities() {
               onClick={() => nav(`/more/activities/${a.id}`)}
               className="flex w-full min-h-[52px] items-center gap-3 border-b border-line px-4 py-2 last:border-b-0 text-left"
             >
-              <span className="flex-1">
-                <span className="block text-[16px]">
-                  {a.sport}
-                  {a.effort ? <span className="text-muted"> · {'★'.repeat(a.effort)}</span> : ''}
-                </span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-[16px]">{a.sport}</span>
                 <span className="block text-[13px] text-muted">
-                  {formatDate(a.date, language)} · {a.minutes} {t('today.minutes')}
+                  {formatDate(a.date, language)} · {formatHms(activitySec(a), t)}
                 </span>
               </span>
+              {a.effort ? (
+                <span className="flex shrink-0 items-center gap-1.5" aria-label={`${t('act.effort')} ${a.effort}/${EFFORT_MAX}`}>
+                  <EffortMeter value={a.effort} />
+                  <span className="text-[13px] font-semibold tabular-nums text-muted">{a.effort}</span>
+                </span>
+              ) : null}
               <ChevronRight size={18} className="text-muted" aria-hidden />
             </button>
           ))}
@@ -67,7 +73,9 @@ export function ActivityEditor() {
   const suggestions = useLiveQuery(listSportSuggestions, [])
 
   const [sport, setSport] = useState('')
-  const [minutesStr, setMinutesStr] = useState('')
+  const [h, setH] = useState('')
+  const [m, setM] = useState('')
+  const [s, setS] = useState('')
   const [effort, setEffort] = useState<number | undefined>()
   const [note, setNote] = useState('')
   const [date, setDate] = useState(localDate())
@@ -80,7 +88,8 @@ export function ActivityEditor() {
     if (!isNew && existing && !loaded.current) {
       loaded.current = true
       setSport(existing.sport)
-      setMinutesStr(String(existing.minutes))
+      const hms = secToHms(activitySec(existing))
+      setH(hms.h); setM(hms.m); setS(hms.s)
       setEffort(existing.effort)
       setNote(existing.note ?? '')
       setDate(existing.date)
@@ -93,11 +102,12 @@ export function ActivityEditor() {
 
   async function handleSave() {
     if (!sport.trim()) { setError(t('act.sportRequired')); return }
-    if (!minutesStr || isNaN(Number(minutesStr)) || Number(minutesStr) <= 0) { setError(t('act.minutesRequired')); return }
+    const durationSec = hmsToSec(h, m, s)
+    if (durationSec <= 0) { setError(t('act.minutesRequired')); return }
     if (!isPastOrToday(date)) { setError(t('act.futureDate')); return }
     setSaving(true)
     try {
-      const act = { sport: sport.trim(), minutes: Math.round(Number(minutesStr)), effort, note: note.trim() || undefined, date }
+      const act = { sport: sport.trim(), minutes: Math.round(durationSec / 60), durationSec, effort, note: note.trim() || undefined, date }
       if (isNew) { await addActivity(act) } else { await updateActivity(Number(id), act) }
       nav(-1)
     } finally {
@@ -132,35 +142,16 @@ export function ActivityEditor() {
             )}
           </div>
         </Row>
-        <Row>
-          <label className="w-24 text-[15px] text-muted">{t('act.minutes')}</label>
-          <input
-            inputMode="numeric"
-            value={minutesStr}
-            onChange={(e) => setMinutesStr(e.target.value)}
-            className="flex-1 bg-transparent text-[16px] outline-none"
-          />
-        </Row>
-        <Row>
-          <label className="w-24 text-[15px] text-muted">{t('act.effort')}</label>
-          <div className="flex gap-1">
-            <button
-              onClick={() => setEffort(undefined)}
-              className={`h-8 px-2 rounded text-[13px] ${effort === undefined ? 'bg-other text-white' : 'border border-line'}`}
-            >
-              {t('act.effortNone')}
-            </button>
-            {[1, 2, 3, 4, 5].map((n) => (
-              <button
-                key={n}
-                onClick={() => setEffort(n)}
-                className={`h-8 w-8 rounded text-[14px] ${effort === n ? 'bg-other text-white' : 'border border-line'}`}
-              >
-                {n}
-              </button>
-            ))}
+        <div className="border-b border-line px-4 py-3">
+          <span className="text-[15px] text-muted">{t('act.minutes')}</span>
+          <DurationBoxes h={h} m={m} s={s} onH={setH} onM={setM} onS={setS} />
+        </div>
+        <div className="border-b border-line px-4 py-3">
+          <span className="text-[15px] text-muted">{t('act.effort')}</span>
+          <div className="mt-1">
+            <EffortPicker value={effort} onChange={setEffort} />
           </div>
-        </Row>
+        </div>
         <Row>
           <label className="w-24 text-[15px] text-muted">{t('act.note')}</label>
           <input

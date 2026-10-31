@@ -18,3 +18,6 @@ export const deleteActivity = (id: number) => db.activities.delete(id)
 
 export const listActivitiesByRange = (from: string, to: string) =>
   db.activities.where('date').between(from, to, true, true).toArray()
+
+/** Stored duration in seconds: the exact h:m:s when it was typed that way, else the whole minutes. */
+export const activitySec = (a: Activity) => a.durationSec ?? a.minutes * 60

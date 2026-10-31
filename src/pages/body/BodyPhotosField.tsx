@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Camera, ImagePlus, X } from 'lucide-react'
+import { Camera, ImagePlus, Maximize2, X } from 'lucide-react'
+import { PhotoViewer } from '../../components/PhotoViewer'
 import type { BodyPhoto, BodyPose } from '../../db/types'
 import { useT } from '../../i18n/useT'
 import { BODY_PHOTO_MAX, compressImage } from '../../lib/photos'
@@ -23,6 +24,7 @@ export function BodyPhotosField({ photos, onChange, alt }: {
   const t = useT()
   const [busy, setBusy] = useState(false)
   const [failed, setFailed] = useState(false)
+  const [viewing, setViewing] = useState<number | null>(null)
   const full = photos.length >= MAX_BODY_PHOTOS
 
   async function add(e: React.ChangeEvent<HTMLInputElement>) {
@@ -58,6 +60,7 @@ export function BodyPhotosField({ photos, onChange, alt }: {
               alt={`${alt} · ${t(`pose.${p.pose}`)}`}
               onPose={(pose) => onChange(photos.map((x, j) => (j === i ? { ...x, pose } : x)))}
               onRemove={() => onChange(photos.filter((_, j) => j !== i))}
+              onView={() => setViewing(i)}
             />
           ))}
         </ul>
@@ -79,18 +82,31 @@ export function BodyPhotosField({ photos, onChange, alt }: {
       <p className="mt-2 text-[12px] text-muted">{t('body.photosNote').replace('{n}', String(MAX_BODY_PHOTOS))}</p>
       {busy && <p role="status" className="mt-2 text-[13px] text-muted">{t('photo.working')}</p>}
       {failed && <p role="alert" className="mt-2 text-[14px] text-weights">{t('photo.failed')}</p>}
+      {viewing !== null && photos.length > 0 && (
+        <PhotoViewer
+          photos={photos.map((p) => ({ blob: p.blob, caption: t(`pose.${p.pose}`) }))}
+          start={viewing}
+          title={alt}
+          onClose={() => setViewing(null)}
+        />
+      )}
     </div>
   )
 }
 
-function PhotoTile({ photo, alt, onPose, onRemove }: {
-  photo: BodyPhoto; alt: string; onPose: (pose: BodyPose) => void; onRemove: () => void
+function PhotoTile({ photo, alt, onPose, onRemove, onView }: {
+  photo: BodyPhoto; alt: string; onPose: (pose: BodyPose) => void; onRemove: () => void; onView: () => void
 }) {
   const t = useT()
   const url = usePhotoUrl(photo.blob)
   return (
     <li className="relative overflow-hidden rounded-xl bg-raised">
-      {url && <img src={url} alt={alt} className="aspect-[3/4] w-full object-cover" />}
+      <button type="button" onClick={onView} aria-label={`${t('photo.view')} ${alt}`} className="block w-full">
+        {url ? <img src={url} alt="" className="aspect-[3/4] w-full object-cover" /> : <span className="block aspect-[3/4] w-full" />}
+        <span className="absolute left-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white/95" aria-hidden>
+          <Maximize2 size={14} />
+        </span>
+      </button>
       <button
         onClick={onRemove}
         aria-label={`${t('photo.remove')} ${t(`pose.${photo.pose}`)}`}
