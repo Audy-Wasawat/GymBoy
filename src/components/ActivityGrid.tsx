@@ -45,7 +45,8 @@ interface DaySummaryPopup {
   hasOther: boolean
 }
 
-export function ActivityGrid() {
+/** One month of the grid: weeks (Monday first) that touch [from, to]; days outside it stay blank. */
+export function ActivityGrid({ from, to }: { from: string; to: string }) {
   const t = useT()
   const [filter, setFilter] = useState<Filter>('all')
   const [popup, setPopup] = useState<DaySummaryPopup | null>(null)
@@ -74,8 +75,10 @@ export function ActivityGrid() {
     if (allDates.length === 0) return { weeks: [] as string[], days: new Map<string, DayData>() }
 
     const firstDate = allDates.reduce((a, b) => (a < b ? a : b))
-    const firstMonday = localDate(startOfWeek(parseLocalDate(firstDate)))
-    const lastMonday = localDate(startOfWeek(parseLocalDate(today)))
+    // Nothing to show for a month that ends before the first log or starts after today.
+    if (to < firstDate || from > today) return { weeks: [] as string[], days: new Map<string, DayData>() }
+    const firstMonday = localDate(startOfWeek(parseLocalDate(from)))
+    const lastMonday = localDate(startOfWeek(parseLocalDate(to < today ? to : today)))
 
     // Collect all Mondays from firstMonday to lastMonday
     const weeks: string[] = []
@@ -98,8 +101,8 @@ export function ActivityGrid() {
         d.setDate(d.getDate() + i)
         const dateStr = localDate(d)
 
-        // Blank: before first log or in the future
-        if (dateStr < firstDate || dateStr > today) {
+        // Blank: outside the month, before the first log or in the future
+        if (dateStr < from || dateStr > to || dateStr < firstDate || dateStr > today) {
           days.set(dateStr, { date: dateStr, color: 'blank', hasWeights: false, hasRun: false, hasOther: false })
           continue
         }
@@ -120,7 +123,7 @@ export function ActivityGrid() {
     }
 
     return { weeks, days }
-  }, [allData, today])
+  }, [allData, today, from, to])
 
   if (!allData || weeks.length === 0) {
     return <div className="px-1 text-[14px] text-muted py-2">{t('grid.noLog')}</div>

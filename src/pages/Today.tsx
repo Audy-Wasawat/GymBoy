@@ -162,14 +162,20 @@ export function Today() {
   }, [])
   const data = useDayData(day)
   const muscles = useDayMuscles(day)
-  const dateLabel = parseLocalDate(day).toLocaleDateString(language === 'th' ? 'th-TH-u-ca-gregory' : 'en-GB', {
-    weekday: 'long', day: 'numeric', month: 'long', ...(day.slice(0, 4) === today.slice(0, 4) ? {} : { year: 'numeric' })
+  // Title: "Today", "Yesterday", then the weekday name. The date bar keeps the weekday only for
+  // today and yesterday, since further back the title already names it.
+  const isYesterday = day === addDays(today, -1)
+  const locale = language === 'th' ? 'th-TH-u-ca-gregory' : 'en-GB'
+  const recent = isToday || isYesterday
+  const title = isToday ? t('today.title') : isYesterday ? t('today.yesterday') : parseLocalDate(day).toLocaleDateString(locale, { weekday: 'long' })
+  const dateLabel = parseLocalDate(day).toLocaleDateString(locale, {
+    ...(recent ? { weekday: 'long' } : {}), day: 'numeric', month: 'long', ...(day.slice(0, 4) === today.slice(0, 4) ? {} : { year: 'numeric' })
   })
   const thisWeek = data?.weekStart === localDate(startOfWeek())
   const nothing = data && data.sessions.length + data.runs.length + data.activities.length === 0
 
   return (
-    <Page title={t('today.title')}>
+    <Page title={title}>
       {/* day picker: today by default, any past day to look back at */}
       <div className="-mt-1 mb-5 flex items-center gap-1 rounded-xl border border-line bg-surface px-1 py-1">
         <button onClick={() => setDay(addDays(day, -1))} className="flex h-11 w-11 shrink-0 items-center justify-center" aria-label={t('food.prevDay')}>
@@ -177,7 +183,6 @@ export function Today() {
         </button>
         <label className="relative flex min-h-[44px] min-w-0 flex-1 cursor-pointer flex-col items-center justify-center text-center">
           <span className="max-w-full truncate text-[15px] font-semibold">{dateLabel}</span>
-          {!isToday && <span className="text-[12px] text-muted">{t('today.pastDay')}</span>}
           <input
             type="date"
             value={day}

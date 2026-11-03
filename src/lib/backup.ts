@@ -347,7 +347,7 @@ export async function createAIExport(opts: AIExportOptions): Promise<Blob> {
                 setNumber: set.setNumber, type: set.type, weightKg: set.weightKg, reps: set.reps,
                 repsLeft: set.repsLeft, repsRight: set.repsRight,
                 durationSec: set.durationSec, durationLeftSec: set.durationLeftSec, durationRightSec: set.durationRightSec,
-                toFailure: set.toFailure
+                toFailure: set.toFailure, goodForm: set.goodForm ?? false
               }))
           }
         })

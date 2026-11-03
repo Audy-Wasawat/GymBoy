@@ -168,7 +168,7 @@ export function Summary() {
 
       <Section title={t('grid.title')}>
         <div className="px-4 py-3">
-          <ActivityGrid />
+          <ActivityGrid from={from} to={to} />
         </div>
       </Section>
     </Page>

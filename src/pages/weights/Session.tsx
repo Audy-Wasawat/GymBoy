@@ -7,7 +7,8 @@ import { Page } from '../../components/Page'
 import { Sheet, SheetButton } from '../../components/Sheet'
 import { Switch } from '../../components/Switch'
 import { db } from '../../db/db'
-import { moveRow } from '../../db/programs'
+import { setRowOrder } from '../../db/programs'
+import { ReorderList, useLongPress } from '../../components/ReorderList'
 import {
   addExerciseToSession, cancelSession, deleteSet, emptyDraft, getOpenSession, previousEntry, setSessionLeftRight,
   refreshBodyParts, removeSessionExercise, replaceSessionExercise, setToText, startRest
@@ -62,6 +63,8 @@ export function SessionPage() {
   }, [session?.id])
   const [sheet, setSheet] = useState<'add' | 'cancel'>()
   const [finishing, setFinishing] = useState(false)
+  // Reorder mode: exercises shrink to one row each and are dragged into place.
+  const [reorder, setReorder] = useState<{ id: number; y: number } | 'menu' | null>(null)
 
   if (session === undefined) return null
   if (session === null) return <Navigate to="/weights" replace />
@@ -73,9 +76,29 @@ export function SessionPage() {
         {[formatDate(session.date, language), ...(session.dayName ? session.bodyParts.map((p) => t(`part.${p}`)) : [])].join(' · ')}
       </p>
 
-      {blocks?.map((b, i) => (
-        <ExerciseBlock key={b.se.id} block={b} session={session} ses={blocks.map((x) => x.se)} index={i} />
-      ))}
+      {reorder && blocks && (
+        <ReorderList
+          items={blocks.map((b) => ({
+            id: b.se.id!,
+            title: b.se.name,
+            subtitle: t('reorder.sets').replace('{n}', String(b.rows.filter((r) => r.kind === 'set' && r.set.type === 'working').length))
+          }))}
+          startDrag={reorder === 'menu' ? undefined : reorder}
+          onChange={(ids) => void setRowOrder(db.sessionExercises, ids)}
+          onDone={() => setReorder(null)}
+        />
+      )}
+      {/* Kept mounted (only hidden) while reordering: the finger that long-pressed a title is still
+          down, and its touch events must keep reaching the page through that element. */}
+      <div className={reorder ? 'hidden' : ''}>
+        {blocks?.map((b, i) => (
+          <ExerciseBlock
+            key={b.se.id} block={b} session={session} index={i}
+            canReorder={blocks.length > 1}
+            onReorder={(y) => setReorder(y === undefined ? 'menu' : { id: b.se.id!, y })}
+          />
+        ))}
+      </div>
       {blocks && blocks.length === 0 && <p className="mb-4 px-1 text-[15px] text-muted">{t('session.noExercises')}</p>}
 
       <button onClick={() => setSheet('add')} className="mb-4 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-weights/40 text-[16px] font-bold text-weights">
@@ -112,8 +135,11 @@ export function SessionPage() {
   )
 }
 
-function ExerciseBlock({ block, session, ses, index }: {
-  block: Block; session: WorkoutSession; ses: SessionExercise[]; index: number
+function ExerciseBlock({ block, session, index, canReorder, onReorder }: {
+  block: Block; session: WorkoutSession; index: number
+  canReorder: boolean
+  /** Opens reorder mode; with a y (long press on the title) the drag starts at once under the finger. */
+  onReorder: (y?: number) => void
 }) {
   const t = useT()
   const { defaultRestSec } = useSettings()
@@ -121,6 +147,7 @@ function ExerciseBlock({ block, session, ses, index }: {
   const { se, rows, prev, unit: weightUnit, prIds, hint } = block
   const [menu, setMenu] = useState<'menu' | 'swap' | 'remove'>()
   const [rowMenu, setRowMenu] = useState<Row>()
+  const longPress = useLongPress((y) => { if (canReorder) onReorder(y) })
   const [note, setNote] = useState(se.note ?? '')
   useEffect(() => setNote(se.note ?? ''), [se.id])
 
@@ -152,7 +179,7 @@ function ExerciseBlock({ block, session, ses, index }: {
   return (
     <section className="mb-4 rounded-2xl border border-line bg-surface p-3">
       <div className="mb-1 flex items-start gap-2">
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 select-none" style={{ WebkitTouchCallout: 'none' } as React.CSSProperties} {...longPress}>
           <h2 className="flex items-center gap-2 text-[18px] font-bold leading-snug"><span className="flex h-6 min-w-6 shrink-0 items-center justify-center rounded-md bg-weights/15 px-1.5 text-[12px] font-bold text-weights">{index + 1}</span><span className="min-w-0">{se.name}</span></h2>
           <p className="text-[13px] text-muted">{[target, rest].filter(Boolean).join(' · ')}</p>
           {hint && <HintNote hint={hint} unit={weightUnit} />}
@@ -197,8 +224,7 @@ function ExerciseBlock({ block, session, ses, index }: {
           </span>
           <Switch checked={se.leftRight} disabled={savedCount > 0} onChange={(v) => void setSessionLeftRight(se.id!, v)} label={t('ex.leftRight')} />
         </div>
-        {index > 0 && <SheetButton onClick={() => { void moveRow(db.sessionExercises, ses, se.id!, -1); setMenu(undefined) }}>{t('common.moveUp')}</SheetButton>}
-        {index < ses.length - 1 && <SheetButton onClick={() => { void moveRow(db.sessionExercises, ses, se.id!, 1); setMenu(undefined) }}>{t('common.moveDown')}</SheetButton>}
+        {canReorder && <SheetButton onClick={() => { setMenu(undefined); onReorder() }}>{t('reorder.open')}</SheetButton>}
         <SheetButton onClick={() => navigate(`/weights/exercises/${se.exerciseId}/history`, { state: { from: '/weights/session' } })}>{t('history.exercise')}</SheetButton>
         {savedCount === 0 && <SheetButton onClick={() => setMenu('swap')}>{t('session.swap')}</SheetButton>}
         <SheetButton tone="danger" onClick={() => (savedCount ? setMenu('remove') : void removeSessionExercise(se))}>{t('session.removeExercise')}</SheetButton>

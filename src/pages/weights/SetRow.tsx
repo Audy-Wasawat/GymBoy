@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Check, CopyPlus } from 'lucide-react'
+import { Check, CopyPlus, ThumbsUp } from 'lucide-react'
 import { db } from '../../db/db'
 import { readSetValues, saveDraft, setToText } from '../../db/sessions'
 import type { SessionExercise, SetDraft, SetLog, WeightUnit } from '../../db/types'
@@ -23,7 +23,9 @@ type Text = { weight: string; value: string; left: string; right: string }
 /** Grid columns shared by the header and the rows; left/right exercises get two value inputs. */
 export const rowGrid = (lr: boolean) =>
   lr ? 'grid-cols-[28px_48px_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_32px_44px]'
-    : 'grid-cols-[32px_56px_minmax(0,1fr)_minmax(0,1fr)_36px_44px]'
+    // Set, previous, weight, reps, F, form, ✓. Narrow phones (under 360 px) get slimmer fixed columns
+    // so the weight and reps inputs keep room for their numbers.
+    : 'grid-cols-[26px_36px_minmax(0,1fr)_minmax(0,1fr)_28px_28px_38px] min-[360px]:grid-cols-[32px_52px_minmax(0,1fr)_minmax(0,1fr)_34px_34px_44px]'
 
 export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, onSaved, onSaveNew, onNewChange, onDelete }: {
   se: SessionExercise; row: Row; label: string; prev?: SetLog; above?: Text; unit: WeightUnit; date: string
@@ -54,6 +56,8 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
   const saved = row.kind === 'set'
   const [newFailure, setNewFailure] = useState(row.kind === 'new' && row.draft.toFailure)
   const failure = row.kind === 'set' ? row.set.toFailure : row.kind === 'draft' ? row.draft.toFailure : newFailure
+  const [newForm, setNewForm] = useState(row.kind === 'new' && !!row.draft.goodForm)
+  const form = row.kind === 'set' ? !!row.set.goodForm : row.kind === 'draft' ? !!row.draft.goodForm : newForm
 
   // Drafts are written on every keystroke so nothing is lost if iOS closes the app.
   // Saved sets are updated whenever the edited values are complete.
@@ -73,6 +77,11 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
     else if (row.kind === 'set') void db.sets.update(row.set.id!, { toFailure: !failure })
     else { setNewFailure(!failure); onNewChange?.({ toFailure: !failure }) }
   }
+  const toggleForm = () => {
+    if (row.kind === 'draft') void db.setDrafts.update(row.draft.id!, { goodForm: !form })
+    else if (row.kind === 'set') void db.sets.update(row.set.id!, { goodForm: !form })
+    else { setNewForm(!form); onNewChange?.({ goodForm: !form }) }
+  }
   const [confirming, setConfirming] = useState(false)
   const confirm = async () => {
     if (row.kind === 'set') return
@@ -80,7 +89,7 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
     setConfirming(true)
     try {
       if (row.kind === 'new') {
-        if (!(await onSaveNew?.({ ...row.draft, ...text, toFailure: newFailure, unit }))) setError(true)
+        if (!(await onSaveNew?.({ ...row.draft, ...text, toFailure: newFailure, goodForm: newForm, unit }))) setError(true)
         return
       }
       // Must run inside the tap itself for iOS to allow sound later.
@@ -103,7 +112,7 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
       enterKeyHint="done"
       placeholder={placeholder}
       aria-label={label}
-      className={`min-h-[44px] w-full min-w-0 rounded-lg border px-1 text-center text-[16px] font-semibold ${
+      className={`min-h-[44px] w-full min-w-0 rounded-lg border px-0 text-center min-[360px]:px-1 text-[16px] font-semibold ${
         error ? 'border-weights bg-bg' : saved ? 'border-transparent bg-transparent' : 'border-line bg-bg'
       }`}
     />
@@ -144,11 +153,21 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
       F
     </button>
   )
+  const formButton = (
+    <button
+      onClick={toggleForm}
+      aria-pressed={form}
+      aria-label={t('set.goodForm')}
+      className={`flex h-11 items-center justify-center rounded-lg ${form ? 'bg-food/15 text-food' : 'text-muted/60'}`}
+    >
+      <ThumbsUp size={17} strokeWidth={form ? 2.6 : 2} aria-hidden />
+    </button>
+  )
   const confirmButton = (
     <button
       onClick={confirm}
       aria-label={saved ? t('set.saved') : t('set.save')}
-      className={`flex h-11 w-11 items-center justify-center rounded-xl ${saved ? 'bg-weights text-white' : 'bg-raised text-muted'}`}
+      className={`flex h-11 w-full items-center justify-center rounded-xl ${saved ? 'bg-weights text-white' : 'bg-raised text-muted'}`}
     >
       <Check size={20} strokeWidth={saved ? 3 : 2.2} aria-hidden />
     </button>
@@ -162,8 +181,8 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
   if (se.leftRight) {
     return swipe(
       <div className={`rounded-lg py-1 ${saved ? 'bg-weights/10' : ''}`}>
-        <div className="grid grid-cols-[32px_minmax(0,1fr)_36px_44px] items-center gap-1">
-          {labelButton}{prevButton}{failureButton}{confirmButton}
+        <div className="grid grid-cols-[32px_minmax(0,1fr)_36px_36px_44px] items-center gap-1">
+          {labelButton}{prevButton}{failureButton}{formButton}{confirmButton}
         </div>
         <div className="mt-1 grid grid-cols-3 gap-1">
           {input('weight', weightHint, t('set.weight'))}
@@ -181,6 +200,7 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
       {input('weight', weightHint, t('set.weight'))}
       {input('value', valueHint, valueHint)}
       {failureButton}
+      {formButton}
       {confirmButton}
     </div>
   )
@@ -202,6 +222,7 @@ export function SetHeader({ se, unit }: { se: SessionExercise; unit: WeightUnit 
         <span>{se.timed ? t('set.sec') : t('set.reps')}</span>
       )}
       <span>F</span>
+      <span className="flex items-center justify-center" title={t('set.goodForm')}><ThumbsUp size={13} aria-label={t('set.goodForm')} /></span>
       <span />
     </div>
   )

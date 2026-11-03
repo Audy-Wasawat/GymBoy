@@ -44,15 +44,15 @@ describe('previous values across both-sides and left/right modes (D2)', () => {
 
   it('the weight hint follows the previous session, whatever mode is used now', () => {
     const target = { targetSets: 2, repMin: 6, repMax: 8, restSec: 90 }
-    const prevSingle = { se: se({ ...target, leftRight: false }), sets: [set({ weightKg: 20, reps: 8 }), set({ weightKg: 20, reps: 8 })] }
+    const prevSingle = { se: se({ ...target, leftRight: false }), sets: [set({ weightKg: 20, reps: 8, goodForm: true }), set({ weightKg: 20, reps: 8, goodForm: true })] }
     expect(weightHint(prevSingle, [])).toMatchObject({ top: 8, weightKg: 20 })
     const prevSides = {
       se: se({ ...target, leftRight: true }),
-      sets: [set({ weightKg: 20, repsLeft: 8, repsRight: 8 }), set({ weightKg: 20, repsLeft: 9, repsRight: 8 })]
+      sets: [set({ weightKg: 20, repsLeft: 8, repsRight: 8, goodForm: true }), set({ weightKg: 20, repsLeft: 9, repsRight: 8, goodForm: true })]
     }
     expect(weightHint(prevSides, [])).toMatchObject({ top: 8, weightKg: 20 })
     // One side short on a set: no hint.
-    const short = { ...prevSides, sets: [set({ weightKg: 20, repsLeft: 8, repsRight: 7 }), set({ weightKg: 20, repsLeft: 8, repsRight: 8 })] }
+    const short = { ...prevSides, sets: [set({ weightKg: 20, repsLeft: 8, repsRight: 7, goodForm: true }), set({ weightKg: 20, repsLeft: 8, repsRight: 8, goodForm: true })] }
     expect(weightHint(short, [])).toBeUndefined()
   })
 

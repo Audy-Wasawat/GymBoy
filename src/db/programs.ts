@@ -82,3 +82,10 @@ export async function moveRow<T extends { id?: number; order: number }>(
     }
   })
 }
+
+/** Saves a new order for rows given as ids, first to last (drag and drop). */
+export async function setRowOrder<T extends { id?: number; order: number }>(table: Table<T, number>, ids: number[]) {
+  await db.transaction('rw', table, async () => {
+    for (let k = 0; k < ids.length; k++) await table.update(ids[k], { order: k } as never)
+  })
+}

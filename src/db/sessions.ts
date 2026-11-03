@@ -20,7 +20,7 @@ export const emptyDraft = (sessionExerciseId: number, order: number, type: SetTy
 })
 
 export const isDraftEmpty = (d: SetDraft) =>
-  !d.weight.trim() && !d.value.trim() && !d.left.trim() && !d.right.trim() && !d.toFailure
+  !d.weight.trim() && !d.value.trim() && !d.left.trim() && !d.right.trim() && !d.toFailure && !d.goodForm
 
 /** Starts a session for today from a day of the active program, or an empty one. */
 export async function startSession(dayId?: number) {
@@ -197,7 +197,7 @@ export async function saveDraft(draft: SetDraft, se: SessionExercise, unit: Weig
     if (!(await db.setDrafts.get(draft.id!))) return false
     await db.sets.add({
       ...values, sessionExerciseId: se.id!, setNumber: draft.order, type: draft.type,
-      exerciseId: se.exerciseId, date, toFailure: draft.toFailure
+      exerciseId: se.exerciseId, date, toFailure: draft.toFailure, ...(draft.goodForm ? { goodForm: true } : {})
     })
     await db.setDrafts.delete(draft.id!)
     await refreshBodyParts(se.sessionId)
@@ -250,7 +250,7 @@ export async function finishSession(sessionId: number, keepDrafts: boolean, unit
           if (values) {
             await db.sets.add({
               ...values, sessionExerciseId: se.id!, setNumber: d.order, type: d.type,
-              exerciseId: se.exerciseId, date: session.date, toFailure: d.toFailure
+              exerciseId: se.exerciseId, date: session.date, toFailure: d.toFailure, ...(d.goodForm ? { goodForm: true } : {})
             })
           }
         }

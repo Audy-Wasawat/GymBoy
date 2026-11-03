@@ -30,7 +30,7 @@ export async function saveHistorySet(opts: {
   sessionId?: number; date: string
   /** The session exercise the row belongs to, or the exercise for one not in the session yet. */
   se?: SessionExercise; exercise?: Exercise
-  row: Pick<SetDraft, 'weight' | 'value' | 'left' | 'right' | 'type' | 'toFailure' | 'order'>; unit: WeightUnit
+  row: Pick<SetDraft, 'weight' | 'value' | 'left' | 'right' | 'type' | 'toFailure' | 'goodForm' | 'order'>; unit: WeightUnit
 }) {
   const se = opts.se ?? pendingSe(opts.exercise!)
   const values = readSetValues(opts.row, se, opts.unit)
@@ -49,7 +49,7 @@ export async function saveHistorySet(opts: {
     }
     await db.sets.add({
       ...values, sessionExerciseId: seId, setNumber: opts.row.order, type: opts.row.type,
-      exerciseId: se.exerciseId, date: session.date, toFailure: opts.row.toFailure
+      exerciseId: se.exerciseId, date: session.date, toFailure: opts.row.toFailure, ...(opts.row.goodForm ? { goodForm: true } : {})
     })
     await refreshBodyParts(sessionId)
     return { sessionId, seId }

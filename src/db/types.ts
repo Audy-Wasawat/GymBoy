@@ -69,6 +69,8 @@ export interface SetLog {
   /** Used instead of reps for timed exercises. */
   durationSec?: number; durationLeftSec?: number; durationRightSec?: number
   toFailure: boolean
+  /** Ticked by the lifter when the set was done with good form; the "add weight" hint needs it on every set. */
+  goodForm?: boolean
 }
 
 /**
@@ -83,6 +85,7 @@ export interface SetDraft {
   /** Reps, or a duration for timed exercises; left/right are used by left/right exercises. */
   value: string; left: string; right: string
   toFailure: boolean
+  goodForm?: boolean
 }
 
 export type Surface = 'treadmill' | 'outdoor'

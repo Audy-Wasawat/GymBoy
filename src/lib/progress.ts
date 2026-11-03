@@ -88,8 +88,8 @@ export interface WeightHint { top: number; timed: boolean; weightKg?: number }
 
 /**
  * "Try adding weight": every working set of the previous session reached the top of the target
- * range that session had copied (both sides for left/right), with at least as many working sets as
- * targeted. Hidden once the current session has a saved working set heavier than last time.
+ * range that session had copied (both sides for left/right) and was ticked as good form, with at
+ * least as many working sets as targeted. Hidden once the current session has a saved working set heavier than last time.
  * It only informs; nothing is changed.
  */
 export function weightHint(prev: { se: SessionExercise; sets: SetLog[] } | undefined, current: SetLog[]): WeightHint | undefined {
@@ -102,7 +102,7 @@ export function weightHint(prev: { se: SessionExercise; sets: SetLog[] } | undef
     se.leftRight
       ? se.timed ? [s.durationLeftSec, s.durationRightSec] : [s.repsLeft, s.repsRight]
       : [se.timed ? s.durationSec : s.reps]
-  if (!working.every((s) => sides(s).every((v) => v !== undefined && v >= se.repMax!))) return undefined
+  if (!working.every((s) => s.goodForm === true && sides(s).every((v) => v !== undefined && v >= se.repMax!))) return undefined
   const weights = working.map((s) => s.weightKg).filter((w): w is number => w !== undefined)
   const weightKg = weights.length ? Math.max(...weights) : undefined
   if (current.some((s) => s.type === 'working' && (s.weightKg ?? 0) > (weightKg ?? 0))) return undefined
