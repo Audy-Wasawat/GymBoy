@@ -20,6 +20,12 @@ export const rowType = (r: Row) => (r.kind === 'set' ? r.set.type : r.draft.type
 
 type Text = { weight: string; value: string; left: string; right: string }
 
+/**
+ * Only the four typed fields. A draft or a copied row also carries its ticks (F, good form), id and
+ * order; those must never ride along in the typed text, or saving would write stale ticks back.
+ */
+const pickText = (o: Partial<Text>): Text => ({ weight: o.weight ?? '', value: o.value ?? '', left: o.left ?? '', right: o.right ?? '' })
+
 /** Grid columns shared by the header and the rows; left/right exercises get two value inputs. */
 export const rowGrid = (lr: boolean) =>
   lr ? 'grid-cols-[28px_48px_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_32px_44px]'
@@ -48,9 +54,9 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
     if (d.unit && d.unit !== unit && w !== undefined) {
       const weight = String(toDisplayWeight(fromDisplayWeight(w, d.unit), unit))
       void db.setDrafts.update(d.id!, { weight, unit })
-      return { ...d, weight }
+      return pickText({ ...d, weight })
     }
-    return d
+    return pickText(d)
   })
   const [error, setError] = useState(false)
   const saved = row.kind === 'set'
@@ -61,7 +67,10 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
 
   // Drafts are written on every keystroke so nothing is lost if iOS closes the app.
   // Saved sets are updated whenever the edited values are complete.
-  const change = (patch: Partial<Text>) => {
+  const change = (raw: Partial<Text>) => {
+    const patch = Object.fromEntries(
+      (['weight', 'value', 'left', 'right'] as const).filter((k) => raw[k] !== undefined).map((k) => [k, raw[k]])
+    ) as Partial<Text>
     const next = { ...text, ...patch }
     setText(next)
     setError(false)
@@ -94,7 +103,10 @@ export function SetRow({ se, row, label, prev, above, unit, date, pr, onLabel, o
       }
       // Must run inside the tap itself for iOS to allow sound later.
       unlockAudio()
-      const draft = { ...row.draft, ...text, unit }
+      // Ticks are read back from the database: a tap on F or form just before ✓ may not have
+      // reached this row's props yet.
+      const stored = await db.setDrafts.get(row.draft.id!)
+      const draft = { ...row.draft, ...stored, ...text, unit }
       if (await saveDraft(draft, se, unit, date)) onSaved?.(draft)
       else setError(true)
     } finally {

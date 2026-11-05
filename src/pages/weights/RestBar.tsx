@@ -71,19 +71,25 @@ export function RestBar({ session }: { session: WorkoutSession }) {
     }
   }, [done, endsAt, vibrate])
 
-  // While the finished bar is still up and the app is open, remind again at 20 s and 40 s.
-  useEffect(() => {
-    if (!done || !endsAt) return
-    if ((overdue === 20 || overdue === 40) && document.visibilityState === 'visible') void playRestDone()
-  }, [done, endsAt, overdue])
-
   if (!endsAt || typing) return null
 
+  // ±15 s works from the stored values, not this render's copy, so quick repeated taps all count.
   // After the timer has run out, +15 starts a fresh 15 s rest.
   const adjust = (delta: number) =>
-    db.sessions.update(session.id!, done
-      ? { restEndsAt: Date.now() + delta * 1000, restTotalSec: delta }
-      : { restEndsAt: Math.max(Date.now(), endsAt + delta * 1000), restTotalSec: Math.max(1, (session.restTotalSec ?? 0) + delta) })
+    db.transaction('rw', db.sessions, async () => {
+      const cur = await db.sessions.get(session.id!)
+      if (!cur?.restEndsAt) return
+      const at = Date.now()
+      if (cur.restEndsAt <= at) {
+        if (delta > 0) await db.sessions.update(session.id!, { restEndsAt: at + delta * 1000, restTotalSec: delta })
+        return
+      }
+      const left = cur.restEndsAt - at
+      // −15 never ends the rest by itself (that is what Skip is for); it stops at 1 s left.
+      const next = delta < 0 && left + delta * 1000 < 1000 ? at + 1000 : cur.restEndsAt + delta * 1000
+      const total = Math.max(1, (cur.restTotalSec ?? 0) + Math.round((next - cur.restEndsAt) / 1000))
+      await db.sessions.update(session.id!, { restEndsAt: next, restTotalSec: total })
+    })
   const total = session.restTotalSec ?? 1
   const frac = done ? 1 : Math.max(0, Math.min(1, remaining / total))
   const R = 21
@@ -119,7 +125,16 @@ export function RestBar({ session }: { session: WorkoutSession }) {
           </div>
           {done && overdue >= 5 && <div className="mt-0.5 text-[12px] font-medium opacity-80">{t('rest.over')}</div>}
         </div>
-        {!done && <button onClick={() => adjust(-15)} className={`${button} bg-raised`}>−15</button>}
+        {/* Kept in place (hidden) when the rest is over, so +15 and Close never shift under the finger. */}
+        <button
+          onClick={() => adjust(-15)}
+          disabled={done || remaining <= 1}
+          aria-hidden={done}
+          tabIndex={done ? -1 : undefined}
+          className={`${button} bg-raised disabled:opacity-40 ${done ? 'invisible' : ''}`}
+        >
+          −15
+        </button>
         <button onClick={() => adjust(15)} className={`${button} ${done ? 'bg-white/20' : 'bg-raised'}`}>+15</button>
         <button onClick={() => clearRest(session.id!)} className={`${button} ${done ? 'bg-white/90 text-weights' : 'bg-weights text-white'}`}>
           {done ? t('common.close') : t('rest.skip')}
