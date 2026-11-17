@@ -1,7 +1,7 @@
 import Dexie, { type Table } from 'dexie'
 import type {
   Activity, BodyEntry, Exercise, Food, FoodEntry, Program, ProgramDay, ProgramExercise,
-  RunLog, RunTemplate, SessionExercise, SetDraft, SetLog, Settings, Shoe, WorkoutSession
+  RestorePoint, StoredPhoto, RunLog, RunTemplate, SessionExercise, SetDraft, SetLog, Settings, Shoe, WorkoutSession
 } from './types'
 
 export class GymboyDB extends Dexie {
@@ -21,6 +21,8 @@ export class GymboyDB extends Dexie {
   foodEntries!: Table<FoodEntry, number>
   bodyEntries!: Table<BodyEntry, number>
   settings!: Table<Settings, string>
+  restorePoints!: Table<RestorePoint, string>
+  photos!: Table<StoredPhoto, string>
 
   constructor() {
     super('gymboy')
@@ -73,6 +75,12 @@ export class GymboyDB extends Dexie {
         if (typeof a.effort === 'number') a.effort = Math.min(10, Math.max(1, Math.round(a.effort * 2)))
       })
     })
+    // v5: the copy of the data taken just before a restore, so the restore can be undone.
+    this.version(5).stores({ restorePoints: 'id' })
+    // v6: food photos are stored once in `photos` (keyed by content) and rows point to them. Moving
+    // the old per-row copies needs the photo bytes, which cannot be read inside an upgrade, so
+    // `migrateFoodPhotos` does it after the database opens; until then the old field still shows.
+    this.version(6).stores({ photos: 'key' })
   }
 }
 

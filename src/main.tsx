@@ -6,6 +6,7 @@ import App from './App'
 import { ensureSettings } from './db/db'
 import { seedExercises } from './db/seed'
 import { recomputeAllBodyParts } from './db/sessions'
+import { migrateFoodPhotos, prunePhotos } from './db/photoStore'
 import { isStandalone, requestPersistence } from './lib/storage'
 import './index.css'
 
@@ -19,6 +20,8 @@ ensureSettings().then(() => {
 })
 // Body parts of past sessions follow the exercises' current body parts (custom exercises use their muscles).
 seedExercises().then(recomputeAllBodyParts)
+// Food photos copied into every row (before schema v6) move into the shared photo store, once each.
+migrateFoodPhotos().then(prunePhotos).catch(() => { /* the old copies keep showing; tried again next launch */ })
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

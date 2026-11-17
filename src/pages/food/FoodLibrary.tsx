@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { ChevronRight, Plus } from 'lucide-react'
 import { Page } from '../../components/Page'
-import { PhotoThumb } from '../../components/PhotoThumb'
+import { RowPhotoThumb } from '../../components/PhotoThumb'
 import { listFoods } from '../../db/food'
 import { useT } from '../../i18n/useT'
 
@@ -45,7 +45,7 @@ export function FoodLibrary() {
               to={`/food/library/${f.id}`}
               className="flex min-h-[52px] items-center gap-3 border-b border-line px-4 py-2 last:border-b-0"
             >
-              <PhotoThumb blob={f.photo} alt={f.name} />
+              <RowPhotoThumb row={f} alt={f.name} />
               <span className="flex-1">
                 <span className="block text-[16px]">{f.name}</span>
                 <span className="block text-[13px] text-muted">{f.kcal} kcal · {f.proteinG} {t('food.gramUnit')} {t('food.protein')}</span>

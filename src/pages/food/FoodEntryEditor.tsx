@@ -4,7 +4,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { ChevronRight } from 'lucide-react'
 import { Page, Row, Section } from '../../components/Page'
 import { PhotoField } from '../../components/PhotoField'
-import { PhotoThumb } from '../../components/PhotoThumb'
+import { RowPhotoThumb } from '../../components/PhotoThumb'
 import { Sheet, SheetButton } from '../../components/Sheet'
 import { deleteFoodEntry, listFoodsMRU, saveNewFoodEntry, updateFoodEntry } from '../../db/food'
 import { db } from '../../db/db'
@@ -14,6 +14,7 @@ import { isPastOrToday, localDate } from '../../lib/dates'
 import { fieldsFromEntry, finalValues, sameFields, tooLarge, type EntryFields } from '../../lib/foodEntry'
 import { parseDecimal } from '../../lib/numbers'
 import { FOOD_PHOTO_MAX } from '../../lib/photos'
+import { resolvePhotoKey, usePickedPhoto, type PhotoPick } from '../../db/photoStore'
 
 type Mode = 'pick' | 'manual'
 
@@ -42,8 +43,10 @@ export function FoodEntryEditor() {
   const [proteinStr, setProteinStr] = useState('')
   const [portionStr, setPortionStr] = useState('1')
   const [saveToLib, setSaveToLib] = useState(false)
-  // The entry's own photo: a copy of the library food's when one is picked, replaceable and removable.
-  const [photo, setPhoto] = useState<Blob | undefined>()
+  // The entry's photo: a link to the library food's when one is picked, or a new photo for this entry
+  // alone; replaceable and removable.
+  const [photo, setPhoto] = useState<PhotoPick>({})
+  const shownPhoto = usePickedPhoto(photo)
   const [date, setDate] = useState(initDate)
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
@@ -62,7 +65,7 @@ export function FoodEntryEditor() {
       setProteinStr(f.protein)
       setPortionStr(f.portion)
       setDate(existingEntry.date)
-      setPhoto(existingEntry.photo)
+      setPhoto({ key: existingEntry.photoKey, blob: existingEntry.photoKey ? undefined : existingEntry.photo })
       setMode('manual')
     }
   }, [isNew, existingEntry])
@@ -77,7 +80,7 @@ export function FoodEntryEditor() {
     setKcalStr(String(f.kcal))
     setProteinStr(String(f.proteinG))
     setPortionStr('1')
-    setPhoto(f.photo)
+    setPhoto({ key: f.photoKey, blob: f.photoKey ? undefined : f.photo })
     setMode('manual')
   }
 
@@ -106,11 +109,12 @@ export function FoodEntryEditor() {
         kcal: unchanged ? keep!.kcal : finalKcal,
         proteinG: unchanged ? keep!.proteinG : finalProtein
       }
+      const photoKey = await resolvePhotoKey(photo)
       if (isNew) {
-        await saveNewFoodEntry(entry, photo, saveToLib && !picked ? { name: name.trim(), kcal: Math.round(baseKcal), proteinG: baseProtein } : undefined)
+        await saveNewFoodEntry(entry, photoKey, saveToLib && !picked ? { name: name.trim(), kcal: Math.round(baseKcal), proteinG: baseProtein } : undefined)
       } else {
-        // photo may be undefined here: that removes it.
-        await updateFoodEntry(Number(id), { ...entry, photo })
+        // photoKey may be undefined here: that removes the photo. The old per-row copy always goes.
+        await updateFoodEntry(Number(id), { ...entry, photoKey, photo: undefined })
       }
       nav(-1)
     } finally {
@@ -171,7 +175,7 @@ export function FoodEntryEditor() {
                     onClick={() => pickFood(f)}
                     className="flex w-full min-h-[52px] items-center gap-3 border-b border-line px-4 py-2 last:border-b-0 text-left"
                   >
-                    <PhotoThumb blob={f.photo} alt={f.name} />
+                    <RowPhotoThumb row={f} alt={f.name} />
                     <span className="flex-1">
                       <span className="block text-[16px]">{f.name}</span>
                       <span className="block text-[13px] text-muted">{f.kcal} kcal · {f.proteinG} {t('food.gramUnit')}</span>
@@ -243,7 +247,7 @@ export function FoodEntryEditor() {
           </Section>
 
           <Section title={t('food.photo')}>
-            <PhotoField photo={photo} onChange={setPhoto} maxSide={FOOD_PHOTO_MAX} capture="environment" alt={name || t('food.photoOf')} />
+            <PhotoField photo={shownPhoto} onChange={(b) => setPhoto(b ? { blob: b } : {})} maxSide={FOOD_PHOTO_MAX} capture="environment" alt={name || t('food.photoOf')} />
           </Section>
 
           {/* save-to-library toggle (new + manual only) */}

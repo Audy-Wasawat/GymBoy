@@ -118,11 +118,19 @@ export interface Shoe {
  */
 export interface Activity { id?: number; date: string; sport: string; minutes: number; durationSec?: number; effort?: number; note?: string }
 
-export interface Food { id?: number; name: string; kcal: number; proteinG: number; photo?: Blob }
+/**
+ * Food photos live once in the photo store (`StoredPhoto`) and rows point to them with `photoKey`.
+ * Picking a library food links its photo; a new photo on one entry is that entry's alone; a new
+ * library photo gets a new key, so older entries keep showing the photo they had.
+ * `photo` is the old layout (a Blob copied into every row), read only until the app moves it to the store.
+ */
+export interface Food { id?: number; name: string; kcal: number; proteinG: number; photoKey?: string; photo?: Blob }
 export interface FoodEntry {
   id?: number; date: string; time: number; foodId?: number; name: string
   portion: number; kcal: number; proteinG: number
-  /** A snapshot taken with the entry, like its kcal and protein: library edits never change it. */
+  /** Points into the photo store, like a snapshot: later library edits never change which photo this is. */
+  photoKey?: string
+  /** Old layout, moved into the photo store on start-up. */
   photo?: Blob
 }
 
@@ -134,6 +142,15 @@ export interface BodyEntry { id?: number; date: string; weightKg: number; photos
 
 /** `kcal` is the daily floor (eat at least), `kcalMax` the ceiling (try not to go over); either may be unset. */
 export interface Goals { kcal?: number; kcalMax?: number; proteinG?: number; weeklyDays?: number }
+/**
+ * A full backup of the data as it was just before a restore replaced it, kept on the phone so the
+ * restore can be undone. Only the latest one is kept.
+ */
+/** A photo stored once, named by its content, so the same picture used many times takes room once. */
+export interface StoredPhoto { key: string; blob: Blob }
+
+export interface RestorePoint { id: 'before-restore'; createdAt: number; blob: Blob }
+
 export interface Settings {
   id: 'app'
   language: Lang

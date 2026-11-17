@@ -10,6 +10,7 @@ import { tooLarge } from '../../lib/foodEntry'
 import { parseDecimal } from '../../lib/numbers'
 import { PhotoField } from '../../components/PhotoField'
 import { FOOD_PHOTO_MAX } from '../../lib/photos'
+import { resolvePhotoKey, usePickedPhoto, type PhotoPick } from '../../db/photoStore'
 
 export function FoodLibraryEditor() {
   const t = useT()
@@ -25,7 +26,8 @@ export function FoodLibraryEditor() {
   const [name, setName] = useState('')
   const [kcalStr, setKcalStr] = useState('')
   const [proteinStr, setProteinStr] = useState('')
-  const [photo, setPhoto] = useState<Blob | undefined>()
+  const [photo, setPhoto] = useState<PhotoPick>({})
+  const shownPhoto = usePickedPhoto(photo)
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
   const [deleteSheet, setDeleteSheet] = useState(false)
@@ -37,7 +39,7 @@ export function FoodLibraryEditor() {
       setName(existing.name)
       setKcalStr(String(existing.kcal))
       setProteinStr(String(existing.proteinG))
-      setPhoto(existing.photo)
+      setPhoto({ key: existing.photoKey, blob: existing.photoKey ? undefined : existing.photo })
     }
   }, [isNew, existing])
 
@@ -54,11 +56,12 @@ export function FoodLibraryEditor() {
         kcal: Math.round(kcal),
         proteinG: parseDecimal(proteinStr) ?? 0
       }
+      const photoKey = await resolvePhotoKey(photo)
       if (isNew) {
-        await addFood({ ...food, ...(photo ? { photo } : {}) })
+        await addFood({ ...food, ...(photoKey ? { photoKey } : {}) })
       } else {
-        // photo may be undefined here: that removes it.
-        await updateFood(Number(id), { ...food, photo })
+        // photoKey may be undefined here: that removes the photo. The old per-row copy always goes.
+        await updateFood(Number(id), { ...food, photoKey, photo: undefined })
       }
       nav(-1)
     } finally {
@@ -109,7 +112,7 @@ export function FoodLibraryEditor() {
 
       {/* photo */}
       <Section title={t('food.photo')}>
-        <PhotoField photo={photo} onChange={setPhoto} maxSide={FOOD_PHOTO_MAX} capture="environment" alt={name || t('food.photoOf')} />
+        <PhotoField photo={shownPhoto} onChange={(b) => setPhoto(b ? { blob: b } : {})} maxSide={FOOD_PHOTO_MAX} capture="environment" alt={name || t('food.photoOf')} />
       </Section>
 
       {error && <p className="mb-3 text-[14px] text-weights">{error}</p>}

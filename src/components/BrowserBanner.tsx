@@ -42,6 +42,7 @@ export function BrowserBanner() {
         <div className="flex-1">
           <p className="text-[14px] font-semibold">{t('banner.title')}</p>
           <p className="mt-0.5 text-[13px] text-muted">{t('banner.body')}</p>
+          <p className="mt-1 text-[13px] font-medium text-weights">{t('banner.separate')}</p>
           <div>
             <Link
               to="/more/backup"
